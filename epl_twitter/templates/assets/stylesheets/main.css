@@ -1,0 +1,128 @@
+/*=============================================
+============= Navbar ========================
+=============================================
+*/
+
+nav ul ul {
+  display: none;
+}
+
+nav ul li:hover > ul{
+  display: block;
+}
+
+nav ul {
+  background: #C2C1CF; 
+  padding: 0 20px; 
+  list-style: none;
+  position: relative;
+  display: inline-table;
+}
+  nav ul:after {
+    content: ""; clear: both; display: block;
+  }
+
+nav ul li {
+  float: left;
+}
+  nav ul li:hover {
+    background: #343050;
+  }
+    nav ul li:hover a {
+      color: #fff;
+    }
+  
+  nav ul li a {
+    display: block; padding: 15px 40px;
+    color: #757575; text-decoration: none;
+  }
+
+nav ul ul {
+  background: #343050; border-radius: 0px; padding: 0;
+  position: absolute; top: 100%;
+}
+  nav ul ul li {
+    float: none; 
+    border-top: 1px solid #6b727c;
+    border-bottom: 1px solid #575f6a;
+    position: relative;
+  }
+    nav ul ul li a {
+      padding: 15px 40px;
+      color: #fff;
+    } 
+      nav ul ul li a:hover {
+        background: #1D193C;
+      }
+
+nav ul ul ul {
+  position: absolute; left: 100%; top:0;
+}
+
+/*===============================================
+=============== Typography ======================
+=================================================
+*/
+
+
+h1, h2, h3, h4 {
+  color: #1D193C;
+}
+h1, h3, h4, h5, p {
+  margin-bottom: 22px;
+}
+h1 {
+  font-size: 36px;
+  line-height: 44px;
+}
+h2 {
+  font-size: 24px;
+  line-height: 44px;
+}
+h3 {
+  font-size: 21px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  color: #a9b2b9;
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+strong {
+  font-weight: 400;
+}
+cite,
+em {
+  font-style: italic;
+}
+
+/*===========================================
+=============== Logo ========================
+=============================================
+*/
+
+
+
+.logo {
+  border-top: 4px solid #1D193C;
+  float: left;
+  font-size: 48px;
+  font-weight: 100;
+  letter-spacing: .5px;
+  line-height: 44px;
+  padding: 40px 0 22px 0;
+  text-transform: uppercase;
+}
+
+.logo strong {
+  font-weight: 400;
+  font-size: 60px;
+}
+
+header {
+  font-size: 150px
+}
+

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+	<div>
+		<h3> Purpose and History </h3>
+
+			<p>bpltweets.com was built to provide an insight into how the public perception of professional football teams change over time. The bpltweets project is authored by aspiring programmer <a href="https://www.linkedin.com/in/aarontaylormays" target="_blank">Aaron TaylorMays</a>, who began the project in early 2015 due to the inspiration of his close friend Danyal Sheikh. The project is currently still in development as of {{today}}.</p>
+
+		<h3> Development </h3>
+
+			<p> The bpltweets project looks at all 34 teams that have been in the Barclays Premier League for at least one season since 2007 (the year Twitter was founded). The project was built primarily using the Django web application framework using a SQLite database. To populate the database, the project uses the Twitter Rest API to pull Twitter data on a weekly basis using both the clubs' official Twitter handles and common hashtags associated with the teams. </p>
+
+			<p>Sentiment analysis was performed on the Tweets using the XYZ Sentiment Analysis Engine. Relevant news articles were linked using the Google News API. Further statistical analysis was done in R.</p>
+
+			<p>For more information, feel free to contact <a href="/contact/">the author</a>.</p>
+
+		<h3>Next Steps</h3>
+
+			<p>After the project is fully functional using the data from BPL teams, there will be an extra session added for premier European teams (eg Real Madrid, PSG, Juventus, etc). This will pose challenges because only English language Tweets will be analyzed.</p>
+
+	</div>
+
+	<a href="#top">Back to top</a>
+
+{% endblock %}

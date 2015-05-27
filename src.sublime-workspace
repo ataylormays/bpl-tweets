@@ -1,0 +1,1107 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"club",
+				"club_nm"
+			],
+			[
+				"clu",
+				"club_nm"
+			],
+			[
+				"cl",
+				"clubs_file_nm"
+			],
+			[
+				"re",
+				"request"
+			],
+			[
+				"is",
+				"is_retweet"
+			],
+			[
+				"is_r",
+				"is_rt"
+			],
+			[
+				"qb",
+				"qb_exclude"
+			],
+			[
+				"qu",
+				"query"
+			],
+			[
+				"qb_",
+				"qb_hashtags"
+			],
+			[
+				"hash",
+				"hashtags"
+			],
+			[
+				"ba",
+				"banned_phrases"
+			],
+			[
+				"g",
+				"global"
+			],
+			[
+				"bul",
+				"build_params"
+			],
+			[
+				"in",
+				"index"
+			],
+			[
+				"consu",
+				"consumers"
+			],
+			[
+				"oau",
+				"oauth_token"
+			],
+			[
+				"sec",
+				"secrets"
+			],
+			[
+				"row",
+				"row_num"
+			],
+			[
+				"clubs_",
+				"clubs_list"
+			],
+			[
+				"tw",
+				"twitter_dates"
+			],
+			[
+				"h",
+				"h_tags"
+			],
+			[
+				"twe",
+				"twitter_object"
+			],
+			[
+				"en",
+				"entities"
+			],
+			[
+				"stat",
+				"status"
+			],
+			[
+				"statu",
+				"statuses"
+			],
+			[
+				"get",
+				"get_historic_tweets"
+			],
+			[
+				"q",
+				"query_bulider"
+			],
+			[
+				"query",
+				"query_bulider"
+			],
+			[
+				"clubs",
+				"clubs_file"
+			],
+			[
+				"ur",
+				"urllib2"
+			],
+			[
+				"u",
+				"urllib2"
+			],
+			[
+				"para",
+				"api_params"
+			],
+			[
+				"sig",
+				"signature_method"
+			],
+			[
+				"api",
+				"api_params"
+			],
+			[
+				"TW",
+				"TWITTER_ACCESS_TOKEN_SECRET"
+			],
+			[
+				"TWI",
+				"TWITTER_ACCESS_TOKEN"
+			],
+			[
+				"f",
+				"font-size"
+			],
+			[
+				"head",
+				"header	Tag"
+			],
+			[
+				"pu",
+				"published_recently"
+			],
+			[
+				"ol",
+				"old_question"
+			],
+			[
+				"pub",
+				"published_recently"
+			],
+			[
+				"fut",
+				"future_question"
+			],
+			[
+				"time",
+				"timezone"
+			],
+			[
+				"templa",
+				"template_name"
+			],
+			[
+				"ques",
+				"question"
+			],
+			[
+				"sele",
+				"selected_choice"
+			],
+			[
+				"maxar",
+				"maxAreaScan"
+			],
+			[
+				"maxA",
+				"maxArea"
+			],
+			[
+				"print",
+				"printBoard2"
+			],
+			[
+				"inc",
+				"incDiff"
+			],
+			[
+				"cpu",
+				"cpuMoves"
+			],
+			[
+				"B",
+				"BoundedQueue"
+			],
+			[
+				"S",
+				"System"
+			],
+			[
+				"set",
+				"setShip"
+			],
+			[
+				"hit",
+				"hitSunk"
+			],
+			[
+				"pr",
+				"printBoard2"
+			],
+			[
+				"ma",
+				"maxDims"
+			],
+			[
+				"new",
+				"newDimsD"
+			],
+			[
+				"max",
+				"maxArea"
+			],
+			[
+				"curr",
+				"currDims"
+			],
+			[
+				"Cu",
+				"currDims"
+			],
+			[
+				"ed",
+				"edgeD"
+			],
+			[
+				"min",
+				"minY-y1"
+			],
+			[
+				"m",
+				"maxDims"
+			],
+			[
+				"setShip",
+				"setShipManual"
+			],
+			[
+				"Chara",
+				"Character"
+			],
+			[
+				"ne",
+				"nextInt"
+			],
+			[
+				"pa",
+				"patrolBoat"
+			],
+			[
+				"king",
+				"kings_ys"
+			],
+			[
+				"kings",
+				"kings_xs"
+			],
+			[
+				"p1_",
+				"p1_xs"
+			],
+			[
+				"nea",
+				"nearby_opponent"
+			],
+			[
+				"leg",
+				"legal_checks"
+			],
+			[
+				"play",
+				"player1"
+			],
+			[
+				"pri",
+				"print_all_pieces"
+			],
+			[
+				"l",
+				"layout"
+			],
+			[
+				"y_",
+				"y_dest"
+			],
+			[
+				"p1",
+				"p1_turn"
+			],
+			[
+				"remo",
+				"remove_pc"
+			],
+			[
+				"pl",
+				"player"
+			],
+			[
+				"x",
+				"x_loc"
+			],
+			[
+				"move",
+				"move_piece"
+			],
+			[
+				"prit",
+				"print_all_squares"
+			],
+			[
+				"prin",
+				"print_all_squares"
+			],
+			[
+				"print_a",
+				"print_all_pieces"
+			],
+			[
+				"show",
+				"show_board"
+			],
+			[
+				"go",
+				"goals_kicked"
+			],
+			[
+				"goals",
+				"goals_kicked"
+			],
+			[
+				"goal",
+				"goal_freq"
+			],
+			[
+				"name",
+				"names_list"
+			],
+			[
+				"names",
+				"names_list"
+			],
+			[
+				"prom",
+				"prompt2"
+			],
+			[
+				"name_",
+				"name_check"
+			],
+			[
+				"crc",
+				"crc1"
+			],
+			[
+				"txt",
+				"txt"
+			],
+			[
+				"pdf",
+				"pdf1"
+			],
+			[
+				"csv",
+				"csv_wk2"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "epl_twitter/tweets/views.py",
+			"settings":
+			{
+				"buffer_size": 1195,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "epl_twitter/testing.py",
+			"settings":
+			{
+				"buffer_size": 465,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "epl_twitter/tweets/urls.py",
+			"settings":
+			{
+				"buffer_size": 216,
+				"line_ending": "Windows",
+				"name": "from django.conf.urls import url"
+			}
+		},
+		{
+			"file": "epl_twitter/epl_twitter/settings.py",
+			"settings":
+			{
+				"buffer_size": 2180,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "epl_twitter/home/views.py",
+			"settings":
+			{
+				"buffer_size": 977,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "epl_twitter/home/urls_about.py",
+			"settings":
+			{
+				"buffer_size": 111,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "epl_twitter/home/urls_contact.py",
+			"settings":
+			{
+				"buffer_size": 115,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "epl_twitter/epl_twitter/urls.py",
+			"settings":
+			{
+				"buffer_size": 453,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "epl_twitter/home/templates/home.html",
+			"settings":
+			{
+				"buffer_size": 931,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "epl_twitter/tweets/templates/teams.html",
+			"settings":
+			{
+				"buffer_size": 922,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "epl_twitter/tweets/templates/club.html",
+			"settings":
+			{
+				"buffer_size": 867,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "epl_twitter/home/templates/about.html",
+			"settings":
+			{
+				"buffer_size": 2262,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "epl_twitter/home/templates/contact.html",
+			"settings":
+			{
+				"buffer_size": 974,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/Python/Python.sublime-build",
+	"command_palette":
+	{
+		"height": 173.0,
+		"selected_items":
+		[
+			[
+				"ss java",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"ss css",
+				"Set Syntax: CSS"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 348.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/get_tweets.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/home/templates/home/home.html",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/home/urls_home.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/home/urls.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/tweets/templates/tweets/home.html",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/home/home/views.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/home/home/urls.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/assets/stylesheets/main.css",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/web/contact.html",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/web/about.html",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/web/home.html",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/scraping/testing.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/epl_twitter/settings.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/tweets/models.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/tweets/admin.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/tweets/get_tweets.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/scraping/get_tweets.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/epl_twitter/epl_twitter/scraping/get_tweets.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/scraping/get_tweets.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/epl twitter/scraping/testing.py",
+		"/C/Users/ataylor/Documents/Projects/games/checkers/checkers.py",
+		"/C/Users/ataylor/Documents/Projects/web apps/tutorials/style conference/index.html",
+		"/C/Users/ataylor/Documents/Projects/web apps/tutorials/style conference/assets/stylesheets/main.css",
+		"/C/Users/ataylor/Documents/Projects/web apps/tutorials/road trip/root/index.html",
+		"/C/Users/ataylor/Documents/Projects/web apps/tutorials/mysite/polls/models.pyc",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Shot.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Testing3.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/BoundedQueue.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Ship.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Player.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Square.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Testing2.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Board.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Testing.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/BattleshipGame.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/AircraftCarrier.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Queue.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Submarine.java",
+		"/C/Users/ataylor/Documents/Projects/backup/BattleshipGame.java",
+		"/C/Users/ataylor/Documents/Projects/backup/Square.java",
+		"/C/Users/ataylor/Documents/Projects/backup/Player.java",
+		"/C/Users/ataylor/Documents/Projects/backup/Board.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/PatrolBoat.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Battleship.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/BattleshipGame.class",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Destroyer.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/submarine.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Pair.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/Tuple.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/aircraftCarrier.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/ship.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/player.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/patrolBoat.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/square.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/battleship.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/patrolBoat.class",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/destroyer.java",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/testing2.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/testing.py",
+		"/C/Users/ataylor/Documents/Projects/games/battleship/battleboat.java",
+		"/C/Users/ataylor/Documents/Projects/games/battleship.java",
+		"/C/Users/ataylor/Documents/Projects/Independent/checkers.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/pandas_scraping.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/scrape_wc_data.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/meal_splitter.py",
+		"/C/Users/ataylor/Documents/R/R-3.1.1/library/yaml/R/yaml",
+		"/C/Users/ataylor/Documents/Projects/Independent/bill_splitter.R",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/ex6.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/ex7.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/ex5.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/ex4.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/ex3.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/ex2.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/ex1.py",
+		"/C/Users/ataylor/Documents/Projects/Independent/Python Challenge/ex0.py",
+		"/C/Users/ataylor/Documents/Projects/Circular Scraper/Shiny/www/passwdInputBinding.js",
+		"/C/Users/ataylor/Documents/Projects/Circular Scraper/Shiny/www/style.css",
+		"/C/Users/ataylor/Documents/Projects/Ad Data/Circular/july14_wk2.csv",
+		"/C/Users/ataylor/Documents/Projects/Ad Data/Circular/adchecker.py",
+		"/C/Users/ataylor/AppData/Roaming/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/C/Users/ataylor/AppData/Roaming/Sublime Text 2/Packages/User/Preferences.sublime-settings"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"settings mo",
+			"save",
+			"print",
+			"advance",
+			"for",
+			"log",
+			"();\n",
+			"2",
+			"mindir",
+			"moves",
+			"aaron",
+			"rand",
+			"print",
+			"random",
+			"aaron",
+			"exiting",
+			"ships",
+			"public",
+			"print",
+			"p2",
+			"square",
+			"11",
+			"owed"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"",
+			"maxDir",
+			"cpuMoves",
+			"player",
+			"fleet",
+			"private"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "epl_twitter/tweets/views.py",
+					"settings":
+					{
+						"buffer_size": 1195,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								549,
+								549
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 194.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "epl_twitter/testing.py",
+					"settings":
+					{
+						"buffer_size": 465,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								291,
+								354
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "epl_twitter/tweets/urls.py",
+					"settings":
+					{
+						"buffer_size": 216,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								93,
+								93
+							]
+						],
+						"settings":
+						{
+							"auto_name": "from django.conf.urls import url",
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "epl_twitter/epl_twitter/settings.py",
+					"settings":
+					{
+						"buffer_size": 2180,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1135,
+								1135
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 345.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "epl_twitter/home/views.py",
+					"settings":
+					{
+						"buffer_size": 977,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								773,
+								773
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 285.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "epl_twitter/home/urls_about.py",
+					"settings":
+					{
+						"buffer_size": 111,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								106,
+								106
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "epl_twitter/home/urls_contact.py",
+					"settings":
+					{
+						"buffer_size": 115,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								110,
+								110
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "epl_twitter/epl_twitter/urls.py",
+					"settings":
+					{
+						"buffer_size": 453,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								400,
+								400
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 8,
+					"file": "epl_twitter/home/templates/home.html",
+					"settings":
+					{
+						"buffer_size": 931,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								217,
+								217
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 460.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "epl_twitter/tweets/templates/teams.html",
+					"settings":
+					{
+						"buffer_size": 922,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								217,
+								217
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "epl_twitter/tweets/templates/club.html",
+					"settings":
+					{
+						"buffer_size": 867,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								805,
+								805
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 561.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "epl_twitter/home/templates/about.html",
+					"settings":
+					{
+						"buffer_size": 2262,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								203,
+								203
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "epl_twitter/home/templates/contact.html",
+					"settings":
+					{
+						"buffer_size": 974,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								194,
+								194
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.531221306797,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 82.0
+	},
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true
+}

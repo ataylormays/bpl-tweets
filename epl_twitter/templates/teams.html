@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+	<div>
+		<h3> The Teams </h3>
+
+		{% if club_names %}
+		<ul>
+			{% for club in club_names %}
+				<li>
+					<a href = "/teams/{{club.0}}/"> {{club.1}}
+					</a>
+
+				</li>
+			{% endfor %}
+		{% else %}
+			<p>No clubs available</p>
+		</ul>
+		{% endif %}
+
+	</div>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+{% block navbar%}
+
+  {% for club in club_names %}
+    <li>
+      <a href = "/teams/{{club.0}}/"> {{club.1}}</a></li>
+  {% endfor %}
+
+{% endblock %}
