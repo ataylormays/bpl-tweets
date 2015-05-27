@@ -61,6 +61,13 @@ def about(request):
 
 	return HttpResponse(template.render(context))
 
+def teams(request):
+	template = loader.get_template('teams.html')
+	context = RequestContext(request, {
+		'club_names': club_names,
+		})
+	return HttpResponse(template.render(context))
+
 def contact(request):
 	template = loader.get_template('contact.html')
 	context = RequestContext(request, {
