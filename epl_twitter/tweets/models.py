@@ -10,6 +10,7 @@ class Tweet(models.Model):
 	url = models.CharField(max_length=100)
 	hashtags = models.CharField(max_length=100)
 	is_retweet = models.BooleanField(default=False)
+	sentiment = models.CharField(max_length=10)
 
 	def __unicode__(self):
 		return self.text

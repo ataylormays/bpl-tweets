@@ -399,7 +399,7 @@
 			"file": "epl_twitter/tweets/views.py",
 			"settings":
 			{
-				"buffer_size": 1195,
+				"buffer_size": 3396,
 				"line_ending": "Unix"
 			}
 		},
@@ -415,7 +415,7 @@
 			"file": "epl_twitter/tweets/urls.py",
 			"settings":
 			{
-				"buffer_size": 216,
+				"buffer_size": 173,
 				"line_ending": "Windows",
 				"name": "from django.conf.urls import url"
 			}
@@ -424,23 +424,26 @@
 			"file": "epl_twitter/epl_twitter/settings.py",
 			"settings":
 			{
-				"buffer_size": 2180,
+				"buffer_size": 2841,
 				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "",
 			"file": "epl_twitter/home/views.py",
+			"file_size": -1,
+			"file_write_time": -1,
 			"settings":
 			{
-				"buffer_size": 977,
-				"line_ending": "Unix"
+				"buffer_size": 0,
+				"line_ending": "Windows"
 			}
 		},
 		{
 			"file": "epl_twitter/home/urls_about.py",
 			"settings":
 			{
-				"buffer_size": 111,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
@@ -448,7 +451,7 @@
 			"file": "epl_twitter/home/urls_contact.py",
 			"settings":
 			{
-				"buffer_size": 115,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
@@ -456,31 +459,48 @@
 			"file": "epl_twitter/epl_twitter/urls.py",
 			"settings":
 			{
-				"buffer_size": 453,
+				"buffer_size": 668,
 				"line_ending": "Unix"
 			}
 		},
 		{
+			"contents": "",
 			"file": "epl_twitter/home/templates/home.html",
+			"file_size": -1,
+			"file_write_time": -1,
 			"settings":
 			{
-				"buffer_size": 931,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
 		{
+			"file": "epl_twitter/tweets/urls_home.py",
+			"settings":
+			{
+				"buffer_size": 109,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"contents": "",
 			"file": "epl_twitter/tweets/templates/teams.html",
+			"file_size": -1,
+			"file_write_time": -1,
 			"settings":
 			{
-				"buffer_size": 922,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
 		{
+			"contents": "",
 			"file": "epl_twitter/tweets/templates/club.html",
+			"file_size": -1,
+			"file_write_time": -1,
 			"settings":
 			{
-				"buffer_size": 867,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
@@ -488,7 +508,7 @@
 			"file": "epl_twitter/home/templates/about.html",
 			"settings":
 			{
-				"buffer_size": 2262,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		},
@@ -496,7 +516,7 @@
 			"file": "epl_twitter/home/templates/contact.html",
 			"settings":
 			{
-				"buffer_size": 974,
+				"buffer_size": 0,
 				"line_ending": "Windows"
 			}
 		}
@@ -677,7 +697,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 10,
 			"sheets":
 			[
 				{
@@ -685,20 +705,21 @@
 					"file": "epl_twitter/tweets/views.py",
 					"settings":
 					{
-						"buffer_size": 1195,
+						"buffer_size": 3396,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								549,
-								549
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
 						"translation.y": 194.0,
@@ -737,15 +758,15 @@
 					"file": "epl_twitter/tweets/urls.py",
 					"settings":
 					{
-						"buffer_size": 216,
+						"buffer_size": 173,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								93,
-								93
+								0,
+								0
 							]
 						],
 						"settings":
@@ -764,15 +785,15 @@
 					"file": "epl_twitter/epl_twitter/settings.py",
 					"settings":
 					{
-						"buffer_size": 2180,
+						"buffer_size": 2841,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1135,
-								1135
+								0,
+								0
 							]
 						],
 						"settings":
@@ -792,15 +813,15 @@
 					"file": "epl_twitter/home/views.py",
 					"settings":
 					{
-						"buffer_size": 977,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								773,
-								773
+								0,
+								0
 							]
 						],
 						"settings":
@@ -808,7 +829,7 @@
 							"syntax": "Packages/Python/Python.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 285.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -818,15 +839,15 @@
 					"file": "epl_twitter/home/urls_about.py",
 					"settings":
 					{
-						"buffer_size": 111,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								106,
-								106
+								0,
+								0
 							]
 						],
 						"settings":
@@ -844,15 +865,15 @@
 					"file": "epl_twitter/home/urls_contact.py",
 					"settings":
 					{
-						"buffer_size": 115,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								110,
-								110
+								0,
+								0
 							]
 						],
 						"settings":
@@ -870,15 +891,15 @@
 					"file": "epl_twitter/epl_twitter/urls.py",
 					"settings":
 					{
-						"buffer_size": 453,
+						"buffer_size": 668,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								400,
-								400
+								0,
+								0
 							]
 						],
 						"settings":
@@ -890,54 +911,21 @@
 						"zoom_level": 1.0
 					},
 					"type": "text"
-				}
-			]
-		},
-		{
-			"selected": 2,
-			"sheets":
-			[
+				},
 				{
 					"buffer": 8,
 					"file": "epl_twitter/home/templates/home.html",
 					"settings":
 					{
-						"buffer_size": 931,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								217,
-								217
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/HTML/HTML.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 460.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 9,
-					"file": "epl_twitter/tweets/templates/teams.html",
-					"settings":
-					{
-						"buffer_size": 922,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								217,
-								217
+								0,
+								0
 							]
 						],
 						"settings":
@@ -952,19 +940,45 @@
 					"type": "text"
 				},
 				{
-					"buffer": 10,
-					"file": "epl_twitter/tweets/templates/club.html",
+					"buffer": 9,
+					"file": "epl_twitter/tweets/urls_home.py",
 					"settings":
 					{
-						"buffer_size": 867,
+						"buffer_size": 109,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								805,
-								805
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "epl_twitter/tweets/templates/teams.html",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -973,25 +987,25 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 561.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 11,
-					"file": "epl_twitter/home/templates/about.html",
+					"file": "epl_twitter/tweets/templates/club.html",
 					"settings":
 					{
-						"buffer_size": 2262,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								203,
-								203
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1007,18 +1021,45 @@
 				},
 				{
 					"buffer": 12,
-					"file": "epl_twitter/home/templates/contact.html",
+					"file": "epl_twitter/home/templates/about.html",
 					"settings":
 					{
-						"buffer_size": 974,
+						"buffer_size": 0,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								194,
-								194
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "epl_twitter/home/templates/contact.html",
+					"settings":
+					{
+						"buffer_size": 0,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
 							]
 						],
 						"settings":
@@ -1052,18 +1093,11 @@
 				0,
 				1,
 				1
-			],
-			[
-				1,
-				0,
-				2,
-				1
 			]
 		],
 		"cols":
 		[
 			0.0,
-			0.531221306797,
 			1.0
 		],
 		"rows":

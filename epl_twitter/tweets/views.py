@@ -7,6 +7,8 @@ from forms import DatesForm
 import datetime
 import time
 
+#create club_names variable
+#list of tuples, eg ("manchester_united", "Manchester United")
 main_dir = "C:/Users/ataylor/Documents/Projects/web apps/epl twitter"
 clubs_file_nm = main_dir + "/data/twitter_clubs.csv"
 with open(clubs_file_nm) as clubs_file:
