@@ -5,7 +5,8 @@ import time
 from django.conf import settings
 import os
 
-LAST_FINISH = 935
+# last run: 6/13/15, 11:17 AM
+LAST_FINISH = 3129
 LIMIT = 1000
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "epl_twitter.settings")
@@ -41,17 +42,17 @@ def analyze_text(text):
 
 tweets = Tweet.objects.all()[LAST_FINISH:LIMIT+LAST_FINISH]
 index = LAST_FINISH
-# t = Tweet.objects.all()[10] 
-# print t.team, t.sentiment, t.tweet_id
+num_hits = 0
 
 start = time.time()
 for t in tweets:
 	#only allowed 60 API hits / minute
 	#sleep if greater
-	if(time.time() - start > 59):
+	if(time.time() - start > 59 or num_hits > 59):
 		print "Sleeping....."
-		time.sleep(5)
+		time.sleep(60)
 		start = time.time()
+		num_hits = 0
 
 	#convert unicode crap	
 	if u"\u2019" in t.text:
@@ -65,10 +66,11 @@ for t in tweets:
 	if u"\u2026" in t.text:
 		t.text = t.text.replace(u"\u2026", '...')
 
-	#hit api on tweets and analyze text
+	# hit api on tweets and analyze text
 	sentiment = analyze_text(t.text.encode("utf-8"))
 	t.sentiment = sentiment['polarity']
 	t.save()
  	print t.team, t.sentiment, index
  	index += 1
+ 	num_hits += 1
 

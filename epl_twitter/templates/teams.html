@@ -1,12 +1,28 @@
 {% extends "base.html" %}
 
+<!-- {% block extrahead %}
+	
+	<style>
+
+	div.scroll {
+    width: 100%;
+    height: 200px;
+    overflow: scroll;
+	}
+
+
+	</style>
+
+{% endblock %} -->
+
+
 {% block content %}
 
 	<div style="height=40px">
 		<h3> The Teams </h3>
 
 		{% if club_names %}
-		<div style="overflow-y:scroll">
+		<div class="scroll">
 		<ul>
 			{% for club in club_names %}
 				<li>
