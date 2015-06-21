@@ -41,7 +41,7 @@
 			</ul>
 			<p>Here is how the sentiment about {{club_nm}} has changed over time:</p>
 			<ul>
-			{% for date, sents in perc_sent %}
+			{% for date, sents in sent_percs %}
 				<li> {{date}}: {{sents.0}}% positive, {{sents.1}}% neutral, {{sents.2}}% negative</li>
 			{% endfor %}
 			</ul>

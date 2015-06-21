@@ -6,7 +6,7 @@ from django.conf import settings
 import os
 
 # last run: 6/13/15, 11:17 AM
-LAST_FINISH = 5865
+LAST_FINISH = 5908
 LIMIT = 1000
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "epl_twitter.settings")

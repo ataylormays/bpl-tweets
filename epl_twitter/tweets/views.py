@@ -21,10 +21,6 @@ with open(clubs_file_nm) as clubs_file:
 	for row in clubs:
 		club_names.extend([(row[0].replace(' ', '_').lower(), row[0])])
 
-def extract_date(dt):
-	# 2015-05-17 12:11:00 -> 2015-05-17
-	return dt[:10]
-
 def count_elts(numbers, limit):
 	output = {}
 	for n in numbers:
@@ -57,35 +53,43 @@ def create_date_dict(dt1, dt2):
 		d[formatted_dt] = i
 		dt1 += datetime.timedelta(days=1)
 		i += 1
-	return L
+	return d
 
 def count_sentiments(tweets, dt1, dt2):
 	sents = create_sent_list(dt1, dt2)
 	dates = create_date_dict(dt1, dt2)
 	for t in tweets:
 		formatted_dt = t.created.strftime("%Y-%m-%d")
+		index = dates[formatted_dt]
 		if t.sentiment == 'positive':
-			sents[dates[formatted_dt]][1][0] += 1
+			sents[index][1][0] += 1
 		elif t.sentiment == 'neutral':
-			sents[dates[formatted_dt]][1][1] += 1
+			sents[index][1][1] += 1
 		else:
-			sents[dates[formatted_dt]][1][2] += 1
+			sents[index][1][2] += 1
 	return sents
 
 # compute percentages of each sentiment
-# returns dict with d[date] = [% pos, % neut, % neg]
-def sentiment_to_perc(sent_dict):
-	d = {}
-	for date in sent_dict.keys():
-		sent_total = float(sum(sent_dict[date]))
+# creates sorted list between two dates with placeholders for counts of sentiment
+# sentiment: [% pos, % neut, % neg]
+# returns list L where elt of L: [date, sentiment] eg [date, [% pos, % neut, % neg]]
+def sentiment_percs(dt1, dt2):
+	L = []
+	sent_list = create_sent_list(dt1, dt2)
+	date_list = [elt[0] for elt in sent_list]
+	date_dict = create_date_dict(dt1, dt2)
+	for date in date_list:
+		index = date_dict[date]
+		sent_total = float(sum(sent_list[index][1]))
 		print date, sent_total
 		if sent_total == 0:
-			d[date] = [0, 0, 0]
+			L.append([date, [0, 0, 0]])
 		else:
-			d[date] = [round(100*sent_dict[date][0]/sent_total, 2),
-						round(100*sent_dict[date][1]/sent_total, 2),
-						round(100*sent_dict[date][2]/sent_total, 2)]
-	return sorted(d.items(), key=lambda x:-1*x[1])
+			sentiments = sent_list[index][1]
+			L.append([date, [round(100*sentiments[0]/sent_total, 2),
+								round(100*sentiments[1]/sent_total, 2),
+								round(100*sentiments[2]/sent_total, 2)]])
+	return L
 
 def home(request):
 
@@ -166,8 +170,7 @@ def club(request, club_nm):
 			have_data = False
 
 		sentiment_tweets = Tweet.objects.filter(team=club_nm).filter(created__gte=dt1).filter(created__lt=dt2)
-		sentiment_dict = count_sentiments(sentiment_tweets, dt1, dt2)
-		perc_sent = sentiment_to_perc(sentiment_dict)
+		sent_percs = sentiment_percs(dt1, dt2)
 
 		context = RequestContext(request, {
 			'have_dates': have_dates,
@@ -178,7 +181,7 @@ def club(request, club_nm):
 			'club_names': club_names,
 			'dates_form': form,
 			'popular_tweets': output_popular,
-			'perc_sent': perc_sent,
+			'sent_percs': sent_percs,
 		})
 	else:
 		context = RequestContext(request, {
