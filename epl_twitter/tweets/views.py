@@ -73,9 +73,8 @@ def count_sentiments(tweets, dt1, dt2):
 # creates sorted list between two dates with placeholders for counts of sentiment
 # sentiment: [% pos, % neut, % neg]
 # returns list L where elt of L: [date, sentiment] eg [date, [% pos, % neut, % neg]]
-def sentiment_percs(dt1, dt2):
+def sentiment_percs(dt1, dt2, sent_list):
 	L = []
-	sent_list = create_sent_list(dt1, dt2)
 	date_list = [elt[0] for elt in sent_list]
 	date_dict = create_date_dict(dt1, dt2)
 	for date in date_list:
@@ -170,7 +169,8 @@ def club(request, club_nm):
 			have_data = False
 
 		sentiment_tweets = Tweet.objects.filter(team=club_nm).filter(created__gte=dt1).filter(created__lt=dt2)
-		sent_percs = sentiment_percs(dt1, dt2)
+		sent_list = count_sentiments(sentiment_tweets, dt1, dt2)
+		sent_percs = sentiment_percs(dt1, dt2, sent_list)
 
 		context = RequestContext(request, {
 			'have_dates': have_dates,

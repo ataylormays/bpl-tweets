@@ -1,0 +1,119 @@
+from tweepy import StreamListener
+from tweepy import API
+import json, time, sys, os, json
+
+class SListener(StreamListener):
+
+
+    def __init__(self, team1, team2, users = [], api = None, fprefix = 'streamer', write_limit = 5, total_limit = 3,
+            directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))):
+        self.api = api or API()
+        self.time = time.time()
+        self.start_time = time.time()
+        self.write_limit = write_limit
+        self.total_limit = total_limit
+        self.team1 = team1
+        self.team2 = team2
+        self.users = users
+        self.t1_counter = 0
+        self.t2_counter = 0
+        self.fprefix = directory + '/data/streaming_data/' + fprefix + '_' +  team1 + '_' + team2
+        self.data_output  = open(self.fprefix + '.' 
+                            + time.strftime('%Y-%m-%d_%H-%M-%S') + '.txt', 'w')
+        self.id_output  = open(self.fprefix + '_ids.txt', 'w')
+        self.user_output = open(self.fprefix + '_users.txt', 'w')
+        
+        self.delout  = open('delete.txt', 'a')
+
+    def on_data(self, data):
+        print 'found data'
+
+        if  'in_reply_to_status' in data:
+            print 'heading to on_status'
+            if self.on_status(data) is False:
+                return False
+        elif 'delete' in data:
+            delete = json.loads(data)['delete']['status']
+            if self.on_delete(delete['id'], delete['user_id']) is False:
+                return False
+        elif 'limit' in data:
+            if self.on_limit(json.loads(data)['limit']['track']) is False:
+                return False
+        elif 'warning' in data:
+            warning = json.loads(data)['warnings']
+            print warning['message']
+            return false
+
+    def on_status(self, status):
+        tweet = json.loads(status)
+
+        if self.users:
+            # if tweet is from VIP user
+            if tweet["user"]["id_str"] in self.users:
+                if ( self.team1.lower() in tweet['text'].lower() 
+                    or self.team2.lower() in tweet['text'].lower() ):
+                    #write tweet id to user file
+                    self.user_output.write(tweet["id_str"] + ', ')
+            else:
+                if time.time() - self.start_time > self.total_limit:
+                    print "over time limit"
+                    self.data_output.close()
+                    return False
+                print tweet["id_str"]
+                print status
+                return True
+
+                self.id_output.write(tweet["id_str"] + ', ')
+
+                print "\n\n"
+                print "in on_status"
+                print status
+                print self.team1
+                print self.team2
+
+                if time.time() - self.time > self.write_limit:
+                    print "inside first if"
+                    print "time diff is ", str(time.time() - self.time)
+                    self.data_output.write(str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ',\n')
+                    self.t1_counter = 0
+                    self.t2_counter = 0
+                    self.time = time.time()
+
+                if time.time() - self.start_time > self.total_limit:
+                    print "inside second if"
+                    self.data_output.close()
+                    return False
+
+                if self.team1.lower() in tweet['text'].lower():
+                    self.t1_counter += 1
+                    print "incrementing t1_counter"
+                if self.team2.lower() in tweet['text'].lower():
+                    print "incrementing t2_counter"
+                    self.t2_counter += 1
+
+                print "exiting on_status successfully"
+                return True 
+        else:
+            print "No user specified"
+            return False           
+
+    def on_delete(self, status_id, user_id):
+        print "in on_delete"
+        self.delout.write( str(status_id) + "\n")
+        return
+
+    def on_limit(self, track):
+        print "in on_limit"
+        sys.stderr.write(track + "\n")
+        return
+
+    def on_error(self, status_code):
+        print "in on_error"
+        sys.stderr.write('Error: ' + str(status_code) + "\n")
+        return False
+
+    def on_timeout(self):
+        print "in on_timeout"
+        sys.stderr.write("Timeout, sleeping for 60 seconds...\n")
+        time.sleep(60)
+        return

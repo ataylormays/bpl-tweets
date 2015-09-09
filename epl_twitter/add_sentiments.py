@@ -23,10 +23,9 @@ settings.configure(
 import django
 from tweets.models import Tweet
 
-APPLICATION_ID = "153f80e3"
-APPLICATION_KEY = "6a42b8f2c379f7642e4a8f0dcacb753e"
-
 def analyze_text(text):
+	APPLICATION_ID = "153f80e3"
+	APPLICATION_KEY = "6a42b8f2c379f7642e4a8f0dcacb753e"
 	parameters = {"text": text}
   	url = 'https://api.aylien.com/api/v1/sentiment'
   	headers = {

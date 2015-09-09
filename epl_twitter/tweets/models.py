@@ -1,6 +1,10 @@
 from django.db import models
 
 class Tweet(models.Model):
+	
+	class Meta:
+		managed = True
+
 	created = models.DateTimeField()
 	team = models.CharField(max_length=30)
 	favorites = models.IntegerField(default=0)

@@ -1,12 +1,13 @@
 import oauth2
 import time
+import urllib
 import urllib2
 import json
 import csv
 from django.conf import settings
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "epl_twitter.settings")
 settings.configure(
 	DATABASES = {
@@ -20,9 +21,11 @@ settings.configure(
 import django
 from tweets.models import Tweet
 
-main_dir = "C:/Users/ataylor/Documents/Projects/web apps/epl twitter"
+clubs_file_nm = os.path.join(BASE_DIR, "data/twitter_clubs.csv")
 
-clubs_file_nm = main_dir + "/data/twitter_clubs.csv"
+print os.path.dirname(os.path.abspath(__file__))
+print BASE_DIR
+print clubs_file_nm
 
 REFRESH_TIME = 45 * 60
 
@@ -58,7 +61,7 @@ def extract_hashtags(twitter_object):
 		return h_tags	
 
 def update_since_id_file(club_nm, since_id):
-	club_file_nm = main_dir + "/data/" + club_nm.lower().replace(" ", "_") + "_since_id.txt"
+	club_file_nm = os.path.join(BASE_DIR, "data/since_ids/" + club_nm.lower().replace(" ", "_") + "_since_id.txt")
 	old_id = ""
 	if os.path.exists(club_file_nm):
 		with open(club_file_nm, 'r+') as f:
@@ -115,12 +118,13 @@ def build_tweet_url(username, msg_id):
 api_params = [{}]
 consumers = []
 tokens = []
+
 def build_params():
 	global consumers
 	global tokens
 	global api_params
 
-	secret_file = main_dir + "/data/secrets.csv"
+	secret_file = os.path.join(BASE_DIR, "data/secrets.csv")
 
 	with open(secret_file, 'r+') as f:
 		rows = csv.reader(f)
@@ -138,6 +142,22 @@ def build_params():
 		"oauth_token": token.key
 	} for consumer, token in zip(consumers, tokens)]
 
+def analyze_text(text):
+	APPLICATION_ID = "153f80e3"
+	APPLICATION_KEY = "6a42b8f2c379f7642e4a8f0dcacb753e"
+	parameters = {"text": text}
+  	url = 'https://api.aylien.com/api/v1/sentiment'
+  	headers = {
+	    "Accept":                             "application/json",
+	    "Content-type":                       "application/x-www-form-urlencoded",
+	    "X-AYLIEN-TextAPI-Application-ID":    APPLICATION_ID,
+	    "X-AYLIEN-TextAPI-Application-Key":   APPLICATION_KEY
+  	}
+  	opener = urllib2.build_opener()
+	request = urllib2.Request(url, urllib.urlencode(parameters), headers)
+	response = opener.open(request);
+	return json.loads(response.read())
+
 def query_twitter_api(query, count=1, since_id="", max_id="", result_type="", index=0):
 	params = api_params[index]
 	url = resource_url
@@ -153,7 +173,6 @@ def query_twitter_api(query, count=1, since_id="", max_id="", result_type="", in
 	url = req.to_url()
 	response = urllib2.Request(url)
 	return json.load(urllib2.urlopen(response))
-
 
 def get_top_id(query):
 	data = query_twitter_api(query)
@@ -182,7 +201,8 @@ def get_historic_tweets(club_nm):
 			build_params()
 
 		start = time.time()
-		data = query_twitter_api(query, count=100, max_id=prev_id, since_id=last_id, index=index, result_type="popular")
+		data = query_twitter_api(query, count=100, max_id=prev_id, 
+			since_id=last_id, index=index, result_type="popular")
 		if data["statuses"] == []:
 			print "end of data"
 			advance = False
@@ -202,7 +222,13 @@ def get_historic_tweets(club_nm):
 				h_tags = extract_hashtags(status["entities"]["hashtags"])
 				is_rt = True if "retweeted_status" in status.keys() else False
 				url = build_tweet_url(status["user"]["screen_name"], id_str)
-				t = Tweet(created=c, url=url, team=club_nm, favorites=f_ct, tweet_id=id_str, retweets=rt_ct, text=txt,hashtags=h_tags, is_retweet=is_rt)
+				# hit Aylien API to analyze text
+				sentiment = analyze_text(txt)
+				# if sentiment["polarity_confidence"] < .8:
+				# 	continue
+				sent = sentiment['polarity']
+				t = Tweet(created=c, url=url, team=club_nm, favorites=f_ct, tweet_id=id_str, retweets=rt_ct, text=txt,hashtags=h_tags, is_retweet=is_rt, sentiment=sent)
+				print t
 				t.save()
 			end = time.time()
 			print i, end-start
