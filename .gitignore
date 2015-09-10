@@ -1,2 +1,4 @@
 data.secrets.csv
 *.pyc
+*~
+.DS_STORE
