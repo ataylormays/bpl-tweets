@@ -5,7 +5,7 @@ import json, time, sys, os, json
 class SListener(StreamListener):
 
 
-    def __init__(self, team1, team2, users = [], api = None, fprefix = 'streamer', write_limit = 5, total_limit = 3,
+    def __init__(self, team1, team2, users = [], api = None, fprefix = 'streamer', write_limit = 8, total_limit = 30,
             directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))):
         self.api = api or API()
         self.time = time.time()
@@ -45,57 +45,50 @@ class SListener(StreamListener):
             return false
 
     def on_status(self, status):
+        if time.time() - self.start_time > self.total_limit:
+            print "over time limit"
+            self.data_output.close()
+            self.user_output.close()
+            self.id_output.close()
+            return False
+
         tweet = json.loads(status)
 
-        if self.users:
-            # if tweet is from VIP user
-            if tweet["user"]["id_str"] in self.users:
-                if ( self.team1.lower() in tweet['text'].lower() 
-                    or self.team2.lower() in tweet['text'].lower() ):
-                    #write tweet id to user file
-                    self.user_output.write(tweet["id_str"] + ', ')
-            else:
-                if time.time() - self.start_time > self.total_limit:
-                    print "over time limit"
-                    self.data_output.close()
-                    return False
-                print tweet["id_str"]
-                print status
-                return True
+        # if tweet is from VIP user about team 1 or team 2
+        if ( tweet["user"]["id_str"] in self.users 
+            and ( self.team1.lower() in tweet['text'].lower() 
+                or self.team2.lower() in tweet['text'].lower() )):
+                #write tweet id to user file
+                self.user_output.write(tweet["id_str"] + ', ')
+        
+        print tweet["id_str"]
+        print status
 
-                self.id_output.write(tweet["id_str"] + ', ')
+        self.id_output.write(tweet["id_str"] + ', ')
 
-                print "\n\n"
-                print "in on_status"
-                print status
-                print self.team1
-                print self.team2
+        print "\n\n"
+        print "in on_status"
+        print status
+        print self.team1
+        print self.team2
 
-                if time.time() - self.time > self.write_limit:
-                    print "inside first if"
-                    print "time diff is ", str(time.time() - self.time)
-                    self.data_output.write(str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ',\n')
-                    self.t1_counter = 0
-                    self.t2_counter = 0
-                    self.time = time.time()
+        if time.time() - self.time > self.write_limit:
+            print "inside first if"
+            print "time diff is ", str(time.time() - self.time)
+            self.data_output.write(str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ',\n')
+            self.t1_counter = 0
+            self.t2_counter = 0
+            self.time = time.time()
 
-                if time.time() - self.start_time > self.total_limit:
-                    print "inside second if"
-                    self.data_output.close()
-                    return False
+        if self.team1.lower() in tweet['text'].lower():
+            self.t1_counter += 1
+            print "incrementing t1_counter"
+        if self.team2.lower() in tweet['text'].lower():
+            print "incrementing t2_counter"
+            self.t2_counter += 1
 
-                if self.team1.lower() in tweet['text'].lower():
-                    self.t1_counter += 1
-                    print "incrementing t1_counter"
-                if self.team2.lower() in tweet['text'].lower():
-                    print "incrementing t2_counter"
-                    self.t2_counter += 1
-
-                print "exiting on_status successfully"
-                return True 
-        else:
-            print "No user specified"
-            return False           
+        print "exiting on_status successfully"
+        return True            
 
     def on_delete(self, status_id, user_id):
         print "in on_delete"
