@@ -1,9 +1,14 @@
 from bs4 import BeautifulSoup
 import requests
-import os
+import os, sys
 import datetime
+import csv
 
-def get_match_data(url, dest, weeks=1):
+path = os.path.abspath(os.path.join('..', '..', 'resources'))
+sys.path.append(path)
+import constants
+
+def scrape_match_data(url, dest, weeks=1):
 	r = requests.get(url)
 
 	soup = BeautifulSoup(r.content)
@@ -39,23 +44,24 @@ def get_match_data(url, dest, weeks=1):
 				away = elt.find_all('td', {"class":"shsNamD"})[2].text
 				matches += [[date, time, home, away]]
 
-	with open(dest + 'matches_' + datetime.datetime.now().strftime("%m-%d-%Y") + '.txt', 'a') as f:
-		for m in matches:
-			for index, field in enumerate(m):
-				# if index == len(m):
-				# 	f.write(field)
-				# else:
-				f.write(field + ", ")
-			f.write("\n")
+	with open(dest + 'matches_' + datetime.datetime.now().strftime("%m-%d-%Y") + '.csv', 'a') as f:
+		csv.writer(f, delimiter=",").writerows(matches)
+		# for m in matches:
+		# 	for index, field in enumerate(m):
+		# 		# if index == len(m):
+		# 		# 	f.write(field)
+		# 		# else:
+		# 		f.write(field + ", ")
+		# 	f.write("\n")
 	
 if __name__ == '__main__':
-	BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+	# print constants.MATCHES_DIR
 	month = datetime.datetime.now().month
 	if month in [6, 7]:
-		print "it's June dum dum, there's no football happening"
-		exit()
+		print "it's summer dum dum, there's no football happening"
+		sys.exit()
 	url = "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month)
-	get_match_data(url, os.path.join(BASE_DIR, '/data/matches/'))
+	scrape_match_data(url, constants.MATCHES_DIR)
 
 
 
