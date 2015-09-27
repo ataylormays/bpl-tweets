@@ -1,17 +1,29 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import RequestContext, loader
+from django.utils.module_loading import import_string
 from .models import Tweet
 import csv
 from forms import DatesForm
 import datetime
 import time
-import os
+import os, sys
 
-#create club_names variable
-#list of tuples, eg ("manchester_united", "Manchester United")
-MAIN_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-clubs_file_nm = os.path.join(MAIN_DIR, "data/twitter_clubs.csv")
+path = os.path.abspath(os.path.join('..', 'resources'))
+sys.path.append(path)
+
+try:
+	import constants
+except ImportError, e:
+	print 'sys_path: ', sys.path
+	constants = __import__('constants')
+	print 'constants: %r' % constants
+	try:
+		print 'constants is at %s (%s)' % (constants.__file__, constants.__path__)
+	except Exception, e:
+		print 'Cannot give details on constants (%s)' % e
+
+clubs_file_nm = os.path.join(constants.DATA_DIR, "twitter_clubs.csv")
 
 with open(clubs_file_nm) as clubs_file:
 	club_names = []
@@ -98,11 +110,11 @@ def home(request):
 	last_wk = datetime.datetime.strptime(today, "%Y-%m-%d")-datetime.timedelta(days=7)
 
 	recent_tweets = Tweet.objects.filter(created__gt=last_wk).filter(created__lte=today)
-	hashtags = [h for tweet in recent_tweets for h in tweet.hashtags.split(", ")]
+	hashtags = [h for tweet in recent_tweets for h in tweet.hashtags.split(", ") if h != ""]
 
 	# remove occurences of empty strings
 
-	hashtags = [h for h in hashtags if h != ""]
+	# hashtags = [h for h in hashtags if h != ""]
 
 	popular_hashtags = [(count, elt[0], elt[1]) for count, elt in enumerate(count_elts(hashtags, 20), 1)]
 	
@@ -141,6 +153,15 @@ def contact(request):
 
 	return HttpResponse(template.render(context))
 
+def live(request, team1, team2, date):
+	template = loader.get_template('live.html')
+	context = RequestContext(request, {
+		'club_names': club_names,
+		'team1': team1,
+		'team2': team2,
+		'date': date,
+		})
+	return HttpResponse(template.render(context))
 
 def club(request, club_nm):
 	#capitalize club name

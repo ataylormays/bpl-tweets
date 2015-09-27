@@ -15,4 +15,5 @@ urlpatterns = [
     url(r'^about/', include('tweets.urls_about')),
     url(r'^contact/', include('tweets.urls_contact')),
     url(r'^teams/', include('tweets.urls')),
+    url(r'^live/', include('tweets.urls_live')),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
