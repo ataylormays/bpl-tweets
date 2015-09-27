@@ -26,6 +26,7 @@ DATA_DIR = os.path.join(BASE_DIR, "data/")
 SECRETS_DIR = os.path.join(DATA_DIR, "secrets/")
 SINCE_DIR = os.path.join(DATA_DIR, "since_ids/")
 POPULARITY_DIR = os.path.join(DATA_DIR, "popularity/")
+MATCHES_DIR = os.path.join(DATA_DIR, "matches/")
 
 # files
 PARAMS_FILE = os.path.join(SECRETS_DIR, "params.json")
