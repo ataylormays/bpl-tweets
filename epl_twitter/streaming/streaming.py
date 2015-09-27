@@ -39,5 +39,6 @@ if __name__ == '__main__':
     users = ["OptaJoe"]
     users_ids = [user.id_str for user in [api.get_user(screen_name) for screen_name in users]]
     teams = [home, away]
+    teams = [team.lower().replace(' ', '_') for team in teams]
     start(teams = teams, users = users_ids)
 
