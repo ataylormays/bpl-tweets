@@ -1,4 +1,5 @@
 data.secrets.*
+data.popularity.*
 *.pyc
 *~
 .DS_STORE
