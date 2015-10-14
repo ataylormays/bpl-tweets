@@ -157,11 +157,22 @@ def live(request, team1, team2, date):
 	template = loader.get_template('live.html')
 	context = RequestContext(request, {
 		'club_names': club_names,
-		'team1': team1,
-		'team2': team2,
+		'team1': team1.title().replace('_', ' '),
+		'team2': team2.title().replace('_', ' '),
 		'date': date,
 		})
 	return HttpResponse(template.render(context))
+
+def archive(request, team1, team2, date):
+	template = loader.get_template('archive.html')
+	context = RequestContext(request, {
+		'club_names': club_names,
+		'team1': team1.title().replace('_', ' '),
+		'team2': team2.title().replace('_', ' '),
+		'date': date,
+		})
+	return HttpResponse(template.render(context))
+
 
 def club(request, club_nm):
 	#capitalize club name
