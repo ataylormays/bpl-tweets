@@ -1,0 +1,49 @@
+div.tweet {
+    display: inline-block;
+    width: 250px;
+    position: relative;
+    margin: auto;
+}
+
+div.bar {
+    display: inline-block;
+    width: 20px;
+    height: 75px;
+    background-color: teal;
+}
+
+div.scrollable {
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+div.side {
+    position: relative;
+    display: inline-block;
+    width:300px;
+    height: 400px;
+    text-align: center;
+}
+
+div#bottom {
+    display: inline-block;
+    position: relative;
+    width: 800px;
+    height: 200px;
+}
+
+div#graph {
+    display: inline-block;
+    position: relative;
+    width: 600px;
+    height: 400px;
+}
+
+div#wrapper {
+    padding: 20px;
+    background-color: white;
+    margin: 0 auto;
+    width: 1300px;
+    display: block;
+    text-align: center;
+}
