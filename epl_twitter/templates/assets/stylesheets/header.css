@@ -1,0 +1,120 @@
+body {
+	margin: 0;
+}
+
+header div {
+	background-color: #1E266B;
+	color: rgba(89, 173, 235, 1);
+	font-family: "Trebuchet MS";
+	font-size: 26px;
+	height: 100px;
+	width: 50%;
+	margin: 0;
+	border: 0;
+	padding: 0;
+	float: left;
+}
+
+div.header-left {
+	position: relative;
+}
+
+
+header a.logo {
+	top: 10%;
+	height: 80%;
+	width: 50%;
+	bottom: 10%;
+	margin: 0;
+	margin-left: 20px;
+	position: absolute;
+}
+
+header a img {
+	height: 80px;
+	width: 80px;
+	position: absolute;
+	vertical-align: middle;
+	margin-left: 240px;
+
+	-webkit-transition: 500ms ease;
+  	-moz-transition: 500ms ease;
+ 	-o-transition: 500ms ease;
+  	transition: 500ms ease;
+}
+
+header a:hover img.top-img {
+	opacity: 0;
+}
+
+header a {
+	color: rgba(89, 173, 235, 1);
+	text-decoration: none;
+
+	-webkit-transition: 500ms ease;
+	-moz-transition: 500ms ease;
+	-ms-transition: 500ms ease;
+	-o-transition: 500ms ease;
+	transition: 500ms ease; 
+}
+
+header a h2 {
+	margin: 0;
+	padding-left: 15px;
+	padding-top: 5px;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 10%;
+	bottom: 10%;
+
+}
+
+header a:hover{
+	color: rgba(255, 255, 255, 1);
+}
+
+.header-left {
+	text-align: center left;
+}
+
+
+div.header-right {
+	text-align: center right;
+	font-size: 18px;
+	position: relative;
+}
+
+header ul {
+	top: 39%;
+	height: 22%;
+	width: 100%;
+	bottom: 39%;
+	margin: 0;
+	position: absolute;
+	-webkit-padding-start: 25%;
+}
+
+header ul li {
+	vertical-align: middle;
+	margin-right: 4%;
+	letter-spacing: 1px;
+	list-style-type: none;
+	display: inline;
+}
+
+/*fade in underline and color*/
+header ul li a {
+	border-bottom: 1px solid rgba(255, 255, 255, 0);
+
+	-webkit-transition: 500ms ease;
+	-moz-transition: 500ms ease;
+	-ms-transition: 500ms ease;
+	-o-transition: 500ms ease;
+	transition: 500ms ease; 
+}
+
+header ul li a:hover{
+	color: rgba(255, 255, 255, 1);
+	border-bottom: 1px solid rgba(255, 255, 255, 1);
+}
