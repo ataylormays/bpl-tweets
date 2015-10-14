@@ -7,6 +7,12 @@
     <link rel="stylesheet" type="text/css" href={% static "main.css" %}>
     <!-- header specific CSS -->
     <link rel="stylesheet" type="text/css" href={% static "header.css" %}>
+    <link rel="stylesheet" type="text/css" href={% static "demo.css" %}>
+
+    <script type="text/javascript" src="{% static "d3.v3.js" %}"></script>
+    <script type="text/javascript" src="{% static "widgets.js" %}"></script>
+    <script type="text/javascript" src="{% static "test.js" %}"></script>
+    <script type="text/javascript" src="{% static "jquery-2.1.4.min.js" %}"></script>
     <!-- Extra page specific formatting -->
     {% block extrahead%}
     {% endblock %}
@@ -22,7 +28,6 @@
           
         </a>  
       </div>
-
       <div class="header-right">
         <ul>
           <li><a href="/matches/">Matches</a></li>
@@ -31,7 +36,6 @@
           <li><a href="/archive/">Archive</a></li>
         </ul>
       </div>
-
     </header>
 
     <div id="content-container">

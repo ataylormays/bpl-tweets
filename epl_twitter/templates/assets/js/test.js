@@ -311,7 +311,7 @@ function loadArsenalTweets() {
 	    document.getElementById('container'),
 	    {
 		cards: 'hidden',
-		theme: 'dark',
+		//theme: 'dark',
 		width: 250
 	    });
     }

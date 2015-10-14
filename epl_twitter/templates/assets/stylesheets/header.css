@@ -1,5 +1,10 @@
 body {
 	margin: 0;
+	position: relative;
+}
+
+header {
+	overflow: hidden;
 }
 
 header div {
@@ -13,6 +18,7 @@ header div {
 	border: 0;
 	padding: 0;
 	float: left;
+	display: block;
 }
 
 div.header-left {
