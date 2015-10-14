@@ -3,6 +3,8 @@
 <!DOCTYPE html>
 <html>
   <head>
+
+    <link rel="stylesheet" type="text/css" href={% static "main.css" %}>
     <link rel="stylesheet" type="text/css" href={% static "header.css" %}>
     <link rel="stylesheet" type="text/css" href={% static "demo.css" %}>
 
@@ -10,7 +12,6 @@
     <script type="text/javascript" src="{% static "widgets.js" %}"></script>
     <script type="text/javascript" src="{% static "test.js" %}"></script>
     <script type="text/javascript" src="{% static "jquery-2.1.4.min.js" %}"></script>
-    <!-- Extra page specific formatting -->
     {% block extrahead%}
     {% endblock %}
   </head>
@@ -18,7 +19,7 @@
   <body>
     <header>
       <div class="header-left">
-        <a class="logo" href="placeholder.html">
+        <a class="logo" href="/home/">
           <span><h2>BPL Tweets</h2></span>
           <img class="bottom-img" src="{% static "bpl_tweets_logo_white.png" %}">
           <img class="top-img" src="{% static "bpl_tweets_logo_dblue.png" %}">
@@ -27,17 +28,19 @@
       </div>
       <div class="header-right">
         <ul>
-          <li><a href="placeholder.html">Matches</a></li>
-          <li><a href="placeholder.html">Teams</a></li>
-          <li><a href="placeholder.html">About</a></li>
-          <li><a href="placeholder.html">Archive</a></li>
+          <li><a href="/matches/">Matches</a></li>
+          <li><a href="/teams/">Teams</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/archive/">Archive</a></li>
         </ul>
       </div>
     </header>
 
-    {% block content %}
-    {% endblock %}
+    <div id="content-container">
+      {% block content %}
 
+      {% endblock %}
+    </div>
     <footer>
         <p>&copy; BPL Tweets 2015</p>
     </footer>

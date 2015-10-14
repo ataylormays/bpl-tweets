@@ -292,7 +292,7 @@ function makeDoubleBarGraph(
     window.setInterval(callString, milliseconds * 2);
 }
 
-function loadArsenalTweets() {
+function loadArsenalTweets(container) {
    arsenalTweets = [
        '643319656472813568',
        '643182298507014144',
@@ -308,11 +308,10 @@ function loadArsenalTweets() {
     for (i = 0; i < arsenalTweets.length; i++) {
 	twttr.widgets.createTweet(
 	    arsenalTweets[i],
-	    document.getElementById('container'),
+	    document.getElementById(container),
 	    {
 		cards: 'hidden',
-		//theme: 'dark',
-		width: 250
+		width: 350
 	    });
     }
 }
