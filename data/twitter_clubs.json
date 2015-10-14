@@ -1,0 +1,240 @@
+{
+ "Manchester United": {
+  "club": "Manchester United", 
+  "primary_color": "", 
+  "hashtags": "#ManchesterUnited, #MUFC, #mufc, #manutd, #ManUtd, #manchesterunitedfc, #GGMU", 
+  "handle": "ManUtd", 
+  "secondary_color": ""
+ }, 
+ "Stoke City": {
+  "club": "Stoke City", 
+  "primary_color": "", 
+  "hashtags": "#SCFC, #scfc, #GoArnStoke, #goarnstoke", 
+  "handle": "stokecity", 
+  "secondary_color": ""
+ }, 
+ "Reading FC": {
+  "club": "Reading FC", 
+  "primary_color": "", 
+  "hashtags": "#ReadingFC, #readingfc", 
+  "handle": "ReadingFC", 
+  "secondary_color": ""
+ }, 
+ "Burnley": {
+  "club": "Burnley", 
+  "primary_color": "", 
+  "hashtags": "#afcb", 
+  "handle": "BurnleyOfficial", 
+  "secondary_color": ""
+ }, 
+ "Aston Villa": {
+  "club": "Aston Villa", 
+  "primary_color": "#6E0025", 
+  "hashtags": "#astonvilla, #avfc, #ASTONVILLA, #AVFC, #AstonVilla", 
+  "handle": "AVFCOfficial", 
+  "secondary_color": "#B1CBE6"
+ }, 
+ "Swansea City": {
+  "club": "Swansea City", 
+  "primary_color": "", 
+  "hashtags": "#SwanseaCity, #Swans, #swans", 
+  "handle": "SwansOfficial", 
+  "secondary_color": ""
+ }, 
+ "Bolton Wanderers": {
+  "club": "Bolton Wanderers", 
+  "primary_color": "", 
+  "hashtags": "#BoltonWanderers, #boltonwanderers, #bwfc, #BOLTONWANDERERS, #BWFC", 
+  "handle": "OfficialBWFC", 
+  "secondary_color": ""
+ }, 
+ "West Bromwich Albion": {
+  "club": "West Bromwich Albion", 
+  "primary_color": "", 
+  "hashtags": "#WBA, #wba, #WBAfc, #wbafc, #Baggies, #baggies", 
+  "handle": "WBAFCofficial", 
+  "secondary_color": ""
+ }, 
+ "Cardiff City": {
+  "club": "Cardiff City", 
+  "primary_color": "", 
+  "hashtags": "#cardiffcity, #Cardiffcity, #CardiffCity", 
+  "handle": "CardiffCityFC", 
+  "secondary_color": ""
+ }, 
+ "Sunderland": {
+  "club": "Sunderland", 
+  "primary_color": "", 
+  "hashtags": "#SunderlandFC", 
+  "handle": "SunderlandAFC", 
+  "secondary_color": ""
+ }, 
+ "Liverpool": {
+  "club": "Liverpool", 
+  "primary_color": "", 
+  "hashtags": "#Liverpool, #LiverpoolFC, #LFC, #ynwa", 
+  "handle": "LFC", 
+  "secondary_color": ""
+ }, 
+ "Manchester City": {
+  "club": "Manchester City", 
+  "primary_color": "", 
+  "hashtags": "#Mancity, #MCFC, #mancity, #mcfc, #ManchesterCity", 
+  "handle": "MCFC", 
+  "secondary_color": ""
+ }, 
+ "Blackpool": {
+  "club": "Blackpool", 
+  "primary_color": "#FF9900", 
+  "hashtags": "#BlackpoolFC, #blackpoolfc, #blackpoolFC", 
+  "handle": "BlackpoolFC", 
+  "secondary_color": "#000000"
+ }, 
+ "Fulham": {
+  "club": "Fulham", 
+  "primary_color": "", 
+  "hashtags": "#fulham, #Fulham, #FFC, #ffc", 
+  "handle": "FulhamFC", 
+  "secondary_color": ""
+ }, 
+ "Everton": {
+  "club": "Everton", 
+  "primary_color": "", 
+  "hashtags": "#Everton, #everton, #EFC, #efc, #Toffees, #toffees", 
+  "handle": "Everton", 
+  "secondary_color": ""
+ }, 
+ "Derby County": {
+  "club": "Derby County", 
+  "primary_color": "", 
+  "hashtags": "#DerbyCounty, #dcfc, #derbycounty", 
+  "handle": "dcfcofficial", 
+  "secondary_color": ""
+ }, 
+ "Leicester City": {
+  "club": "Leicester City", 
+  "primary_color": "", 
+  "hashtags": "#lcfc, #leicestercity, #LeicesterCity", 
+  "handle": "OfficialFOXES", 
+  "secondary_color": ""
+ }, 
+ "AFC Bournemouth": {
+  "club": "AFC Bournemouth", 
+  "primary_color": "", 
+  "hashtags": "#Bournemouth", 
+  "handle": "afcbournemouth", 
+  "secondary_color": ""
+ }, 
+ "Southampton": {
+  "club": "Southampton", 
+  "primary_color": "", 
+  "hashtags": "#SaintsFC, #saintsfc, #SFC, #sfc", 
+  "handle": "SouthamptonFC", 
+  "secondary_color": ""
+ }, 
+ "Newcastle United": {
+  "club": "Newcastle United", 
+  "primary_color": "", 
+  "hashtags": "#NUFC, #nufc, #NewcastleUnited, #toonarmy, #ToonArmy, #TOONARMY", 
+  "handle": "NUFC", 
+  "secondary_color": ""
+ }, 
+ "Norwich City": {
+  "club": "Norwich City", 
+  "primary_color": "", 
+  "hashtags": "#ncfc, #norwichcity, #NCFC, #NorwichCity", 
+  "handle": "NorwichCityFC", 
+  "secondary_color": ""
+ }, 
+ "Hull City": {
+  "club": "Hull City", 
+  "primary_color": "", 
+  "hashtags": "#HullCity, #Hullcity, #hullcity, #HCFC, #hcfc, #hcafc, #HCAFC", 
+  "handle": "HullCity", 
+  "secondary_color": ""
+ }, 
+ "Wigan Athletic": {
+  "club": "Wigan Athletic", 
+  "primary_color": "", 
+  "hashtags": "#WiganAthletic, #wiganathletic, #wafc, #WAFC", 
+  "handle": "LaticsOfficial", 
+  "secondary_color": ""
+ }, 
+ "Queens Park Rangers": {
+  "club": "Queens Park Rangers", 
+  "primary_color": "", 
+  "hashtags": "#QPR, #qpr", 
+  "handle": "QPRFC", 
+  "secondary_color": ""
+ }, 
+ "Blackburn Rovers": {
+  "club": "Blackburn Rovers", 
+  "primary_color": "#6CB5FF", 
+  "hashtags": "#BlackburnRovers, #brfc, #blackburnrovers, #BRFC", 
+  "handle": "OneRovers", 
+  "secondary_color": "#FFFFFF"
+ }, 
+ "Chelsea": {
+  "club": "Chelsea", 
+  "primary_color": "", 
+  "hashtags": "#Chelsea, #chelsea, #cfc, #CFC, #chelseafc, #ChelseaFC", 
+  "handle": "ChelseaFC", 
+  "secondary_color": ""
+ }, 
+ "West Ham United": {
+  "club": "West Ham United", 
+  "primary_color": "", 
+  "hashtags": "#WHUFC, #whufc, #WestHam, #westham", 
+  "handle": "whufc_official", 
+  "secondary_color": ""
+ }, 
+ "Portsmouth": {
+  "club": "Portsmouth", 
+  "primary_color": "", 
+  "hashtags": "#pompey, #Pompey", 
+  "handle": "officialpompey", 
+  "secondary_color": ""
+ }, 
+ "Tottenham Hotspur": {
+  "club": "Tottenham Hotspur", 
+  "primary_color": "", 
+  "hashtags": "#THFC, #thfc", 
+  "handle": "SpursOfficial", 
+  "secondary_color": ""
+ }, 
+ "Wolverhampton Wanderers": {
+  "club": "Wolverhampton Wanderers", 
+  "primary_color": "", 
+  "hashtags": "#Wolverhampton, #wolverhampton, #WWFC, #wwfc", 
+  "handle": "OfficialWolves", 
+  "secondary_color": ""
+ }, 
+ "Birmingham City": {
+  "club": "Birmingham City", 
+  "primary_color": "#1D1D8F", 
+  "hashtags": "#BirminghamCity, #BCFC, #birminghamcity", 
+  "handle": "BCFC", 
+  "secondary_color": "#F0F0F8"
+ }, 
+ "Arsenal": {
+  "club": "Arsenal", 
+  "primary_color": "#E60000", 
+  "hashtags": "#Arsenal, #arsenal, #afc, #AFC, #ArsenalFC, #arsenalfc, #Gunners", 
+  "handle": "Arsenal", 
+  "secondary_color": "#C4A959"
+ }, 
+ "Crystal Palace": {
+  "club": "Crystal Palace", 
+  "primary_color": "", 
+  "hashtags": "#crystalpalacefc, #cpfc, #CrystalPalaceFC, #CPFC", 
+  "handle": "CPFC", 
+  "secondary_color": ""
+ }, 
+ "Middlesbrough": {
+  "club": "Middlesbrough", 
+  "primary_color": "", 
+  "hashtags": "#boro", 
+  "handle": "Boro", 
+  "secondary_color": ""
+ }
+}
