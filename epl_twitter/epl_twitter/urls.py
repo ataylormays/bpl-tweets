@@ -9,7 +9,6 @@ from django.contrib import admin
 # url(r'^blog/', include('blog.urls')),
 
 urlpatterns = [
-
     url(r'^admin/', include(admin.site.urls)),
     url(r'^home/', include('tweets.urls_home')),
     url(r'^about/', include('tweets.urls_about')),
@@ -17,4 +16,5 @@ urlpatterns = [
     url(r'^teams/', include('tweets.urls')),
     url(r'^live/', include('tweets.urls_live')),
     url(r'^archive/', include('tweets.urls_archive')),
+    url(r'^demo/', include('tweets.urls_demo')),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

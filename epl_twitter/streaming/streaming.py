@@ -14,7 +14,12 @@ api = tweepy.API(auth)
 
 def start(teams = [], users = []):
  
-    listen = SListener(api=api, team1=teams[0], team2=teams[1], users = users)
+    listen = SListener(
+        api=api,
+        team1=teams[0],
+        team2=teams[1],
+        users = users,
+        total_limit = 60 * 300)
     stream = tweepy.Stream(auth, listen)
 
     print "Streaming started..."

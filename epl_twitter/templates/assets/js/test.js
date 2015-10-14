@@ -50,7 +50,7 @@ function rescale(v, min, max) {
 
     scale = v;
     for (i = 0; i < N; i++) {
-	scale[i] = ((v[i] - vMin) / spread) * spread + min;
+	scale[i] = ((v[i] - vMin) / vSpread) * spread + min;
     }
     return scale;
 }
@@ -164,7 +164,7 @@ function makeDoubleBarGraph(
 	M <= N,
 	"Vectors must have length less than N.");
 
-    d3.select("body")
+    d3.select("#graph")
 	.selectAll("svg")
 	.data([[height, width]])
 	.enter()
@@ -172,11 +172,10 @@ function makeDoubleBarGraph(
 	.attr("height", function(d) { return d[0]; })
 	.attr("width", function(d) { return d[1]; })
 	.style({ "background-color" : backgroundColor,
-		 "margin-left" : "auto",
-		 "margin-right" : "auto",
-		 "position" : "absolute",
-		 "left" : 0,
-		 "right" : 0});
+		 "margin" : "auto",
+		 "display" : "block",
+		 "width" : width,
+		 "position" : "relative"});
 
     // First get the sides of the rectangle that we will actually draw
     xBegin = width * xPadding;
@@ -187,7 +186,7 @@ function makeDoubleBarGraph(
 
     yMid = (yBegin + yEnd) / 2;
 
-    lineList = d3.select("body")
+    lineList = d3.select("#graph")
 	.select("svg")
 	.selectAll("line")
 
@@ -215,7 +214,7 @@ function makeDoubleBarGraph(
     yTickUp = yMid + tick;
     yTickDown = yMid - tick;
 
-    lineList = d3.select("body")
+    lineList = d3.select("#graph")
 	.select("svg")
 	.selectAll(".tick")
 
@@ -256,7 +255,7 @@ function makeDoubleBarGraph(
 	     y2Scaled[i] - yMid - strokeWidth / 2]);
     }
 
-    rectangleList = d3.select("body")
+    rectangleList = d3.select("#graph")
     	.select("svg")
     	.selectAll(".barDown")
     	.data(y1Rects)
@@ -269,7 +268,7 @@ function makeDoubleBarGraph(
 	.attr("fill", team1PrimaryColor)
 	.attr("class", "barDown")
 
-    rectangleList = d3.select("body")
+    rectangleList = d3.select("#graph")
     	.select("svg")
     	.selectAll(".barUp")
     	.data(y2Rects)
@@ -291,4 +290,29 @@ function makeDoubleBarGraph(
 	team2SecondaryColor + "');"
 
     window.setInterval(callString, milliseconds * 2);
+}
+
+function loadArsenalTweets() {
+   arsenalTweets = [
+       '643319656472813568',
+       '643182298507014144',
+       '643129497642995712',
+       '643321290246504448',
+       '643440509818638336',
+       '643320805120704512',
+       '643091851050782722',
+       '643465570235588608',
+       '643176448027561984'
+   ];
+
+    for (i = 0; i < arsenalTweets.length; i++) {
+	twttr.widgets.createTweet(
+	    arsenalTweets[i],
+	    document.getElementById('container'),
+	    {
+		cards: 'hidden',
+		theme: 'dark',
+		width: 250
+	    });
+    }
 }

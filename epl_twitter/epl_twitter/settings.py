@@ -99,6 +99,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'templates/assets/images'),
     os.path.join(BASE_DIR, 'templates/assets/stylesheets'),
+    os.path.join(BASE_DIR, 'templates/assets/js'),
+    os.path.join(BASE_DIR, '../data/streaming_data')
     )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
