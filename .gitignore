@@ -3,3 +3,4 @@ data.popularity.*
 *.pyc
 *~
 .DS_STORE
+data/*

@@ -58,6 +58,10 @@ div#bottom {
     height: 300px;
 }
 
+div#extender {
+    height: 10px;
+}
+
 div#bottomwrapper {
     margin: auto;
     text-align: center;
