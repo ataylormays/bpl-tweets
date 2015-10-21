@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.utils.module_loading import import_string
+from dateutil.relativedelta import relativedelta
 from .models import Tweet
 import csv
+import json
 from forms import DatesForm
 import datetime
 import time
@@ -23,16 +25,6 @@ except ImportError, e:
 	except Exception, e:
 		print 'Cannot give details on constants (%s)' % e
 
-clubs_file_nm = os.path.join(constants.DATA_DIR, "twitter_clubs.csv")
-
-with open(clubs_file_nm) as clubs_file:
-	club_names = []
-	clubs = csv.reader(clubs_file, delimiter=",")
-	#skip header row
-	next(clubs)
-	for row in clubs:
-		club_names.extend([(row[0].replace(' ', '_').lower(), row[0])])
-
 def count_elts(numbers, limit):
 	output = {}
 	for n in numbers:
@@ -41,6 +33,12 @@ def count_elts(numbers, limit):
 		else:
 			output[n] = 1
 	return sorted(output.items(), key=lambda x:-1*x[1])[:limit]
+
+def create_match_url(team1, team2, parent_dir):
+	t1, t2 = team1.lower().replace(' ', '_'), team2.lower().replace(' ', '_')
+	url = '../' + parent_dir + '/' + t1 + '-' + t2 + '-' + datetime.date.today().strftime("%Y%m%d")
+	print url
+	return url
 
 # create sorted list between two dates with placeholders for counts of sentiment
 # sentiment: [positive, neutral, negative]
@@ -102,6 +100,17 @@ def sentiment_percs(dt1, dt2, sent_list):
 								round(100*sentiments[2]/sent_total, 2)]])
 	return L
 
+def get_club_names():
+	clubs_file_nm = os.path.join(constants.DATA_DIR, "twitter_clubs.json")
+	with open(clubs_file_nm) as clubs_file:
+		club_names = []
+		clubs = clubs_file.read()
+		clubs = json.loads(clubs)
+		print clubs.keys()
+		for name in sorted(clubs.keys()):
+			club_names.extend([(name.replace(' ', '_').lower(), name)])
+	return club_names
+
 def home(request):
 
 	template = loader.get_template('home.html')
@@ -119,7 +128,6 @@ def home(request):
 	popular_hashtags = [(count, elt[0], elt[1]) for count, elt in enumerate(count_elts(hashtags, 20), 1)]
 	
 	context = RequestContext(request, {
-		'club_names': club_names,
 		'hashtags': popular_hashtags,
 
 		})
@@ -130,21 +138,49 @@ def about(request):
 	today = datetime.date.today().strftime("%b %d, %Y")
 	template = loader.get_template('about.html')
 	context = RequestContext(request, {
-		'club_names': club_names,
 		'today': today,
-
 		})
 
 	return HttpResponse(template.render(context))
 
+def matches(request):
+	today = datetime.date.today().strftime("%d %B %Y")
+	now = datetime.datetime.now().strftime("%I:%M %p")
+	live_matches = []
+	upcoming_matches = []
+	try:
+		with open(os.path.join(constants.MATCHES_DIR, 'matches.csv'), 'r') as f:
+			matches_reader = csv.reader(f, delimiter=",")
+			for row in matches_reader:
+				start_dt = row[0] + " " + row[1]
+				start_dt = datetime.datetime.strptime(start_dt, "%d %B %Y %I:%M %p")
+				if ( datetime.datetime.now() < start_dt or 
+					datetime.datetime.now() > start_dt + datetime.timedelta(minutes=constants.TOT_MINUTES)):
+					upcoming_matches += [row + [create_match_url(row[2], row[3], 'live')]]
+				else:
+					live_matches += [row + [create_match_url(row[2], row[3], 'live')]]
+	except:
+		print "We fucked up in views.matches"
+
+	for m in upcoming_matches:
+		print m
+
+	template = loader.get_template('matches.html')
+	context = RequestContext(request, {
+		'live_matches': live_matches,
+		'upcoming_matches': upcoming_matches,
+		})
+	return HttpResponse(template.render(context))
+
 def demo(request):
 	template = loader.get_template('demo.html')
-	context = RequestContext(request, {
-	})
+	context = RequestContext(request)
 
 	return HttpResponse(template.render(context))
 
 def teams(request):
+	club_names = get_club_names()
+
 	template = loader.get_template('teams.html')
 	context = RequestContext(request, {
 		'club_names': club_names,
@@ -153,27 +189,37 @@ def teams(request):
 
 def contact(request):
 	template = loader.get_template('contact.html')
-	context = RequestContext(request, {
-		'club_names': club_names,
-
-		})
+	context = RequestContext(request)
 
 	return HttpResponse(template.render(context))
 
 def live(request, team1, team2, date):
 	template = loader.get_template('live.html')
 	context = RequestContext(request, {
-		'club_names': club_names,
 		'team1': team1.title().replace('_', ' '),
 		'team2': team2.title().replace('_', ' '),
 		'date': date,
 		})
 	return HttpResponse(template.render(context))
 
-def archive(request, team1, team2, date):
+def archive(request):
+	date_format = "%B %Y"
+	date_list = [constants.ARCHIVE_START]
+	d = datetime.datetime.strptime(constants.ARCHIVE_START, date_format).date()
+	end_string = (datetime.date.today() + relativedelta(months=1)).strftime(date_format)
+	while(d.strftime(date_format) != end_string):
+		d += relativedelta(months=1)
+		date_list += [d.strftime(date_format)]
+
 	template = loader.get_template('archive.html')
 	context = RequestContext(request, {
-		'club_names': club_names,
+		'date_list': date_list[::-1],
+		})
+	return HttpResponse(template.render(context))
+
+def archive_match(request, team1, team2, date):
+	template = loader.get_template('archive_match.html')
+	context = RequestContext(request, {
 		'team1': team1.title().replace('_', ' '),
 		'team2': team2.title().replace('_', ' '),
 		'date': date,
@@ -217,7 +263,6 @@ def club(request, club_nm):
 			'start_date': start_date,
 			'end_date': end_date,
 			'club_nm': club_nm,
-			'club_names': club_names,
 			'dates_form': form,
 			'popular_tweets': output_popular,
 			'sent_percs': sent_percs,
@@ -226,7 +271,6 @@ def club(request, club_nm):
 		context = RequestContext(request, {
 			'have_dates': have_dates,
 			'club_nm': club_nm,
-			'club_names': club_names,
 			'dates_form': form,
 			})
 

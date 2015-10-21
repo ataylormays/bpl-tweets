@@ -17,13 +17,14 @@ class SListener(StreamListener):
         self.users = users
         self.t1_counter = 0
         self.t2_counter = 0
-        self.fprefix = directory + '/data/streaming_data/' + fprefix + '_' +  team1 + '_' + team2
-        self.data_output  = open(self.fprefix + '.' 
+        self.fprefix = directory + '/data/streaming_data/' + fprefix + '_' +  team1.lower().replace(' ', '_') + '_' + team2.lower().replace(' ', '_')
+        self.data_output  = open(self.fprefix + '_' 
                             + time.strftime('%Y-%m-%d_%H-%M-%S') + '.txt', 'w')
         self.id_output  = open(self.fprefix + '_ids.txt', 'w')
+        self.tweet_output  = open(self.fprefix + '_tweets.txt', 'w')
         self.user_output = open(self.fprefix + '_users.txt', 'w')
         
-        self.delout  = open('delete.txt', 'a')
+        self.delout  = open(self.fprefix + '_delete.txt', 'w')
 
     def on_data(self, data):
         print 'found data'
@@ -62,15 +63,9 @@ class SListener(StreamListener):
                 self.user_output.write(tweet["id_str"] + ', ')
         
         print tweet["id_str"]
-        print status
 
         self.id_output.write(tweet["id_str"] + ', ')
-
-        print "\n\n"
-        print "in on_status"
-        print status
-        print self.team1
-        print self.team2
+        self.tweet_output.write(tweet["text"].encode('utf-8') + ', ')
 
         if time.time() - self.time > self.write_limit:
             print "inside first if"

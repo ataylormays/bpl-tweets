@@ -1,7 +1,7 @@
 import os
 
 # 90 min game + 15 min half time + 15 min buffer = 120 min
-TOT_MINUTES = 120
+TOT_MINUTES = 60
 RUN_FREQ = .5
 
 # number of cols in popularity file
@@ -35,5 +35,6 @@ TOKENS_FILE = os.path.join(SECRETS_DIR, "tokens.tok")
 SECRETS_FILE = os.path.join(SECRETS_DIR, "secrets.csv")
 CLUBS_FILE = os.path.join(DATA_DIR, "twitter_clubs.csv")
 
+ARCHIVE_START = "August 2015"
 
 	

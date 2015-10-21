@@ -37,7 +37,7 @@ def scrape_match_data(url, dest, weeks=1):
 	for md in match_day_list:
 		# dates appear in Saturday, 19 December 2015 format
 		# cut out weekday
-		date = md[0].text[md[0].text.find(' ')+1:].replace(" CT", "")
+		date = md[0].text[md[0].text.find(' ')+1:]
 		# skip over dates in past
 		# stop once program reaches dates in future
 		if datetime.datetime.strptime(date, "%d %B %Y") > date_limit:
@@ -46,7 +46,7 @@ def scrape_match_data(url, dest, weeks=1):
 			continue	
 		for elt in md:
 			if "shsRow0Row" in str(elt) or "shsRow1Row" in str(elt):
-				time = elt.find_all('span', {"class":"shsCTZone"})[0].text
+				time = elt.find_all('span', {"class":"shsCTZone"})[0].text.replace(" CT", "")
 				home = elt.find_all('td', {"class":"shsNamD"})[1].text
 				away = elt.find_all('td', {"class":"shsNamD"})[2].text
 				matches += [[date, time, home, away]]

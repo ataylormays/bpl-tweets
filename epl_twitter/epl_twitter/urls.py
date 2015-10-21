@@ -17,4 +17,5 @@ urlpatterns = [
     url(r'^live/', include('tweets.urls_live')),
     url(r'^archive/', include('tweets.urls_archive')),
     url(r'^demo/', include('tweets.urls_demo')),
+    url(r'^matches/', include('tweets.urls_matches')),
 ]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

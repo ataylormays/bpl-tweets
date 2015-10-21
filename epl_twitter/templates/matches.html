@@ -1,0 +1,23 @@
+{% extends "base.html"%}
+	
+{%block content%}
+
+<div>
+
+	{% if live_matches %}
+		<h3> Live Matches </h3>
+		{% for m in live_matches %}
+			<li><a href={{m.4}}>{{m.2}} vs {{m.3}}</a></li>
+		{% endfor %}
+	{% endif %}
+
+	{% if upcoming_matches %}
+		<h3> Upcoming Matches </h3>
+		{% for m in upcoming_matches %}
+			<li><a href={{m.4}}>{{m.2}} vs {{m.3}}</a></li>
+		{% endfor %}
+	{% endif %}
+
+</div>
+
+{% endblock %}
