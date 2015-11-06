@@ -5,3 +5,4 @@ data.popularity.*
 .DS_STORE
 data/*
 src.*
+db.sqlite3
