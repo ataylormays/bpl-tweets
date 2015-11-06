@@ -292,26 +292,75 @@ function makeDoubleBarGraph(
     window.setInterval(callString, milliseconds * 2);
 }
 
-function loadArsenalTweets(container) {
-   arsenalTweets = [
-       '643319656472813568',
-       '643182298507014144',
-       '643129497642995712',
-       '643321290246504448',
-       '643440509818638336',
-       '643320805120704512',
-       '643091851050782722',
-       '643465570235588608',
-       '643176448027561984'
-   ];
-
-    for (i = 0; i < arsenalTweets.length; i++) {
+function loadTweets(hidden, container, file, counter) {
+    tweets = $(hidden).text().split(',\n');
+    for (i = counter; i < tweets.length; i++) {
 	twttr.widgets.createTweet(
-	    arsenalTweets[i],
+	    tweets[i],
 	    document.getElementById(container),
 	    {
 		cards: 'hidden',
 		width: 350
 	    });
     }
+    counter = tweets.length - 1;
+
+    setTimeout(function() {
+	$(hidden).load(file, function() {
+	    loadTweets(hidden, container, file, counter);
+	});
+    }, 3000);
+}
+
+function loadGraph(hidden, container, file, chunk, timeout) {
+    lines = $(hidden).text().split(',\n');
+    n = lines.length;
+    now = 0;
+    team1Total = 0;
+    team2Total = 0;
+    team1Arr = [];
+    team2Arr = [];
+    for (i = 0; i < n - 1; i++) {
+	line = lines[i];
+	split = line.split(',');
+	time = split[0];
+	team1 = parseInt(split[1]);
+	team2 = parseInt(split[2]);
+
+	if (time < chunk + now) {
+	    team1Total += team1;
+	    team2Total += team2;
+	} else {
+	    team1Arr.push(team1Total);
+	    team2Arr.push(team2Total);
+	    team1Total = 0;
+	    team2Total = 0;
+	    now = now + chunk;
+	    i--;
+	}
+    }
+    team1Arr.push(team1Total);
+    team2Arr.push(team2Total);
+
+    makeDoubleBarGraph(
+	400,
+	600,
+	team1Arr,
+	team2Arr,
+	90,
+	1,
+	"DarkBlue",
+	"DarkRed",
+	"Blue",
+	"Red",
+	"White",
+	0,
+	0.05,
+	0.05);
+
+    setTimeout(function() {
+	$(hidden).load(file, function() {
+	    loadGraph(hidden, container, file, chunk, timeout);
+	});
+    }, timeout * 1000);
 }

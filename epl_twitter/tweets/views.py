@@ -172,10 +172,15 @@ def matches(request):
 		})
 	return HttpResponse(template.render(context))
 
-def demo(request):
+def demo(request, team1, team2, date):
 	template = loader.get_template('demo.html')
-	context = RequestContext(request)
-
+	context = RequestContext(request, {
+          'team1Title': team1.title().replace('_', ' '),
+          'team2Title': team2.title().replace('_', ' '),
+          'team1': team1,
+          'team2': team2,
+          'date': date,
+          })
 	return HttpResponse(template.render(context))
 
 def teams(request):

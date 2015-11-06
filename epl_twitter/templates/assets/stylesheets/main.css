@@ -8,13 +8,11 @@ body {
   display: block;
   /*width: 70%;
   margin-left: 15%;
-<<<<<<< Updated upstream
   margin-right: 15%;*/
   padding-top: 20px;
   margin: 0 auto;
   width: 1450px;
-  /*text-align: center;*/
-=======
+  text-align: center;
   margin-right: 15%;
   color: #1E266B;
 }
@@ -26,7 +24,6 @@ body {
 
 #content-container a:hover {
   color: #1E266B;
->>>>>>> Stashed changes
 }
 
 /* Scrollbox */

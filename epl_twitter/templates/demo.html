@@ -4,6 +4,7 @@
 
 {% load staticfiles %}
 
+<h2>{{team1Title}} vs. {{team2Title}}</h2>
 <div id='wrapper'>
   <div id='leftborder'>
     <div id='left' class='side scrollable'>
@@ -23,28 +24,23 @@
   <div id='extender'></div>
 </div>
 
+<div id="hidden1" style="display: none;"></div>
+<div id="hidden2" style="display: none;"></div>
+<div id="hidden3" style="display: none;"></div>
+
 <script type="text/javascript">
-  makeDoubleBarGraph(
-  400,
-  600,
-  [1, 2, 3, 5, 6, 7],
-  [2, 3, 1, 3, 4, 5],
-  90,
-  1,
-  "DarkBlue",
-  "DarkRed",
-  "Blue",
-  "Red",
-  "White",
-  0,
-  0.05,
-  0.05);
-</script>
-<script type="text/javascript">
-  loadArsenalTweets('containerleft');
-  loadArsenalTweets('containerright');
-  $("#bottom").load(
-  "{% static "streamer_manchester united_tottenham hotspur.2015-09-27_15-29-09.txt" %}")
+  idsFile = "/static/streamer_{{team1}}_{{team2}}_ids.txt";
+  usersFile = "/static/streamer_{{team1}}_{{team2}}_users.txt";
+  graphFile = "/static/streamer_{{team1}}_{{team2}}.txt";
+  $("#hidden1").load(idsFile, function() {
+  loadTweets("#hidden1", "containerleft", idsFile, 0);
+  });
+  $("#hidden2").load(usersFile, function() {
+  loadTweets("#hidden2", "containerright", usersFile, 0);
+  });
+  $("#hidden3").load(graphFile, function() {
+  loadGraph("#hidden3", "#bottom", graphFile, 10, 10);
+  });
 </script>
 
 {% endblock %}
