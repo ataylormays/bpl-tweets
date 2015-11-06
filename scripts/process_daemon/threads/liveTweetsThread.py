@@ -10,17 +10,6 @@ for ip in import_paths:
 
 print sys.path
 from StreamingTweets import StreamingTweets
-# try:
-# 	#import constants
-# 	from StreamingTweets import StreamingTweets
-# except ImportError, e:
-# 	print 'sys_path: ', sys.path
-# 	constants = __import__('constants')
-# 	print 'constants: %r' % constants
-# 	try:
-# 		print 'constants is at %s (%s)' % (constants.__file__, constants.__path__)
-# 	except Exception, e:
-# 		print 'Cannot give details on constants (%s)' % e
 
 class LiveTweetsThread(threading.Thread):
 	"""docstring for LiveTweetsThread"""

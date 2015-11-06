@@ -293,7 +293,7 @@ function makeDoubleBarGraph(
 }
 
 function loadTweets(hidden, container, file, counter) {
-    tweets = $(hidden).text().split(',\n');
+    tweets = $(hidden).text().split(', ');
     for (i = counter; i < tweets.length; i++) {
 	twttr.widgets.createTweet(
 	    tweets[i],

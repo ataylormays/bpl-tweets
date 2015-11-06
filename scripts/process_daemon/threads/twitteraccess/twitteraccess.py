@@ -129,13 +129,9 @@ def build_params():
 		json.dump(api_params, fp)
 
 	with open(constants.CONSUMERS_FILE, 'w') as fc:
-		print consumers
-		#csv.writer(f, delimiter=",").writerows(consumers)
-		#json.dump(consumers, f)
 		pickle.dump(consumers, fc)
 
-	with open(constants.TOKENS_FILE, 'w') as ft:
-		#csv.writer(f, delimiter=",").writerows(tokens)    	
+	with open(constants.TOKENS_FILE, 'w') as ft: 	
 		pickle.dump(tokens, ft)
 
 def analyze_text(text):
@@ -182,11 +178,9 @@ def query_twitter_api(query, count=1, since_id="", max_id="", result_type="", in
 	headers = req.to_header()
 	url = req.to_url()
 	response = urllib2.Request(url)
-	print url
 	return json.load(urllib2.urlopen(response))
 		 
 def populate_popularity(club_nm, since_id="", iteration=1):
-	print club_nm
 	#build api_params 
 	build_params()
 
@@ -218,7 +212,7 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 
 		start = time.time()
 		data = query_twitter_api(query, count=100, max_id=prev_id, 
-			since_id=since_id, index=index, result_type="mixed")
+			since_id=since_id, index=index, result_type=constants.TWEET_TYPE)
 		
 		if data["statuses"] == []:
 			print "end of data"

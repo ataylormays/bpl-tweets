@@ -1,0 +1,13 @@
+Fields
+	Created
+		UTC time when this Tweet was created
+	Favorites
+		Indicates approximately how many times this Tweet has been “favorited” by Twitter users
+	Tweet_Id
+		The string representation of the unique identifier for this Tweet
+	Retweets
+		Number of times this Tweet has been retweeted
+	Text
+		The actual UTF-8 text of the status update
+	Hashtags
+		Hashtags included in text

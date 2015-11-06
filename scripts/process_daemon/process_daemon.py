@@ -12,6 +12,12 @@ for ip in import_paths:
 
 import constants
 from threads.liveTweetsThread import LiveTweetsThread as LTT
+from threads.popularityThread import PopularityThread as PT
+
+# t1 = PT("manchester united")
+# t2 = PT("manchester city")
+# t1.start()
+# t2.start()
 
 # t1 = LTT("manchester united", "arsenal", constants.SECRETS_DIR, 60*constants.TOT_MINUTES)
 # t1.start() 
@@ -39,17 +45,28 @@ while(loop):
 				continue
 			curr_matches += [[row[2], row[3]]]
 		if curr_matches:
+			print 'inside curr_matches'
 			livetweetthreads = [LTT(m[0], m[1], constants.SECRETS_DIR, 60*constants.TOT_MINUTES) for m in curr_matches]
+			print livetweetthreads
+			popularitythreads = [PT(m[0]) for m in curr_matches]
+			popularitythreads += [PT(m[1]) for m in curr_matches]
+			print popularitythreads
 			for thread in livetweetthreads:
-				print "starting processes with %s and %s" % (thread.home, thread.away)
-				thread.run()
+				print "starting live tweet collection process for %s and %s" % (thread.home, thread.away)
+				thread.start()
+				print 'started ltt'
+			for thread in popularitythreads:
+				print "starting popularity measuring for " + thread.club
+				thread.start()
+				print 'started pt'
+
 		f.close()
 
 	except:
 		print "Ending process"
 		loop = False
 		break
-	print "Sleeping for 30 secs"
+	print "Daemon sleeping for 30 secs"
 	time.sleep(30)
 
 
