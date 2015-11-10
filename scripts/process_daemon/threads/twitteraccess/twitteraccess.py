@@ -5,7 +5,10 @@ import urllib2
 import json
 import csv
 import pickle
-import os
+import os, sys
+
+resources_path = os.path.abspath(os.path.join('../../../..', 'resources'))
+sys.path.append(resources_path)
 
 import constants
 
@@ -51,7 +54,7 @@ def update_since_id(club_nm, since_id=""):
 	club_since_file = os.path.join(constants.SINCE_DIR, club_nm.lower().replace(" ", "_") + "_since_id.txt")
 	old_id = ""
 	if since_id == "":
-		since_id = get_top_id(query_bulider(club_nm))
+		old_id = get_top_id(query_builder(club_nm))
 	if os.path.exists(club_since_file):
 		with open(club_since_file, 'r+') as f:
 			old_id = f.read()
@@ -59,8 +62,9 @@ def update_since_id(club_nm, since_id=""):
 			f.truncate()
 			f.write(since_id)
 	else:
-		with open(club_since_file, 'a+') as f:
+		with open(club_since_file, 'w') as f:
 			f.write(since_id)
+		old_id = since_id
 	return old_id
 
 def qb_name(club_nm):
@@ -88,24 +92,20 @@ def qb_exclude(phrases):
 		exclusions += '%20-' + phrase
 	return exclusions
 
-def query_bulider(club_nm):
+def query_builder(club_nm):
 	query = ""
-	with open(constants.CLUBS_FILE) as clubs_file:
-		clubs = csv.reader(clubs_file, delimiter=",")
-		for row in clubs:
-			if(row[0]) == club_nm:
-				query += qb_name(row[0])
-				query += qb_hashtags(row[1]) 
-				query += qb_handle(row[2])
-		query += qb_exclude(constants.BANNED_PHRASES)
-		return query
+	print constants.CLUBS_JSON
+	with open(constants.CLUBS_JSON) as clubs_json:
+		club_data = json.load(clubs_json)[club_nm]
+	
+	query += qb_name(club_data["club"])
+	query += qb_hashtags(club_data["hashtags"])
+	query += qb_handle(club_data["handle"])
+	query += qb_exclude(constants.BANNED_PHRASES)
+	return query
 
 def build_tweet_url(username, msg_id):
 	return "https://twitter.com/" + username + "/status/" + msg_id
-
-api_params = [{}]
-consumers = []
-tokens = []
 
 def build_params():
 	with open(constants.SECRETS_FILE, 'r+') as f:
@@ -188,7 +188,7 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 	if since_id == "":
 		since_id = update_since_id(club_nm)
 	i = 0
-	query = query_bulider(club_nm)
+	query = query_builder(club_nm)
 	prev_id = get_top_id(query)
 	collected_tweets = set()
 	index = 0
@@ -252,12 +252,4 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 	#write data (overwrites file)
 	with open(input_file_nm, 'w+') as f:
 		csv.writer(f, delimiter=",").writerows(all_data)
-		
-
-if __name__ == "__main__":
-	build_params()
-	q = query_bulider("Manchester United")
-	print query_twitter_api(q)
-	#test_team = "Arsenal"
-	#populate_popularity(test_team)
 	

@@ -7,7 +7,7 @@ import datetime
 import csv
 import traceback
 
-path = os.path.abspath(os.path.join('..', 'resources'))
+path = os.path.abspath(os.path.join('../..', 'resources'))
 sys.path.append(path)
 import constants
 

@@ -2,13 +2,12 @@ import threading
 import csv
 import os, sys
 
-resources_path = os.path.abspath(os.path.join('../..', 'resources'))
-streaming_path = os.path.abspath(os.path.join('../..', 'epl_twitter/streaming'))
+resources_path = os.path.abspath(os.path.join('../../../..', 'resources'))
+streaming_path = os.path.abspath(os.path.join('..', 'streaming'))
 import_paths = [resources_path, streaming_path]
 for ip in import_paths:
 	sys.path.append(ip)
 
-print sys.path
 from StreamingTweets import StreamingTweets
 
 class LiveTweetsThread(threading.Thread):
