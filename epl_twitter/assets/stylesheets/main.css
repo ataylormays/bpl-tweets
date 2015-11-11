@@ -1,0 +1,53 @@
+/*Body*/
+
+body {
+	font-family: "Trebuchet MS";
+}
+
+#content-container {
+	display: block;
+	/*width: 70%;
+		margin-left: 15%;
+		margin-right: 15%;*/
+	padding-top: 20px;
+	margin: 0 auto;
+	width: 1450px;
+	text-align: center;
+	margin-right: 15%;
+	color: #1E266B;
+}
+
+#content-container a {
+	text-decoration: none;
+	color: rgba(89, 173, 235, 1);
+}
+
+#content-container a:hover {
+	color: #1E266B;
+}
+
+/* Scrollbox */
+div.scroll {
+	width: 50%;
+	height: 200px;
+	overflow: scroll;
+}
+
+/* Footer */
+footer {
+	float: right;
+	margin-top: 10%;
+	margin-right: 10%
+}
+
+/* Archive */
+div.left-box {
+	display: inline-block;
+	float: left;
+	width: 50%;
+}
+
+div.right-box {
+	float: left;
+	width: 50%;
+}

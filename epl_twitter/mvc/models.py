@@ -1,7 +1,7 @@
 from django.db import models
 
 class Tweet(models.Model):
-	
+
 	class Meta:
 		managed = True
 
@@ -18,4 +18,3 @@ class Tweet(models.Model):
 
 	def __unicode__(self):
 		return self.text
-

@@ -1,0 +1,121 @@
+div.tweet {
+	display: inline-block;
+	width: 350px;
+	position: relative;
+	margin: auto;
+}
+
+div.bar {
+	display: inline-block;
+	width: 20px;
+	height: 75px;
+	background-color: teal;
+}
+
+div.scrollable {
+	overflow-x: hidden;
+	overflow-y: scroll;
+}
+
+div.side {
+	margin-top: 10px;
+	margin-bottom: 10px;
+	position: relative;
+	text-align: center;
+	height: 381px;
+	width: 400px;
+	position: relative;
+	display: inline-block;
+}
+
+div#left_border {
+	border: 1px solid;
+	border-color: grey;
+	border-top-left-radius: 1em;
+	border-bottom-left-radius: 1em;
+	border-right-style: none;
+	position: relative;
+	display: inline-block;
+	margin-right: -5px;
+	z-index: 1;
+}
+
+div#right_border {
+	border: 1px solid;
+	border-color: grey;
+	border-top-right-radius: 1em;
+	border-bottom-right-radius: 1em;
+	border-left-style: none;
+	position: relative;
+	display: inline-block;
+	margin-left: -5px;
+	z-index: 1;
+}
+
+div#container_bottom {
+	margin: 0px;
+	width: 598px;
+	height: 300px;
+}
+
+div.extender {
+	height: 10px;
+}
+
+div#bottom_wrapper {
+	margin: auto;
+	text-align: center;
+	display: inline-block;
+	position: relative;
+	border: 1px solid;
+	border-color: grey;
+	border-bottom-left-radius: 1em;
+	border-bottom-right-radius: 1em;
+	border-top-style: none;
+	border-color: grey;
+}
+
+div#graph {
+	border-top: 1px solid;
+	border-color: grey;
+	border-left-style: none;
+	border-right-style: none;
+	border-bottom-style: none;
+	display: inline-block;
+	position: relative;
+	width: 600px;
+	height: 401px;
+	z-index: 0;
+}
+
+div#top_wrapper {
+	background-color: white;
+	width: 100%;
+	display: block;
+	text-align: center;
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+	padding-top: 50px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	height: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	background: rgba(255,0,0,0.8);
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+	background: rgba(255,0,0,0.4);
+}

@@ -17,11 +17,14 @@ sys.path.append(path)
 try:
 	import constants
 except ImportError, e:
+	print 'import constants failed'
 	print 'sys_path: ', sys.path
 	constants = __import__('constants')
 	print 'constants: %r' % constants
 	try:
-		print 'constants is at %s (%s)' % (constants.__file__, constants.__path__)
+		print (
+			'constants is at %s (%s)' %
+			(constants.__file__, constants.__path__))
 	except Exception, e:
 		print 'Cannot give details on constants (%s)' % e
 
@@ -35,9 +38,13 @@ def count_elts(numbers, limit):
 	return sorted(output.items(), key=lambda x:-1*x[1])[:limit]
 
 def create_match_url(team1, team2, parent_dir):
-	t1, t2 = team1.lower().replace(' ', '_'), team2.lower().replace(' ', '_')
-	url = '../' + parent_dir + '/' + t1 + '-' + t2 + '-' + datetime.date.today().strftime("%Y%m%d")
-	print url
+	t1, t2 = (
+		team1.lower().replace(' ', '_'),
+		team2.lower().replace(' ', '_'))
+	url = os.path.join(
+		'..',
+		parent_dir,
+		t1 + '-' + t2 + '-' + datetime.date.today().strftime("%Y%m%d"))
 	return url
 
 # create sorted list between two dates with placeholders for counts of sentiment
@@ -80,9 +87,11 @@ def count_sentiments(tweets, dt1, dt2):
 	return sents
 
 # compute percentages of each sentiment
-# creates sorted list between two dates with placeholders for counts of sentiment
+# creates sorted list between two dates with placeholders for counts
+#of sentiment
 # sentiment: [% pos, % neut, % neg]
-# returns list L where elt of L: [date, sentiment] eg [date, [% pos, % neut, % neg]]
+# returns list L where elt of L: is of the form [date, sentiment],
+# e.g. [date, [% pos, % neut, % neg]]
 def sentiment_percs(dt1, dt2, sent_list):
 	L = []
 	date_list = [elt[0] for elt in sent_list]
@@ -90,14 +99,15 @@ def sentiment_percs(dt1, dt2, sent_list):
 	for date in date_list:
 		index = date_dict[date]
 		sent_total = float(sum(sent_list[index][1]))
-		print date, sent_total
 		if sent_total == 0:
 			L.append([date, [0, 0, 0]])
 		else:
 			sentiments = sent_list[index][1]
-			L.append([date, [round(100*sentiments[0]/sent_total, 2),
-								round(100*sentiments[1]/sent_total, 2),
-								round(100*sentiments[2]/sent_total, 2)]])
+			L.append([
+				date,
+				[round(100*sentiments[0]/sent_total, 2),
+				round(100*sentiments[1]/sent_total, 2),
+				round(100*sentiments[2]/sent_total, 2)]])
 	return L
 
 def get_club_names():
@@ -106,27 +116,30 @@ def get_club_names():
 		club_names = []
 		clubs = clubs_file.read()
 		clubs = json.loads(clubs)
-		print clubs.keys()
 		for name in sorted(clubs.keys()):
-			club_names.extend([(name.replace(' ', '_').lower(), name)])
+			club_names.extend(
+				[(name.replace(' ', '_').lower(), name)])
 	return club_names
 
 def home(request):
 
 	template = loader.get_template('home.html')
-	
+
 	today = datetime.date.today().strftime("%Y-%m-%d")
-	last_wk = datetime.datetime.strptime(today, "%Y-%m-%d")-datetime.timedelta(days=7)
+	last_wk = (
+		datetime.datetime.strptime(today, "%Y-%m-%d")
+		- datetime.timedelta(days=7))
 
-	recent_tweets = Tweet.objects.filter(created__gt=last_wk).filter(created__lte=today)
-	hashtags = [h for tweet in recent_tweets for h in tweet.hashtags.split(", ") if h != ""]
+	recent_tweets = Tweet.objects.filter(created__gt=last_wk) \
+		.filter(created__lte=today)
+	hashtags = [
+		h for tweet in recent_tweets
+		for h in tweet.hashtags.split(", ") if h != ""]
 
-	# remove occurences of empty strings
+	popular_hashtags = [
+		(count, elt[0], elt[1])
+		for count, elt in enumerate(count_elts(hashtags, 20), 1)]
 
-	# hashtags = [h for h in hashtags if h != ""]
-
-	popular_hashtags = [(count, elt[0], elt[1]) for count, elt in enumerate(count_elts(hashtags, 20), 1)]
-	
 	context = RequestContext(request, {
 		'hashtags': popular_hashtags,
 
@@ -149,21 +162,25 @@ def matches(request):
 	live_matches = []
 	upcoming_matches = []
 	try:
-		with open(os.path.join(constants.MATCHES_DIR, 'matches.csv'), 'r') as f:
+		csv_file = os.path.join(constants.MATCHIES_DIR, 'matches.csv')
+		with open(cv_file, 'r') as f:
 			matches_reader = csv.reader(f, delimiter=",")
 			for row in matches_reader:
 				start_dt = row[0] + " " + row[1]
-				start_dt = datetime.datetime.strptime(start_dt, "%d %B %Y %I:%M %p")
-				if ( datetime.datetime.now() < start_dt or 
-					datetime.datetime.now() > start_dt + datetime.timedelta(minutes=constants.TOT_MINUTES)):
-					upcoming_matches += [row + [create_match_url(row[2], row[3], 'live')]]
+				start_dt = datetime.datetime \
+					.strptime(start_dt, "%d %B %Y %I:%M %p")
+				delta = datetime.timedetla(
+					minutes=constants.TOT_MINUTES)
+				now = datetime.datetime.now()
+				match = create_match_url(row[2], row[3], 'live')
+				if (
+					now < start_dt or
+					now > start_dt + delta):
+					upcoming_matches += [row + [match]]
 				else:
-					live_matches += [row + [create_match_url(row[2], row[3], 'live')]]
+					live_matches += [row + [match]]
 	except:
 		print "We fucked up in views.matches"
-
-	for m in upcoming_matches:
-		print m
 
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
@@ -172,15 +189,15 @@ def matches(request):
 		})
 	return HttpResponse(template.render(context))
 
-def demo(request, team1, team2, date):
-	template = loader.get_template('demo.html')
+def live(request, team1, team2, date):
+	template = loader.get_template('live.html')
 	context = RequestContext(request, {
-          'team1Title': team1.title().replace('_', ' '),
-          'team2Title': team2.title().replace('_', ' '),
-          'team1': team1,
-          'team2': team2,
-          'date': date,
-          })
+		'team1Title': team1.title().replace('_', ' '),
+		'team2Title': team2.title().replace('_', ' '),
+		'team1': team1,
+		'team2': team2,
+		'date': date,
+	})
 	return HttpResponse(template.render(context))
 
 def teams(request):
@@ -198,20 +215,13 @@ def contact(request):
 
 	return HttpResponse(template.render(context))
 
-def live(request, team1, team2, date):
-	template = loader.get_template('live.html')
-	context = RequestContext(request, {
-		'team1': team1.title().replace('_', ' '),
-		'team2': team2.title().replace('_', ' '),
-		'date': date,
-		})
-	return HttpResponse(template.render(context))
-
 def archive(request):
 	date_format = "%B %Y"
 	date_list = [constants.ARCHIVE_START]
-	d = datetime.datetime.strptime(constants.ARCHIVE_START, date_format).date()
-	end_string = (datetime.date.today() + relativedelta(months=1)).strftime(date_format)
+	d = datetime.datetime.strptime(constants.ARCHIVE_START, date_format) \
+		.date()
+	end_string = (datetime.date.today() + relativedelta(months=1)) \
+		.strftime(date_format)
 	while(d.strftime(date_format) != end_string):
 		d += relativedelta(months=1)
 		date_list += [d.strftime(date_format)]
@@ -235,30 +245,38 @@ def archive_match(request, team1, team2, date):
 def club(request, club_nm):
 	#capitalize club name
 	club_nm = club_nm.replace('_', ' ').title()
-	
 	have_dates = False
-
 	template = loader.get_template('club.html')
-	
+
 	#add datesform to page
 	form = DatesForm(request.POST or None)
 
 	if form.is_valid():
 		start_date = request.POST["start_date"]
-		print start_date
 		end_date = request.POST["end_date"]
 		dt1 = datetime.datetime.strptime(start_date, '%m/%d/%Y')
-		print dt1
-		dt2 = datetime.datetime.strptime(end_date, '%m/%d/%Y')+datetime.timedelta(days=1)
+		dt2 = (
+			datetime.datetime.strptime(end_date, '%m/%d/%Y') +
+			datetime.timedelta(days=1))
 		have_dates = True
-		most_popular = Tweet.objects.filter(team=club_nm).filter(created__gte=dt1).filter(created__lt=dt2).extra(select={'popularity': 'retweets+favorites'}).order_by('-popularity')[:5]
-		output_popular = [(tweet.text[:50] + '...', tweet.url) for tweet in most_popular]
+
+		most_popular = Tweet.objects.filter(team=club_nm) \
+			.filter(created__gte=dt1) \
+			.filter(created__lt=dt2) \
+			.extra(select={'popularity': 'retweets+favorites'}) \
+			.order_by('-popularity')[:5]
+		output_popular = [
+			(tweet.text[:50] + '...', tweet.url)
+			for tweet in most_popular]
+
 		if output_popular:
 			have_data = True
 		else:
 			have_data = False
 
-		sentiment_tweets = Tweet.objects.filter(team=club_nm).filter(created__gte=dt1).filter(created__lt=dt2)
+		sentiment_tweets = Tweet.objects.filter(team=club_nm) \
+			.filter(created__gte=dt1) \
+			.filter(created__lt=dt2)
 		sent_list = count_sentiments(sentiment_tweets, dt1, dt2)
 		sent_percs = sentiment_percs(dt1, dt2, sent_list)
 

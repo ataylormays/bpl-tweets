@@ -32,26 +32,26 @@ DEFAULT_CHARSET = 'utf-8'
 # Application definition
 
 INSTALLED_APPS = (
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'tweets',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
+	'mvc',
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'epl_twitter.urls'
+ROOT_URLCONF = 'mvc.urls'
 
 WSGI_APPLICATION = 'epl_twitter.wsgi.application'
 
@@ -60,15 +60,14 @@ WSGI_APPLICATION = 'epl_twitter.wsgi.application'
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.sqlite3',
+		'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+	}
 }
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -80,28 +79,28 @@ USE_L10N = True
 USE_TZ = True
 
 TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, 'templates'),
-    )
+	os.path.join(BASE_DIR, 'templates'),
+)
 
 DATE_INPUT_FORMATS = (
-    '%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y', # '2006-10-25', '10/25/2006', '10/25/06'
-    '%b %d %Y', '%b %d, %Y',            # 'Oct 25 2006', 'Oct 25, 2006'
-    '%d %b %Y', '%d %b, %Y',            # '25 Oct 2006', '25 Oct, 2006'
-    '%B %d %Y', '%B %d, %Y',            # 'October 25 2006', 'October 25, 2006'
-    '%d %B %Y', '%d %B, %Y',            # '25 October 2006', '25 October, 2006'
+	'%Y-%m-%d', '%m/%d/%Y', # '2006-10-25', '10/25/2006'
+	'%b %d %Y', '%b %d, %Y', # 'Oct 25 2006', 'Oct 25, 2006'
+	'%d %b %Y', '%d %b, %Y', # '25 Oct 2006', '25 Oct, 2006'
+	'%B %d %Y', '%B %d, %Y', # 'October 25 2006', 'October 25, 2006'
+	'%d %B %Y', '%d %B, %Y', # '25 October 2006', '25 October, 2006'
+	'%m/%d/%y' #'10/25/06'
 )
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'templates/assets/images'),
-    os.path.join(BASE_DIR, 'templates/assets/stylesheets'),
-    os.path.join(BASE_DIR, 'templates/assets/js'),
-    os.path.join(BASE_DIR, '../data/streaming_data')
-    )
+	os.path.join(BASE_DIR, 'assets/images'),
+	os.path.join(BASE_DIR, 'assets/stylesheets'),
+	os.path.join(BASE_DIR, 'assets/js'),
+	os.path.join(BASE_DIR, '../data/streaming_data')
+)
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static_files')
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets/admin_files')

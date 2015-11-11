@@ -44,9 +44,9 @@ header a img {
 	margin-left: 240px;
 
 	-webkit-transition: 500ms ease;
-  	-moz-transition: 500ms ease;
- 	-o-transition: 500ms ease;
-  	transition: 500ms ease;
+	-moz-transition: 500ms ease;
+	-o-transition: 500ms ease;
+	transition: 500ms ease;
 }
 
 header a:hover img.top-img {
@@ -61,7 +61,7 @@ header a {
 	-moz-transition: 500ms ease;
 	-ms-transition: 500ms ease;
 	-o-transition: 500ms ease;
-	transition: 500ms ease; 
+	transition: 500ms ease;
 }
 
 header a h2 {
@@ -113,7 +113,7 @@ header ul li a {
 	-moz-transition: 500ms ease;
 	-ms-transition: 500ms ease;
 	-o-transition: 500ms ease;
-	transition: 500ms ease; 
+	transition: 500ms ease;
 }
 
 header ul li a:hover{
