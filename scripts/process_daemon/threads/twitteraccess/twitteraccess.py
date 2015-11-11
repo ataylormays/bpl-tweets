@@ -94,7 +94,6 @@ def qb_exclude(phrases):
 
 def query_builder(club_nm):
 	query = ""
-	print constants.CLUBS_JSON
 	with open(constants.CLUBS_JSON) as clubs_json:
 		club_data = json.load(clubs_json)[club_nm]
 	
