@@ -4,9 +4,8 @@ import json, time, sys, os, json
 
 class SListener(StreamListener):
 
-
-    def __init__(self, team1, team2, users = [], api = None, fprefix = 'streamer', write_limit = 8, total_limit = 30,
-            directory = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))):
+    def __init__(self, team1, team2, users = [], api = None, fprefix = 'streamer', write_limit = 10, total_limit = 30,
+            directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))):
         self.api = api or API()
         self.time = time.time()
         self.start_time = time.time()
@@ -17,20 +16,16 @@ class SListener(StreamListener):
         self.users = users
         self.t1_counter = 0
         self.t2_counter = 0
-        self.fprefix = directory + '/data/streaming_data/' + fprefix + '_' +  team1.lower().replace(' ', '_') + '_' + team2.lower().replace(' ', '_')
-        self.data_output  = open(self.fprefix + '_' 
-                            + time.strftime('%Y-%m-%d_%H-%M-%S') + '.txt', 'w')
-        self.id_output  = open(self.fprefix + '_ids.txt', 'w')
-        self.tweet_output  = open(self.fprefix + '_tweets.txt', 'w')
+        self.fprefix = directory + '/data/streaming_data/' + fprefix + '_' +  team1.lower().replace(' ', '-') + '_' + team2.lower().replace(' ', '-')
+        self.data_output = open(self.fprefix + '_counts_data.txt', 'w')
+        self.id_output = open(self.fprefix + '_ids.txt', 'w')
+        self.tweet_output = open(self.fprefix + '_tweets.txt', 'w')
         self.user_output = open(self.fprefix + '_users.txt', 'w')
         
-        self.delout  = open(self.fprefix + '_delete.txt', 'w')
+        self.delout = open(self.fprefix + '_delete.txt', 'w')
 
     def on_data(self, data):
-        print 'found data'
-
         if  'in_reply_to_status' in data:
-            print 'heading to on_status'
             if self.on_status(data) is False:
                 return False
         elif 'delete' in data:
@@ -47,6 +42,8 @@ class SListener(StreamListener):
 
     def on_status(self, status):
         if time.time() - self.start_time > self.total_limit:
+            #write final data points and close files
+            self.data_output.write(str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ',\n')
             print "over time limit"
             self.data_output.close()
             self.user_output.close()
@@ -62,14 +59,14 @@ class SListener(StreamListener):
                 #write tweet id to user file
                 self.user_output.write(tweet["id_str"] + ', ')
         
-        print tweet["id_str"]
+        print "Received tweet #" + tweet["id_str"]
 
         self.id_output.write(tweet["id_str"] + ', ')
         self.tweet_output.write(tweet["text"].encode('utf-8') + ', ')
 
         if time.time() - self.time > self.write_limit:
-            print "inside first if"
-            print "time diff is ", str(time.time() - self.time)
+            print 'writing to ' + self.team1 + ' vs ' + self.team2 + ' data file: ' + \
+                str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ','
             self.data_output.write(str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ',\n')
             self.t1_counter = 0
             self.t2_counter = 0
@@ -77,12 +74,10 @@ class SListener(StreamListener):
 
         if self.team1.lower() in tweet['text'].lower():
             self.t1_counter += 1
-            print "incrementing t1_counter"
         if self.team2.lower() in tweet['text'].lower():
-            print "incrementing t2_counter"
             self.t2_counter += 1
 
-        print "exiting on_status successfully"
+        print "exiting slistener::on_status successfully"
         return True            
 
     def on_delete(self, status_id, user_id):

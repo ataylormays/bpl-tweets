@@ -1,6 +1,7 @@
 import threading
 import csv
 import os, sys
+from random import randint
 
 resources_path = os.path.abspath(os.path.join('../../../..', 'resources'))
 streaming_path = os.path.abspath(os.path.join('..', 'streaming'))
@@ -24,7 +25,7 @@ class LiveTweetsThread(threading.Thread):
 			rows = csv.reader(f)
 			secrets = [row for row in rows]
 		
-		secret = secrets[0]
+		secret = secrets[randint(0,9)]
 		streamer = StreamingTweets(secret[0], secret[1], secret[2], secret[3])
 
 		#TO-DO: get list of VIP users from config file
