@@ -1,13 +1,14 @@
+import csv
+import json
 import oauth2
+import os
+import pickle
+import sys
 import time
 import urllib
 import urllib2
-import json
-import csv
-import pickle
-import os, sys
 
-resources_path = os.path.abspath(os.path.join('../../../..', 'resources'))
+resources_path = os.path.abspath(os.path.join('../../..', 'resources'))
 sys.path.append(resources_path)
 
 import constants
@@ -17,7 +18,6 @@ def convert_datetime(twitter_date):
 	new_fmt = '%Y-%m-%d %H:%M:%S'
 	d = time.strptime(twitter_date, old_fmt)
 	return time.strftime(new_fmt, d)
-
 
 def get_hashtags(club_nm):
 	with open(constants.CLUBS_FILE) as clubs_file:
@@ -36,7 +36,9 @@ def extract_hashtags(twitter_object):
 		return h_tags
 
 def get_since_id(club_nm):
-	club_since_file = os.path.join(constants.SINCE_DIR, club_nm.lower().replace(" ", "_") + "_since_id.txt")
+	club_since_file = os.path.join(
+		constants.SINCE_DIR,
+		club_nm.lower().replace(" ", "_") + "_since_id.txt")
 	if os.path.exists(club_since_file):
 		with open(club_since_file, 'r+') as f:
 			return f.read()
@@ -48,10 +50,12 @@ def get_top_id(query):
 	if data["statuses"] == []:
 		print "no data"
 	else:
-		return data["statuses"][0]["id_str"]	
+		return data["statuses"][0]["id_str"]
 
 def update_since_id(club_nm, since_id=""):
-	club_since_file = os.path.join(constants.SINCE_DIR, club_nm.lower().replace(" ", "_") + "_since_id.txt")
+	club_since_file = os.path.join(
+		constants.SINCE_DIR,
+		club_nm.lower().replace(" ", "_") + "_since_id.txt")
 	old_id = ""
 	if since_id == "":
 		old_id = get_top_id(query_builder(club_nm))
@@ -96,7 +100,7 @@ def query_builder(club_nm):
 	query = ""
 	with open(constants.CLUBS_JSON) as clubs_json:
 		club_data = json.load(clubs_json)[club_nm]
-	
+
 	query += qb_name(club_data["club"])
 	query += qb_hashtags(club_data["hashtags"])
 	query += qb_handle(club_data["handle"])
@@ -110,9 +114,13 @@ def build_params():
 	with open(constants.SECRETS_FILE, 'r+') as f:
 		rows = csv.reader(f)
 		secrets = [row for row in rows]
-	
-	consumers = [oauth2.Consumer(key=secret[0], secret=secret[1]) for secret in secrets]
-	tokens = [oauth2.Token(key=secret[2], secret=secret[3]) for secret in secrets] 
+
+	consumers = [
+		oauth2.Consumer(key=secret[0], secret=secret[1])
+		for secret in secrets]
+	tokens = [
+		oauth2.Token(key=secret[2], secret=secret[3])
+		for secret in secrets]
 
 	api_params = [{
 		"oath_version": "1.0",
@@ -130,26 +138,32 @@ def build_params():
 	with open(constants.CONSUMERS_FILE, 'w') as fc:
 		pickle.dump(consumers, fc)
 
-	with open(constants.TOKENS_FILE, 'w') as ft: 	
+	with open(constants.TOKENS_FILE, 'w') as ft:
 		pickle.dump(tokens, ft)
 
 def analyze_text(text):
 	APPLICATION_ID = '' # application id
 	APPLICATION_KEY = '' # application key
 	parameters = {"text": text}
-  	url = 'https://api.aylien.com/api/v1/sentiment'
-  	headers = {
-	    "Accept":                             "application/json",
-	    "Content-type":                       "application/x-www-form-urlencoded",
-	    "X-AYLIEN-TextAPI-Application-ID":    APPLICATION_ID,
-	    "X-AYLIEN-TextAPI-Application-Key":   APPLICATION_KEY
+	url = 'https://api.aylien.com/api/v1/sentiment'
+	headers = {
+		"Accept": "application/json",
+		"Content-type": "application/x-www-form-urlencoded",
+		"X-AYLIEN-TextAPI-Application-ID": APPLICATION_ID,
+		"X-AYLIEN-TextAPI-Application-Key": APPLICATION_KEY
   	}
-  	opener = urllib2.build_opener()
+	opener = urllib2.build_opener()
 	request = urllib2.Request(url, urllib.urlencode(parameters), headers)
 	response = opener.open(request);
 	return json.loads(response.read())
 
-def query_twitter_api(query, count=1, since_id="", max_id="", result_type="", index=0):
+def query_twitter_api(
+	query,
+	count=1,
+	since_id="",
+	max_id="",
+	result_type="",
+	index=0):
 	# read in data
 	with open(constants.PARAMS_FILE, 'r+') as fp:
 		api_params = json.load(fp)
@@ -178,9 +192,9 @@ def query_twitter_api(query, count=1, since_id="", max_id="", result_type="", in
 	url = req.to_url()
 	response = urllib2.Request(url)
 	return json.load(urllib2.urlopen(response))
-		 
+
 def populate_popularity(club_nm, since_id="", iteration=1):
-	#build api_params 
+	#build api_params
 	build_params()
 
 	tot_time_start = time.time()
@@ -195,13 +209,15 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 	tweet_data = []
 
 	#read and edit data
-	input_file_nm = os.path.join(constants.POPULARITY_DIR, club_nm.lower().replace(' ', '_') + "_popularity.csv")
+	input_file_nm = os.path.join(
+		constants.POPULARITY_DIR,
+		club_nm.lower().replace(' ', '_') + "_popularity.csv")
 	try:
 		with open(input_file_nm, 'rU') as f:
 			tweet_file = csv.reader(f, delimiter=",")
 			tweet_data = [row for row in tweet_file]
 	except:
-		tweet_data = []	
+		tweet_data = []
 
 	# breaks when no more data
 	while(True):
@@ -210,9 +226,14 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 			build_params()
 
 		start = time.time()
-		data = query_twitter_api(query, count=100, max_id=prev_id, 
-			since_id=since_id, index=index, result_type=constants.TWEET_TYPE)
-		
+		data = query_twitter_api(
+			query,
+			count=100,
+			max_id=prev_id,
+			since_id=since_id,
+			index=index,
+			result_type=constants.TWEET_TYPE)
+
 		if data["statuses"] == []:
 			print "end of data"
 			break
@@ -229,8 +250,10 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 					continue
 				else:
 					collected_tweets.add(id_str)
-				
-				popularity = str(status["retweet_count"] + status["favorite_count"])
+
+				popularity = str(
+					status["retweet_count"] + \
+					status["favorite_count"])
 				new_tweet = True
 				for row in tweet_data:
 					if(row[0] == id_str):
@@ -239,10 +262,17 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 						new_tweet = False
 						break
 				if new_tweet:
-					content = [id_str] + ["0"]*(iteration-1) + [str(popularity)] + ["0"]*(int(constants.NUM_COLS)-iteration)
+					content = [id_str] + \
+						["0"] * (iteration-1) + \
+						[str(popularity)] + \
+						["0"] * \
+						(
+							int(
+							constants.NUM_COLS) - \
+							iteration)
 					tweet_data += [content]
-		
-		all_data += tweet_data		
+
+		all_data += tweet_data
 		end = time.time()
 		print i, end-start
 		index += 1
@@ -251,4 +281,3 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 	#write data (overwrites file)
 	with open(input_file_nm, 'w+') as f:
 		csv.writer(f, delimiter=",").writerows(all_data)
-	
