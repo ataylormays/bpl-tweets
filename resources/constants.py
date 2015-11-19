@@ -37,7 +37,7 @@ PARAMS_FILE = os.path.join(SECRETS_DIR, "params.json")
 CONSUMERS_FILE = os.path.join(SECRETS_DIR, "consumers.con")
 TOKENS_FILE = os.path.join(SECRETS_DIR, "tokens.tok")
 SECRETS_FILE = os.path.join(SECRETS_DIR, "secrets.csv")
-CLUBS_CSV = os.path.join(DATA_DIR, "twitter_clubs.csv")
-CLUBS_JSON = os.path.join(DATA_DIR, "twitter_clubs.json")
+CLUBS_CSV = os.path.join(RESOURCES_DIR, "twitter_clubs.csv")
+CLUBS_JSON = os.path.join(RESOURCES_DIR, "twitter_clubs.json")
 
 ARCHIVE_START = "August 2015"

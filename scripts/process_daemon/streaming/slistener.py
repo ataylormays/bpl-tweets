@@ -33,18 +33,18 @@ class SListener(StreamListener):
 		self.t1_counter = 0
 		self.t2_counter = 0
 		team1_fix, team2_fix = map(
-			lambda x: x.lower().replace(" ", "-"),
+			lambda x: x.lower().replace(" ", "_"),
 			[team1, team2])
 		self.fprefix = os.path.join(
-			directory,
-			"../data/streaming_data/",
-			"_".join([fprefix, team1_fix, team2_fix]))
+			os.path.dirname(directory),
+			"data/streaming_data/",
+			"-".join([fprefix, team1_fix, team2_fix]))
 
-		self.data_output = open(self.fprefix + '_counts_data.txt', 'w')
-		self.id_output = open(self.fprefix + '_ids.txt', 'w')
-		self.tweet_output = open(self.fprefix + '_tweets.txt', 'w')
-		self.user_output = open(self.fprefix + '_users.txt', 'w')
-		self.delout = open(self.fprefix + '_delete.txt', 'w')
+		self.data_output = open(self.fprefix + '-counts_data.txt', 'w')
+		self.id_output = open(self.fprefix + '-ids.txt', 'w')
+		self.tweet_output = open(self.fprefix + '-tweets.txt', 'w')
+		self.user_output = open(self.fprefix + '-users.txt', 'w')
+		self.delout = open(self.fprefix + '-delete.txt', 'w')
 
 	def on_data(self, data):
 		if	'in_reply_to_status' in data:

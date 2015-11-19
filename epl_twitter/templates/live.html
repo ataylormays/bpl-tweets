@@ -29,11 +29,12 @@
 <div id="container_left_loader" style="display: none;"></div>
 <div id="container_right_loader" style="display: none;"></div>
 <div id="bottom_loader" style="display: none;"></div>
+<div id="graph_loader" style="display: none;"></div>
 
 <script type="text/javascript">
-	idsFile = "/static/streamer_{{team1}}_{{team2}}_ids.txt";
-	usersFile = "/static/streamer_{{team1}}_{{team2}}_users.txt";
-	graphFile = "/static/streamer_{{team1}}_{{team2}}.txt";
+	idsFile = "/static/streamer-{{team1}}-{{team2}}-ids.txt";
+	usersFile = "/static/streamer-{{team1}}-{{team2}}-users.txt";
+	graphFile = "/static/streamer-{{team1}}-{{team2}}-counter_data.txt";
 
 	$("#container_left_loader").load(idsFile, function() {
 		loadTweets(
@@ -53,9 +54,18 @@
 		loadTweets(
 			"container_bottom_loader",
 			"container_bottom",
-			grpahFile,
+			graphFile,
 			0);
 	});
+	$("#graph_loader").load(graphFile, function(){
+		loadGraph(
+           	"graph_loader",
+           	"graph",
+           	graphFile,
+           	0,
+           	5
+        );
+   });
 </script>
 
 {% endblock %}

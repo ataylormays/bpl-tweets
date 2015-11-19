@@ -111,7 +111,7 @@ def sentiment_percs(dt1, dt2, sent_list):
 	return L
 
 def get_club_names():
-	clubs_file_nm = os.path.join(constants.DATA_DIR, "twitter_clubs.json")
+	clubs_file_nm = constants.CLUBS_JSON
 	with open(clubs_file_nm) as clubs_file:
 		club_names = []
 		clubs = clubs_file.read()
