@@ -255,6 +255,24 @@ function makeDoubleBarGraph(
 			 y2Scaled[i] - yMid - strokeWidth / 2]);
 	}
 
+	function makeRectangleList(rectangles, barClass, color){
+		d3.select("#graph")
+		.select("svg")
+		.selectAll("." + barClass)
+		.data(rectangles)
+		.enter()
+		.append("rect")
+		.attr("x", function(d) { return d[0]; })
+		.attr("y", function(d) { return d[1]; })
+		.attr("width", function(d) { return d[2]; })
+		.attr("height", function(d) { return d[3]; })
+		.attr("fill", color)
+		.attr("class", barClass)
+	}
+
+	// rectangleList = makeRectangleList(y1Rects, "barDown", team1PrimaryColor)
+	// rectangleList = makeRectangleList(y2Rects, "barUp", team2PrimaryColor)
+
 	rectangleList = d3.select("#graph")
 		.select("svg")
 		.selectAll(".barDown")
@@ -303,7 +321,7 @@ function makeDoubleBarGraph(
 	timeout: a number specifying the amount of time until the function
 	should call itself recursively
 
-	This function loads the file containing data frot the central graph
+	This function loads the file containing data for the central graph
 	and then passes that data to makeDoubleBarGraph(...).
 */
 function loadTweets(hidden, container, file, counter) {
@@ -342,6 +360,7 @@ function loadTweets(hidden, container, file, counter) {
 	and then passes that data to makeDoubleBarGraph(...).
 */
 function loadGraph(hidden, container, file, chunk, timeout) {
+	console.log('entering loadGraph');
 	lines = $('#' + hidden).text().split(',\n');
 	n = lines.length;
 	now = 0;
@@ -371,6 +390,7 @@ function loadGraph(hidden, container, file, chunk, timeout) {
 	team1Arr.push(team1Total);
 	team2Arr.push(team2Total);
 
+	console.log('about to makeDoubleBarGraph');
 	makeDoubleBarGraph(
 		400,
 		600,
