@@ -28,8 +28,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESOURCES_DIR = os.path.join(BASE_DIR, "resources/")
 DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "bpl-tweets-data/")
 SECRETS_DIR = os.path.join(DATA_DIR, "secrets/")
-SINCE_DIR = os.path.join(DATA_DIR, "since_ids/")
-POPULARITY_DIR = os.path.join(DATA_DIR, "popularity/")
+SINCE_DIR = os.path.join(DATA_DIR, "streaming_data/since_ids/")
+POPULARITY_DIR = os.path.join(DATA_DIR, "streaming_data/popularity/")
 MATCHES_DIR = os.path.join(DATA_DIR, "matches/")
 
 # files

@@ -64,8 +64,6 @@ class StreamingTweets:
 					track = teams,
 					languages=['en'])
 		except:
-			e = sys.exc_info()[0]
-			print "error!"
-			print e
+			print "StreamingTweets caugh exception. Ending process."
 			stream.disconnect()
 			raise

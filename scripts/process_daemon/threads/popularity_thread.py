@@ -23,8 +23,7 @@ class PopularityThread(threading.Thread):
 	def run(self):
 		# at start of match
 		twitter_access.build_params()
-		since_id = twitteraccess.update_since_id(self.club)
-
+		since_id = twitter_access.update_since_id(self.club)
 		# after 1st run of match, every n minutes
 		runs = 1
 		while(runs < constants.NUM_COLS):
@@ -32,7 +31,7 @@ class PopularityThread(threading.Thread):
 				club_nm=self.club,
 				since_id=since_id,
 				iteration=runs)
-			log_string = "PopularityThread sleeping for %d"
-			print log_string % (constants.RUN_FREQ * 60)
+			template = "PopularityThread sleeping for %d."
+			print template % (constants.RUN_FREQ * 60)
 			time.sleep(constants.RUN_FREQ * 60)
 			runs += 1

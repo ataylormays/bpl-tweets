@@ -8,7 +8,7 @@ import time
 import urllib
 import urllib2
 
-resources_path = os.path.abspath(os.path.join('../../..', 'resources'))
+resources_path = os.path.abspath(os.path.join('../../../..', 'resources'))
 sys.path.append(resources_path)
 
 import constants
@@ -20,11 +20,13 @@ def convert_datetime(twitter_date):
 	return time.strftime(new_fmt, d)
 
 def get_hashtags(club_nm):
+	hashtags = []
 	with open(constants.CLUBS_FILE) as clubs_file:
 		clubs = csv.reader(clubs_file, delimiter=",")
 		for row in clubs:
 			if(row[0]) == club_nm:
-				print row[1].split(", ")
+				hashtags.append(row[1].split(", "))
+	return hashtags
 
 def extract_hashtags(twitter_object):
 	if len(twitter_object) == 0:
@@ -48,7 +50,7 @@ def get_since_id(club_nm):
 def get_top_id(query):
 	data = query_twitter_api(query)
 	if data["statuses"] == []:
-		print "no data"
+		print "twitter_access::get_top_id: No data."
 	else:
 		return data["statuses"][0]["id_str"]
 
@@ -65,9 +67,11 @@ def update_since_id(club_nm, since_id=""):
 			f.seek(0)
 			f.truncate()
 			f.write(since_id)
+			f.flush()
 	else:
 		with open(club_since_file, 'w') as f:
 			f.write(since_id)
+			f.flush()
 		old_id = since_id
 	return old_id
 
@@ -164,18 +168,13 @@ def query_twitter_api(
 	max_id="",
 	result_type="",
 	index=0):
-	# read in data
 	with open(constants.PARAMS_FILE, 'r+') as fp:
 		api_params = json.load(fp)
 
 	with open(constants.TOKENS_FILE, 'r+') as ft:
-		# rows = csv.reader(f)
-		# tokens = [row for row in rows]
 		tokens = pickle.load(ft)
 
 	with open(constants.CONSUMERS_FILE, 'r+') as fc:
-		# rows = csv.reader(f)
-		# consumers = [row for row in rows]
 		consumers = pickle.load(fc)
 
 	params = api_params[index]
@@ -235,7 +234,6 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 			result_type=constants.TWEET_TYPE)
 
 		if data["statuses"] == []:
-			print "end of data"
 			break
 		else:
 			prev_id = int(data["statuses"][-1]["id"])-1
@@ -243,7 +241,6 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 			# empty tweet_data variable after first run
 			if i != 1:
 				tweet_data = []
-			print str(len(data["statuses"])) + " on this page"
 			for status in data["statuses"]:
 				id_str =  status["id_str"]
 				if id_str in collected_tweets:
@@ -257,7 +254,6 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 				new_tweet = True
 				for row in tweet_data:
 					if(row[0] == id_str):
-						print 'amending existing tweet'
 						row[iteration] = popularity
 						new_tweet = False
 						break
@@ -274,7 +270,6 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 
 		all_data += tweet_data
 		end = time.time()
-		print i, end-start
 		index += 1
 		index = index % 10
 

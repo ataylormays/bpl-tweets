@@ -62,21 +62,26 @@ class SListener(StreamListener):
 				print "Warning: %s." % warning['message']
 				return false
 
+	def write_and_flush(self, f, s):
+		f.write(s)
+		f.flush()
+
 	def write_line(self, delta):
 		join = [str(delta), str(self.t1_counter), str(self.t2_counter), '\n' ]
 		output = ','.join(join)
-		self.data_output.write(output)
+		self.write_and_flush(self.data_output, output)
 
 	def contains_either_team(self, text):
 		t = text.lower()
 		return self.team1.lower() in t or self.team2.lower() in t
 
 	def on_status(self, status):
-		delta = time.time() - self.start_time
+		totalTime = time.time() - self.start_time
+		delta = time.time() - self.time
 
-		if delta > self.total_limit:
-			self.write_line(delta)
+		if totalTime > self.total_limit:
 			print "Time limit exceed. Terminating slistener."
+			self.write_line(delta)
 			self.data_output.close()
 			self.id_output.close()
 			self.tweet_output.close()
@@ -85,32 +90,32 @@ class SListener(StreamListener):
 			return False
 
 		tweet = json.loads(status)
-
 		tweet_user = tweet["user"]["id_str"]
 		tweet_text = tweet['text']
 		tweet_id = tweet["id_str"]
 
 		if tweet_user in self.users and self.contains_either_team(text):
 			print "Received tweet #" + tweet_id + "."
-			self.user_output.write(tweet_id + ', ')
-			self.id_output.write(tweet_id + ', ')
-			self.tweet_output.write(tweet_text.encode('utf-8') + ', ')
+			self.write_and_flush(self.user_output.write, tweet_id + ', ')
 
-			if delta > self.write_limit:
-				self.t1_counter = 0
-				self.t2_counter = 0
-				self.time = time.time()
+		self.write_and_flush(self.id_output, tweet_id + ', ')
+		self.write_and_flush(self.tweet_output, tweet_text.encode('utf-8') + ', ')
 
-				if self.team1.lower() in tweet_text.lower():
-						self.t1_counter += 1
-				if self.team2.lower() in tweet_text.lower():
-						self.t2_counter += 1
+		print delta
+		if delta > self.write_limit:
+			self.write_line(delta)
+			self.t1_counter = 0
+			self.t2_counter = 0
+			self.time = time.time()
 
-			print "Exiting slistener::on_status successfully"
-			return True
+		if self.team1.lower() in tweet_text.lower():
+			self.t1_counter += 1
+		if self.team2.lower() in tweet_text.lower():
+			self.t2_counter += 1
+		return True
 
 	def on_delete(self, status_id, user_id):
-		self.delout.write( str(status_id) + "\n")
+		self.write_and_flush(self.delout.write, str(status_id) + "\n")
 		return
 
 	def on_limit(self, track):

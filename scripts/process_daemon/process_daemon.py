@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import argparse
+import argparse
 import csv
 import datetime
 import os
@@ -28,7 +30,7 @@ def start_threads(lt_threads, p_threads):
 		print template % (thread.home, thread.away)
 		thread.start()
 	template = "Starting popularity measuring for %s."
-	for thread in popularitythreads:
+	for thread in p_threads:
 		print template % thread.club
 		thread.start()
 
@@ -42,41 +44,102 @@ def read_matches(filename, now, today):
 			if row[1] != now:
 					continue
 			curr_matches += [[row[2], row[3]]]
+	return curr_matches
 
-loop = True
+def dummy_mode():
+	# TODO - Implement!
+	pass
 
-while True:
-	today = datetime.date.today().strftime("%d %B %Y")
-	now = datetime.datetime.now().strftime("%I:%M %p")
+def team_mode(team1, team2):
+	lt_thread = LTT(
+		team1,
+		team2,
+		constants.SECRETS_DIR,
+		60 * constants.TOT_MINUTES)
+	p_threads = [PT(team1), PT(team2)]
 
-	now = remove_zeropading(now)
-	today = remove_zeropading(today)
+	start_threads([lt_thread], p_threads)
 
-	try:
-		filename = os.path.join(constants.MATCHES_DIR, "matches.csv")
-		matches = read_matches(filename, now, today)
+def daemon_mode():
+	loop = True
 
-		if matches:
-			lt_threads = [
-				LTT(
-					m[0],
-					m[1],
-					constants.SECRETS_DIR,
-					seconds)
+	while True:
+		now = datetime.datetime.now().strftime("%I:%M %p")
+		today = datetime.date.today().strftime("%d %B %Y")
+
+		now = remove_zeropading(now)
+		today = remove_zeropading(today)
+
+		try:
+			filename = os.path.join(
+				constants.MATCHES_DIR,
+				"matches.csv")
+			matches = read_matches(filename, now, today)
+
+			if matches:
+				lt_threads = [
+					LTT(
+						m[0],
+						m[1],
+						constants.SECRETS_DIR,
+						60 * constants.TOT_MINUTES)
 				for m in matches]
 
-			p_threads = [PT(m[0]) for m in matches]
-			p_threads += [PT(m[1]) for m in matches]
+				p_threads = [PT(m[0]) for m in matches]
+				p_threads += [PT(m[1]) for m in matches]
 
-			start_threads(lt_threads, p_threads)
+				start_threads(lt_threads, p_threads)
 
-	except:
-		print "Daemon caught exception. Ending process."
-		raise
-		loop = False
+		except:
+			print "Daemon caught exception. Ending process."
+			raise
+			loop = False
 
-	if loop:
-		print "Daemon sleeping for 30 seconds."
-		time.sleep(30)
+		if loop:
+			print "Daemon sleeping for 30 seconds."
+			time.sleep(30)
+		else:
+			break
+
+def main():
+	parser = argparse.ArgumentParser()
+	parser.add_argument(
+		"-t1",
+		"--team1",
+		type=str,
+		help="Team 1 to collect tweets from, if ignoring matches file.")
+	parser.add_argument(
+		"-t2",
+		"--team2",
+		type=str,
+		help="Team 2 to collect tweets from, if ignoring matches file.")
+	parser.add_argument(
+		"-d",
+		"--dummy",
+		action="store_true",
+		help="Run the process_daemon in dummy mode.")
+	args = parser.parse_args()
+
+	dummy = args.dummy
+	team1 = args.team1
+	team2 = args.team2
+
+	error1 = "Do not specify --team1 or --team2 in dummy mode."
+	error2 = "--team1 and --team2 must be specified together or not at all."
+	if dummy:
+		if team1 or team2:
+			print error1, "Exiting."
+			sys.exit(1)
+	elif (team1 and not team2) or (team2 and not team1):
+		print error2, "Exiting."
+		sys.exit(1)
+
+	if dummy:
+		dummy_mode()
+	elif team1:
+		team_mode(team1, team2)
 	else:
-		break
+		daemon_mode()
+
+if __name__ == "__main__":
+	main()
