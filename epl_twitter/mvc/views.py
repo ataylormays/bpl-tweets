@@ -141,8 +141,7 @@ def home(request):
 		for count, elt in enumerate(count_elts(hashtags, 20), 1)]
 
 	context = RequestContext(request, {
-		'hashtags': popular_hashtags,
-
+		'hashtags': popular_hashtags
 		})
 
 	return HttpResponse(template.render(context))

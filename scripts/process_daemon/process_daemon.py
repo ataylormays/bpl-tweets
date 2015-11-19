@@ -1,74 +1,82 @@
-import datetime
+#!/usr/bin/python
+
 import csv
-import os, sys
+import datetime
+import os
+import sys
 import time
 import tweepy
 
 resources_path = os.path.abspath(os.path.join('../..', 'resources'))
 streaming_path = os.path.abspath('streaming')
-twitter_path = os.path.abspath('threads/twitteraccess')
-import_paths = [resources_path, streaming_path, twitter_path]
+twitter_access_path = os.path.abspath('threads/twitter_access')
+
+import_paths = [resources_path, streaming_path, twitter_access_path]
 for ip in import_paths:
 	sys.path.append(ip)
 
 import constants
-from threads.liveTweetsThread import LiveTweetsThread as LTT
-from threads.popularityThread import PopularityThread as PT
+from threads.live_tweets_thread import LiveTweetsThread as LTT
+from threads.popularity_thread import PopularityThread as PT
 
-# t1 = PT("Manchester United")
-# t2 = PT("Manchester City")
-# t1.start()
-# t2.start()
+def remove_zeropading(time_obj):
+	return time_obj[1:] if time_obj[0] == '0' else time_obj
 
-t1 = LTT("Manchester United", "Arsenal", constants.SECRETS_DIR, 30)
-t1.start() 
+def start_threads(lt_threads, p_threads):
+	template = "Starting live tweet collection for %s and %s."
+	for thread in lt_threads:
+		print template % (thread.home, thread.away)
+		thread.start()
+	template = "Starting popularity measuring for %s."
+	for thread in popularitythreads:
+		print template % thread.club
+		thread.start()
 
-# def remove_zeropading(time_obj):
-# 	return time_obj[1:] if time_obj[0] == '0' else time_obj
+def read_matches(filename, now, today):
+	with open(filename, "r") as f:
+		matches_reader = csv.reader(f, delimiter=",")
+		curr_matches = []
+		for row in matches_reader:
+			if row[0] != today:
+				continue
+			if row[1] != now:
+					continue
+			curr_matches += [[row[2], row[3]]]
 
-# loop = True
+loop = True
 
-# while(loop):
-# 	today = datetime.date.today().strftime("%d %B %Y") 
-# 	now = datetime.datetime.now().strftime("%I:%M %p")
+while True:
+	today = datetime.date.today().strftime("%d %B %Y")
+	now = datetime.datetime.now().strftime("%I:%M %p")
 
-# 	now = remove_zeropading(now)
-# 	today = remove_zeropading(today)
+	now = remove_zeropading(now)
+	today = remove_zeropading(today)
 
-# 	try:
-# 		f = open(os.path.join(constants.MATCHES_DIR, "matches.csv"), 'r')
-# 		matches_reader = csv.reader(f, delimiter=",")
-# 		curr_matches = []
-# 		for row in matches_reader:
-# 			if row[0] != today:
-# 				continue
-# 			if row[1] != now:
-# 				continue
-# 			curr_matches += [[row[2], row[3]]]
-# 		if curr_matches:
-# 			print 'inside curr_matches'
-# 			livetweetthreads = [LTT(m[0], m[1], constants.SECRETS_DIR, 60*constants.TOT_MINUTES) for m in curr_matches]
-# 			print livetweetthreads
-# 			popularitythreads = [PT(m[0]) for m in curr_matches]
-# 			popularitythreads += [PT(m[1]) for m in curr_matches]
-# 			print popularitythreads
-# 			for thread in livetweetthreads:
-# 				print "starting live tweet collection process for %s and %s" % (thread.home, thread.away)
-# 				thread.start()
-# 				print 'started ltt'
-# 			for thread in popularitythreads:
-# 				print "starting popularity measuring for " + thread.club
-# 				thread.start()
-# 				print 'started pt'
+	try:
+		filename = os.path.join(constants.MATCHES_DIR, "matches.csv")
+		matches = read_matches(filename, now, today)
 
-# 		f.close()
+		if matches:
+			lt_threads = [
+				LTT(
+					m[0],
+					m[1],
+					constants.SECRETS_DIR,
+					seconds)
+				for m in matches]
 
-# 	except:
-# 		print "Ending process"
-# 		loop = False
-# 		break
-# 	print "Daemon sleeping for 30 secs"
-# 	time.sleep(30)
+			p_threads = [PT(m[0]) for m in matches]
+			p_threads += [PT(m[1]) for m in matches]
 
+			start_threads(lt_threads, p_threads)
 
+	except:
+		print "Daemon caught exception. Ending process."
+		raise
+		loop = False
 
+	if loop:
+		print "Daemon sleeping for 30 seconds."
+		time.sleep(30)
+	else:
+		break

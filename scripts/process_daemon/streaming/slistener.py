@@ -1,102 +1,127 @@
+import json
+import os
+import sys
+import time
+
 from tweepy import StreamListener
 from tweepy import API
-import json, time, sys, os, json
 
 class SListener(StreamListener):
 
-    def __init__(self, team1, team2, users = [], api = None, fprefix = 'streamer', write_limit = 10, total_limit = 30,
-            directory = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))):
-        self.api = api or API()
-        self.time = time.time()
-        self.start_time = time.time()
-        self.write_limit = write_limit
-        self.total_limit = total_limit
-        self.team1 = team1
-        self.team2 = team2
-        self.users = users
-        self.t1_counter = 0
-        self.t2_counter = 0
-        self.fprefix = directory + '/data/streaming_data/' + fprefix + '_' +  team1.lower().replace(' ', '-') + '_' + team2.lower().replace(' ', '-')
-        self.data_output = open(self.fprefix + '_counts_data.txt', 'w')
-        self.id_output = open(self.fprefix + '_ids.txt', 'w')
-        self.tweet_output = open(self.fprefix + '_tweets.txt', 'w')
-        self.user_output = open(self.fprefix + '_users.txt', 'w')
-        
-        self.delout = open(self.fprefix + '_delete.txt', 'w')
+	def __init__(
+		self,
+		team1,
+		team2,
+		users = [],
+		api = None,
+		fprefix = 'streamer',
+		write_limit = 10,
+		total_limit = 60,
+		directory = os.path.dirname(
+			os.path.dirname(
+				os.path.dirname(
+					os.path.dirname(__file__))))):
 
-    def on_data(self, data):
-        if  'in_reply_to_status' in data:
-            if self.on_status(data) is False:
-                return False
-        elif 'delete' in data:
-            delete = json.loads(data)['delete']['status']
-            if self.on_delete(delete['id'], delete['user_id']) is False:
-                return False
-        elif 'limit' in data:
-            if self.on_limit(json.loads(data)['limit']['track']) is False:
-                return False
-        elif 'warning' in data:
-            warning = json.loads(data)['warnings']
-            print warning['message']
-            return false
+		self.api = api or API()
+		self.time = time.time()
+		self.start_time = time.time()
+		self.write_limit = write_limit
+		self.total_limit = total_limit
+		self.team1 = team1
+		self.team2 = team2
+		self.users = users
+		self.t1_counter = 0
+		self.t2_counter = 0
+		team1_fix, team2_fix = map(
+			lambda x: x.lower().replace(" ", "-"),
+			[team1, team2])
+		self.fprefix = os.path.join(
+			directory,
+			"../data/streaming_data/",
+			"_".join([fprefix, team1_fix, team2_fix]))
 
-    def on_status(self, status):
-        if time.time() - self.start_time > self.total_limit:
-            #write final data points and close files
-            self.data_output.write(str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ',\n')
-            print "over time limit"
-            self.data_output.close()
-            self.user_output.close()
-            self.id_output.close()
-            return False
+		self.data_output = open(self.fprefix + '_counts_data.txt', 'w')
+		self.id_output = open(self.fprefix + '_ids.txt', 'w')
+		self.tweet_output = open(self.fprefix + '_tweets.txt', 'w')
+		self.user_output = open(self.fprefix + '_users.txt', 'w')
+		self.delout = open(self.fprefix + '_delete.txt', 'w')
 
-        tweet = json.loads(status)
+	def on_data(self, data):
+		if	'in_reply_to_status' in data:
+			if self.on_status(data) is False:
+				return False
+			elif 'delete' in data:
+				delete = json.loads(data)['delete']['status']
+				if self.on_delete(delete['id'], delete['user_id']) is False:
+					return False
+			elif 'limit' in data:
+				if self.on_limit(json.loads(data)['limit']['track']) is False:
+						return False
+			elif 'warning' in data:
+				warning = json.loads(data)['warnings']
+				print "Warning: %s." % warning['message']
+				return false
 
-        # if tweet is from VIP user about team 1 or team 2
-        if ( tweet["user"]["id_str"] in self.users 
-            and ( self.team1.lower() in tweet['text'].lower() 
-                or self.team2.lower() in tweet['text'].lower() )):
-                #write tweet id to user file
-                self.user_output.write(tweet["id_str"] + ', ')
-        
-        print "Received tweet #" + tweet["id_str"]
+	def write_line(self, delta):
+		join = [str(delta), str(self.t1_counter), str(self.t2_counter), '\n' ]
+		output = ','.join(join)
+		self.data_output.write(output)
 
-        self.id_output.write(tweet["id_str"] + ', ')
-        self.tweet_output.write(tweet["text"].encode('utf-8') + ', ')
+	def contains_either_team(self, text):
+		t = text.lower()
+		return self.team1.lower() in t or self.team2.lower() in t
 
-        if time.time() - self.time > self.write_limit:
-            print 'writing to ' + self.team1 + ' vs ' + self.team2 + ' data file: ' + \
-                str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ','
-            self.data_output.write(str(time.time() - self.start_time) +', ' + str(self.t1_counter) + ', ' + str(self.t2_counter) + ',\n')
-            self.t1_counter = 0
-            self.t2_counter = 0
-            self.time = time.time()
+	def on_status(self, status):
+		delta = time.time() - self.start_time
 
-        if self.team1.lower() in tweet['text'].lower():
-            self.t1_counter += 1
-        if self.team2.lower() in tweet['text'].lower():
-            self.t2_counter += 1
+		if delta > self.total_limit:
+			self.write_line(delta)
+			print "Time limit exceed. Terminating slistener."
+			self.data_output.close()
+			self.id_output.close()
+			self.tweet_output.close()
+			self.user_output.close()
+			self.delout.close()
+			return False
 
-        print "exiting slistener::on_status successfully"
-        return True            
+		tweet = json.loads(status)
 
-    def on_delete(self, status_id, user_id):
-        print "in on_delete"
-        self.delout.write( str(status_id) + "\n")
-        return
+		tweet_user = tweet["user"]["id_str"]
+		tweet_text = tweet['text']
+		tweet_id = tweet["id_str"]
 
-    def on_limit(self, track):
-        print "in on_limit"
-        sys.stderr.write(track + "\n")
-        return
+		if tweet_user in self.users and self.contains_either_team(text):
+			print "Received tweet #" + tweet_id + "."
+			self.user_output.write(tweet_id + ', ')
+			self.id_output.write(tweet_id + ', ')
+			self.tweet_output.write(tweet_text.encode('utf-8') + ', ')
 
-    def on_error(self, status_code):
-        print "in on_error"
-        sys.stderr.write('Error: ' + str(status_code) + "\n")
-        return False
+			if delta > self.write_limit:
+				self.t1_counter = 0
+				self.t2_counter = 0
+				self.time = time.time()
 
-    def on_timeout(self):
-        print "in on_timeout"
-        sys.stderr.write("Timeout, sleeping for 60 seconds...\n")
-        time.sleep(60)
-        return
+				if self.team1.lower() in tweet_text.lower():
+						self.t1_counter += 1
+				if self.team2.lower() in tweet_text.lower():
+						self.t2_counter += 1
+
+			print "Exiting slistener::on_status successfully"
+			return True
+
+	def on_delete(self, status_id, user_id):
+		self.delout.write( str(status_id) + "\n")
+		return
+
+	def on_limit(self, track):
+		sys.stderr.write(track + "\n")
+		return
+
+	def on_error(self, status_code):
+		sys.stderr.write("Error: " + str(status_code) + "\n")
+		return False
+
+	def on_timeout(self):
+		sys.stderr.write("Timeout, sleeping for 60 seconds.\n")
+		time.sleep(60)
+		return

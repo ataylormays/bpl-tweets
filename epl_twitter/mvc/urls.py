@@ -13,6 +13,7 @@ parse_teams_regex = \
 
 urlpatterns = [
 	url(r'^admin/', include(admin.site.urls)),
+	url(r'^home/', views.home, name='home'),
 	url(r'^club/(?P<club_nm>[A-Za-z_]+)/$', views.club, name='club'),
 	url(r'^about/', views.about, name='about'),
 	url(r'^contact/', views.contact, name='contact'),
