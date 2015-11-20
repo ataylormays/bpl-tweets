@@ -50,22 +50,14 @@
 			usersFile,
 			0);
 	});
-	$("#bottom_loader").load(graphFile, function() {
-		loadTweets(
-			"container_bottom_loader",
-			"container_bottom",
-			graphFile,
-			0);
-	});
-	$("#graph_loader").load(graphFile, function(){
+	$("#graph_loader").load(graphFile, function() {
 		loadGraph(
            	"graph_loader",
            	"graph",
            	graphFile,
-           	0,
-           	5
-        );
-   });
+           	10,
+           	6);
+   	});
 </script>
 
 {% endblock %}

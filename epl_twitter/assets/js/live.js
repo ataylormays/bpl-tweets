@@ -270,34 +270,8 @@ function makeDoubleBarGraph(
 		.attr("class", barClass)
 	}
 
-	// rectangleList = makeRectangleList(y1Rects, "barDown", team1PrimaryColor)
-	// rectangleList = makeRectangleList(y2Rects, "barUp", team2PrimaryColor)
-
-	rectangleList = d3.select("#graph")
-		.select("svg")
-		.selectAll(".barDown")
-		.data(y1Rects)
-		.enter()
-		.append("rect")
-		.attr("x", function(d) { return d[0]; })
-		.attr("y", function(d) { return d[1]; })
-		.attr("width", function(d) { return d[2]; })
-		.attr("height", function(d) { return d[3]; })
-		.attr("fill", team1PrimaryColor)
-		.attr("class", "barDown")
-
-	rectangleList = d3.select("#graph")
-		.select("svg")
-		.selectAll(".barUp")
-		.data(y2Rects)
-		.enter()
-		.append("rect")
-		.attr("x", function(d) { return d[0]; })
-		.attr("y", function(d) { return d[1]; })
-		.attr("width", function(d) { return d[2]; })
-		.attr("height", function(d) { return d[3]; })
-		.attr("fill", team2PrimaryColor)
-		.attr("class", "barUp")
+	rectangleList = makeRectangleList(y1Rects, "barDown", team1PrimaryColor)
+	rectangleList = makeRectangleList(y2Rects, "barUp", team2PrimaryColor)
 
 	milliseconds = 750;
 	callString = "blinkFinalBars(" +
@@ -311,15 +285,15 @@ function makeDoubleBarGraph(
 }
 
 /*
-	loadGraph
+	loadTweets
 
 	hidden: a string giving the id of a hidden div
 	container: a string giving the id of a div for display
 	file: a string giving the file to read data from
 	counter: the number of lines that have been read from the file
-	previously
+		previously
 	timeout: a number specifying the amount of time until the function
-	should call itself recursively
+		should call itself recursively
 
 	This function loads the file containing data for the central graph
 	and then passes that data to makeDoubleBarGraph(...).
@@ -351,16 +325,13 @@ function loadTweets(hidden, container, file, counter) {
 	hidden: a string giving the id of a hidden div
 	container: a string giving the id of a div for display
 	file: a string giving the file to read data from
-	chunk: a number giving the number of seconds each bar in the graph
-	should correspond to.
+	barDuration: a number giving the number of seconds each bar
+		in the graph should correspond to.
 	timeout: a number specifying the amount of time until the function
-	should call itself recursively
+		should call itself recursively
 
-	This function loads the file containing data frot the central graph
-	and then passes that data to makeDoubleBarGraph(...).
 */
-function loadGraph(hidden, container, file, chunk, timeout) {
-	console.log('entering loadGraph');
+function loadGraph(hidden, container, file, barDuration, timeout) {
 	lines = $('#' + hidden).text().split(',\n');
 	n = lines.length;
 	now = 0;
@@ -375,7 +346,7 @@ function loadGraph(hidden, container, file, chunk, timeout) {
 		team1 = parseInt(split[1]);
 		team2 = parseInt(split[2]);
 
-		if (time < chunk + now) {
+		if (time < barDuration + now) {
 			team1Total += team1;
 			team2Total += team2;
 		} else {
@@ -383,7 +354,7 @@ function loadGraph(hidden, container, file, chunk, timeout) {
 			team2Arr.push(team2Total);
 			team1Total = 0;
 			team2Total = 0;
-			now = now + chunk;
+			now = now + barDuration;
 			i--;
 		}
 	}
@@ -413,7 +384,7 @@ function loadGraph(hidden, container, file, chunk, timeout) {
 				hidden,
 				container,
 				file,
-				chunk,
+				barDuration,
 				timeout);
 		});
 	}, timeout * 1000);
