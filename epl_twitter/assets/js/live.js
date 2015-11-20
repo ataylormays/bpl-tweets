@@ -299,7 +299,7 @@ function makeDoubleBarGraph(
 	and then passes that data to makeDoubleBarGraph(...).
 */
 function loadTweets(hidden, container, file, counter) {
-	tweets = $(hidden).text().split(', ');
+	tweets = $('#' + hidden).text().split(', ');
 	for (i = counter; i < tweets.length; i++) {
 		twttr.widgets.createTweet(
 			tweets[i],
@@ -312,7 +312,7 @@ function loadTweets(hidden, container, file, counter) {
 	counter = tweets.length - 1;
 
 	setTimeout(function() {
-		$(hidden).load(file, function() {
+		$('#' + hidden).load(file, function() {
 			loadTweets(hidden, container, file, counter);
 		});
 	}, 3000);

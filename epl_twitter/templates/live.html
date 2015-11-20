@@ -34,7 +34,7 @@
 <script type="text/javascript">
 	idsFile = "/static/streamer-{{team1}}-{{team2}}-ids.txt";
 	usersFile = "/static/streamer-{{team1}}-{{team2}}-users.txt";
-	graphFile = "/static/streamer-{{team1}}-{{team2}}-counter_data.txt";
+	graphFile = "/static/streamer-{{team1}}-{{team2}}-counts_data.txt";
 
 	$("#container_left_loader").load(idsFile, function() {
 		loadTweets(
@@ -55,7 +55,7 @@
            	"graph_loader",
            	"graph",
            	graphFile,
-           	10,
+           	60,
            	6);
    	});
 </script>

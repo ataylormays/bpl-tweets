@@ -37,7 +37,7 @@ class SListener(StreamListener):
 			[team1, team2])
 		self.fprefix = os.path.join(
 			os.path.dirname(directory),
-			"data/streaming_data/",
+			"bpl-tweets-data/streaming_data/",
 			"-".join([fprefix, team1_fix, team2_fix]))
 
 		self.data_output = open(self.fprefix + '-counts_data.txt', 'w')
@@ -66,8 +66,8 @@ class SListener(StreamListener):
 		f.write(s)
 		f.flush()
 
-	def write_line(self, delta):
-		join = [str(delta), str(self.t1_counter), str(self.t2_counter), '\n' ]
+	def write_line(self, totalTime):
+		join = [str(totalTime), str(self.t1_counter), str(self.t2_counter), '\n' ]
 		output = ','.join(join)
 		self.write_and_flush(self.data_output, output)
 
@@ -81,7 +81,7 @@ class SListener(StreamListener):
 
 		if totalTime > self.total_limit:
 			print "Time limit exceed. Terminating slistener."
-			self.write_line(delta)
+			self.write_line(totalTime)
 			self.data_output.close()
 			self.id_output.close()
 			self.tweet_output.close()
@@ -96,14 +96,13 @@ class SListener(StreamListener):
 
 		if tweet_user in self.users and self.contains_either_team(text):
 			print "Received tweet #" + tweet_id + "."
-			self.write_and_flush(self.user_output.write, tweet_id + ', ')
+			self.write_and_flush(self.user_output, tweet_id + ', ')
 
 		self.write_and_flush(self.id_output, tweet_id + ', ')
 		self.write_and_flush(self.tweet_output, tweet_text.encode('utf-8') + ', ')
 
-		print delta
 		if delta > self.write_limit:
-			self.write_line(delta)
+			self.write_line(totalTime)
 			self.t1_counter = 0
 			self.t2_counter = 0
 			self.time = time.time()
@@ -115,7 +114,7 @@ class SListener(StreamListener):
 		return True
 
 	def on_delete(self, status_id, user_id):
-		self.write_and_flush(self.delout.write, str(status_id) + "\n")
+		self.write_and_flush(self.delout, str(status_id) + "\n")
 		return
 
 	def on_limit(self, track):
