@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 from bs4 import BeautifulSoup
 import requests
@@ -7,14 +7,14 @@ import datetime
 import csv
 import traceback
 
-path = os.path.abspath(os.path.join('../..', 'resources'))
-sys.path.append(path)
+resources_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'resources')
+sys.path.append(resources_path)
 import constants
 
 def scrape_match_data(url, dest, weeks=1):
 	r = requests.get(url)
 
-	soup = BeautifulSoup(r.content)
+	soup = BeautifulSoup(r.content, "html.parser")
 
 	# only collect data for certain number of weeks
 	date_limit = (datetime.datetime.now() + datetime.timedelta(days=7*weeks)).strftime("%d %B %Y")
