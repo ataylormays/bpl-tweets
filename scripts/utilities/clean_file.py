@@ -14,7 +14,7 @@ def main():
 		with open(filepath, 'rb+') as f:
 			content = f.read()
 			f.seek(0)
-			f.write(content.replace(b'\r', b''))
+			f.write(content.replace(b'\r', b'\n'))
 			f.truncate()
 		print "Successfully cleaned file at " + filepath
 	except:
