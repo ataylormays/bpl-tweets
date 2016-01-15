@@ -7,6 +7,9 @@ RUN_FREQ = 1
 # number of cols in popularity file
 NUM_COLS = TOT_MINUTES / RUN_FREQ
 
+# number of secrets
+NUM_SECRETS = 13
+
 # refresh time for getting new keys for Twitter API call
 REFRESH_TIME = 45 * 60
 
@@ -31,11 +34,11 @@ SECRETS_DIR = os.path.join(DATA_DIR, "secrets/")
 SINCE_DIR = os.path.join(DATA_DIR, "streaming_data/since_ids/")
 POPULARITY_DIR = os.path.join(DATA_DIR, "streaming_data/popularity/")
 MATCHES_DIR = os.path.join(DATA_DIR, "matches/")
+PARAMS_DIR = os.path.join(SECRETS_DIR, "params/")
+CONSUMERS_DIR = os.path.join(SECRETS_DIR, "consumers/")
+TOKENS_DIR = os.path.join(SECRETS_DIR, "tokens/")
 
 # files
-PARAMS_FILE = os.path.join(SECRETS_DIR, "params.json")
-CONSUMERS_FILE = os.path.join(SECRETS_DIR, "consumers.con")
-TOKENS_FILE = os.path.join(SECRETS_DIR, "tokens.tok")
 SECRETS_FILE = os.path.join(SECRETS_DIR, "secrets.csv")
 CLUBS_CSV = os.path.join(RESOURCES_DIR, "twitter_clubs.csv")
 CLUBS_JSON = os.path.join(RESOURCES_DIR, "twitter_clubs.json")
