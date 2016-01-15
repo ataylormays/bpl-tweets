@@ -34,7 +34,7 @@ def login_to_apps_site():
 
 	# enter username/pwd
 	enter_text(driver, "css", "input.js-username-field", "ataylormays@gmail.com")
-	enter_text(driver, "css", "input.js-password-field", "Genious11", enter=True)
+	enter_text(driver, "css", "input.js-password-field", "", enter=True)
 
 	# wait for page to load then redirect to apps site
 	time.sleep(2)
