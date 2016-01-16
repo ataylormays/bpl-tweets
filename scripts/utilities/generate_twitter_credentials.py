@@ -80,6 +80,7 @@ def generate_new_app(close=True):
 	if close:
 		driver.close()
 
+<<<<<<< HEAD
 def get_last_app_number():
 	driver = login_to_apps_site()
 
@@ -182,7 +183,8 @@ def rebuild(number_of_apps=int(constants.NUM_SECRETS)):
 #for i in xrange(10):
 #	generate_new_app(close=False)	
 #delete_last_app()
-write_credentials()
+#write_credentials()
 #generate_new_app(close=False)
 #credentials = get_app_credentials(close=True)
 #print credentials
+#generate_new_app(close=False)

@@ -39,6 +39,8 @@ class SListener(StreamListener):
 			os.path.dirname(directory),
 			"bpl-tweets-data/streaming_data/",
 			"-".join([fprefix, team1_fix, team2_fix]))
+		if not os.path.exists(self.fprefix):
+			os.makedirs(self.fprefix)
 
 		self.data_output = open(self.fprefix + '-counts_data.txt', 'w')
 		self.id_output = open(self.fprefix + '-ids.txt', 'w')
@@ -47,8 +49,13 @@ class SListener(StreamListener):
 		self.user_output = open(self.fprefix + '-users.txt', 'w')
 		self.delout = open(self.fprefix + '-delete.txt', 'w')
 
+		# file_type, counts, ids, tweets, users, delete
+		self.split_value = 10
+		self.file_handles = { }
+		self.lines_written = { }
+
 	def on_data(self, data):
-		if	'in_reply_to_status' in data:
+		if 'in_reply_to_status' in data:
 			if self.on_status(data) is False:
 				return False
 			elif 'delete' in data:
@@ -63,14 +70,36 @@ class SListener(StreamListener):
 				print "Warning: %s." % warning['message']
 				return false
 
-	def write_and_flush(self, f, s):
-		f.write(s)
-		f.flush()
+	def write_and_flush(self, line, file_type):
+		# This is the first time writing this kind of file type
+		if file_type not in self.lines_written:
+			self.lines_written[file_type] = 0
+			self.file_handles[file_type] = open(
+				os.path.join(
+					self.fprefix,
+					file_type + '-0.txt'),
+				'w')
+
+		lines_written = self.lines_written[file_type] + 1
+		file_handle = self.file_handles[file_type]
+		if lines_written % self.split_value == 0:
+			n = lines_written / self.split_value
+			file_handle.close()
+			file_handle = open(
+				os.path.join(
+					self.fprefix,
+					file_type + '-' + str(n) + '.txt'),
+				'w')
+			file_handle.write(line + '\n')
+			file_handle.flush()
+
+		self.lines_written[file_type] = lines_written
+		self.file_handles[file_type] = file_handle
 
 	def write_line(self, totalTime):
-		join = [str(totalTime), str(self.t1_counter), str(self.t2_counter), '\n' ]
+		join = [str(totalTime), str(self.t1_counter), str(self.t2_counter) ]
 		output = ','.join(join)
-		self.write_and_flush(self.data_output, output)
+		self.write_and_flush(output, 'counts')
 
 	def contains_either_team(self, text):
 		t = text.lower()
@@ -102,8 +131,8 @@ class SListener(StreamListener):
 			else:
 				return True
 
-		self.write_and_flush(self.id_output, tweet_id + ', ')
-		self.write_and_flush(self.tweet_output, tweet_text.encode('utf-8') + ', ')
+		self.write_and_flush(tweet_id, 'ids')
+		self.write_and_flush(tweet_text.encode('utf-8'), 'tweets')
 
 		# TO-DO: write tweet object to db
 		#json.dump(status, self.tweet_json_output)
@@ -121,7 +150,7 @@ class SListener(StreamListener):
 		return True
 
 	def on_delete(self, status_id, user_id):
-		self.write_and_flush(self.delout, str(status_id) + "\n")
+		self.write_and_flush(str(status_id), 'delete')
 		return
 
 	def on_limit(self, track):

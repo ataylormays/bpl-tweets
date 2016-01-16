@@ -5,8 +5,20 @@
 {% load staticfiles %}
 
 <link rel="stylesheet" type="text/css" href={% static "live.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.min.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" %}>
 <script type="text/javascript" src="{% static "live.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery-ui-1.11.4.custom/jquery-ui.min.js" %}"></script>
+<script>
+$(function() {
+	$("#graph").tooltip({
+		track: true
+	});
+});
 
+
+</script>
 <h2>{{team1Title}} vs. {{team2Title}}</h2>
 <div id='top_wrapper'>
 	<div id='left_border'>
@@ -32,9 +44,10 @@
 <div id="graph_loader" style="display: none;"></div>
 
 <script type="text/javascript">
-	idsFile = "/static/streamer-{{team1}}-{{team2}}-ids.txt";
-	usersFile = "/static/streamer-{{team1}}-{{team2}}-users.txt";
-	graphFile = "/static/streamer-{{team1}}-{{team2}}-counts_data.txt";
+$( document ).ready(function() {
+	idsFile = "/static/streamer-{{team1}}-{{team2}}/ids-0.txt";
+	//usersFile = "/static/streamer-{{team1}}-{{team2}}/users-0.txt";
+	graphFile = "/static/streamer-{{team1}}-{{team2}}/counts-0.txt";
 
 	$("#container_left_loader").load(idsFile, function() {
 		loadTweets(
@@ -43,21 +56,23 @@
 			idsFile,
 			0);
 	});
-	$("#container_right_loader").load(usersFile, function() {
-		loadTweets(
-			"container_right_loader",
-			"container_right",
-			usersFile,
-			0);
-	});
+	//$("#container_right_loader").load(usersFile, function() {
+	//	loadTweets(
+	//		"container_right_loader",
+	//		"container_right",
+	//		usersFile,
+	//		0);
+	//});
 	$("#graph_loader").load(graphFile, function() {
 		loadGraph(
-           	"graph_loader",
-           	"graph",
-           	graphFile,
-           	60,
-           	6);
-   	});
+			"graph_loader",
+			"graph",
+			graphFile,
+			15,
+			12,
+			true);
+	});
+});
 </script>
 
 {% endblock %}
