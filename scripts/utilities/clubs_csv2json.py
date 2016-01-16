@@ -17,7 +17,7 @@ except ImportError, e:
 		print 'Cannot give details on constants (%s)' % e
 
 clubs_dict = {}
-with open(os.path.join(constants.CLUBS_CSV), 'r') as clubs_csv:
+with open(constants.CLUBS_CSV, 'r') as clubs_csv:
 	clubs = csv.reader(clubs_csv, delimiter=",")
 	headers = clubs.next()
 	for row in clubs:
@@ -27,5 +27,5 @@ with open(os.path.join(constants.CLUBS_CSV), 'r') as clubs_csv:
 			club_dict[headers[index]] = elt
 		clubs_dict[club_nm] = club_dict
 
-with open(os.path.join(constants.CLUBS_JSON), 'w') as clubs_json:
+with open(constants.CLUBS_JSON, 'w') as clubs_json:
 	json.dump(clubs_dict, clubs_json, indent=1)

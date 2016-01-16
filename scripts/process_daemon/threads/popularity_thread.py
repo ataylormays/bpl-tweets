@@ -19,10 +19,11 @@ class PopularityThread(threading.Thread):
 	def __init__(self, club):
 		super(PopularityThread, self).__init__()
 		self.club = club
+		self.name = club + "_PopularityThread"
 
 	def run(self):
 		# at start of match
-		twitter_access.build_params()
+		twitter_access.build_params(self.club)
 		since_id = twitter_access.update_since_id(self.club)
 		# after 1st run of match, every n minutes
 		runs = 1

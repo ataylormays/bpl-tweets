@@ -47,8 +47,8 @@ def get_since_id(club_nm):
 	else:
 		return ''
 
-def get_top_id(query):
-	data = query_twitter_api(query)
+def get_top_id(query, club_nm):
+	data = query_twitter_api(query, club_nm)
 	if data["statuses"] == []:
 		print "twitter_access::get_top_id: No data."
 	else:
@@ -60,7 +60,7 @@ def update_since_id(club_nm, since_id=""):
 		club_nm.lower().replace(" ", "_") + "_since_id.txt")
 	old_id = ""
 	if since_id == "":
-		old_id = get_top_id(query_builder(club_nm))
+		old_id = get_top_id(query_builder(club_nm), club_nm)
 	if os.path.exists(club_since_file):
 		with open(club_since_file, 'r+') as f:
 			old_id = f.read()
@@ -114,16 +114,15 @@ def query_builder(club_nm):
 def build_tweet_url(username, msg_id):
 	return "https://twitter.com/" + username + "/status/" + msg_id
 
-def build_params():
-	with open(constants.SECRETS_FILE, 'r+') as f:
-		rows = csv.reader(f)
-		secrets = [row for row in rows]
+def build_params(club_nm):
+	with open(constants.SECRETS_JSON, 'r') as f:
+		secrets = json.load(f)
 
 	consumers = [
-		oauth2.Consumer(key=secret[0], secret=secret[1])
+		oauth2.Consumer(key=secret["consumer_key"], secret=secret["consumer_secret"])
 		for secret in secrets]
 	tokens = [
-		oauth2.Token(key=secret[2], secret=secret[3])
+		oauth2.Token(key=secret["access_token"], secret=secret["access_token_secret"])
 		for secret in secrets]
 
 	api_params = [{
@@ -136,13 +135,18 @@ def build_params():
 	} for consumer, token in zip(consumers, tokens)]
 
 	# write data
-	with open(constants.PARAMS_FILE, 'w') as fp:
+	club_file = club_nm.lower().replace(" ", "_")
+
+	params_file_nm = os.path.join(constants.PARAMS_DIR, club_file) + "_params.json"
+	with open(params_file_nm, 'w') as fp:
 		json.dump(api_params, fp)
 
-	with open(constants.CONSUMERS_FILE, 'w') as fc:
+	consumers_file_nm = os.path.join(constants.CONSUMERS_DIR, club_file) + "_consumers.con"
+	with open(consumers_file_nm, 'w') as fc:
 		pickle.dump(consumers, fc)
 
-	with open(constants.TOKENS_FILE, 'w') as ft:
+	tokens_file_nm = os.path.join(constants.TOKENS_DIR, club_file) + "_tokens.tok"
+	with open(tokens_file_nm, 'w') as ft:
 		pickle.dump(tokens, ft)
 
 def analyze_text(text):
@@ -163,19 +167,27 @@ def analyze_text(text):
 
 def query_twitter_api(
 	query,
+	club_nm,
 	count=1,
 	since_id="",
 	max_id="",
 	result_type="",
 	index=0):
-	with open(constants.PARAMS_FILE, 'r+') as fp:
+
+	# read secret files
+	club_file = club_nm.lower().replace(" ", "_")
+
+	params_file_nm = os.path.join(constants.PARAMS_DIR, club_file) + "_params.json" 
+	with open(params_file_nm, 'r') as fp:
 		api_params = json.load(fp)
 
-	with open(constants.TOKENS_FILE, 'r+') as ft:
-		tokens = pickle.load(ft)
-
-	with open(constants.CONSUMERS_FILE, 'r+') as fc:
+	consumers_file_nm = os.path.join(constants.CONSUMERS_DIR, club_file) + "_consumers.con"
+	with open(consumers_file_nm, 'r') as fc:
 		consumers = pickle.load(fc)
+
+	tokens_file_nm = os.path.join(constants.TOKENS_DIR, club_file) + "_tokens.tok"
+	with open(tokens_file_nm, 'r') as ft:
+		tokens = pickle.load(ft)
 
 	params = api_params[index]
 	url = constants.RESOURCE_URL
@@ -193,15 +205,13 @@ def query_twitter_api(
 	return json.load(urllib2.urlopen(response))
 
 def populate_popularity(club_nm, since_id="", iteration=1):
-	#build api_params
-	build_params()
 
 	tot_time_start = time.time()
 	if since_id == "":
 		since_id = update_since_id(club_nm)
 	i = 0
 	query = query_builder(club_nm)
-	prev_id = get_top_id(query)
+	prev_id = get_top_id(query, club_nm)
 	collected_tweets = set()
 	index = 0
 	all_data = []
@@ -227,6 +237,7 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 		start = time.time()
 		data = query_twitter_api(
 			query,
+			club_nm,
 			count=100,
 			max_id=prev_id,
 			since_id=since_id,
@@ -271,7 +282,7 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 		all_data += tweet_data
 		end = time.time()
 		index += 1
-		index = index % 10
+		index = index % int(constants.NUM_SECRETS)
 
 	#write data (overwrites file)
 	with open(input_file_nm, 'w+') as f:

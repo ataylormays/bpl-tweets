@@ -76,5 +76,3 @@ def ordinal_string(digit):
 	ordinal =  parse_chunks(chunks)
 
 	return ordinal
-
-print ordinal_string(745289347452)

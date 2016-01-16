@@ -16,22 +16,16 @@ from streaming_tweets import StreamingTweets
 
 class LiveTweetsThread(threading.Thread):
 	"""docstring for LiveTweetsThread"""
-	def __init__(self, home, away, secrets_dir, runtime):
+	def __init__(self, home, away, runtime):
 		threading.Thread.__init__(self)
 		self.home = home
 		self.away = away
-		self.secrets_dir = secrets_dir
 		self.runtime = runtime
+		self.name = home + "_vs_" + away + "_LiveTweetThread"
 
 	def run(self):
-		with open(self.secrets_dir + 'secrets.csv', 'r+') as f:
-			rows = csv.reader(f)
-			secrets = [row for row in rows]
-
-		secret = secrets[randint(0,9)]
-		streamer = StreamingTweets(
-			secret[0], secret[1], secret[2], secret[3])
-
+		streamer = StreamingTweets()
+		
 		#TO-DO: get list of VIP users from config file
 		users = ["OptaJoe"]
 		streamer.start(self.home, self.away, users, self.runtime)

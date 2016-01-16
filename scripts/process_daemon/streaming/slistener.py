@@ -43,6 +43,7 @@ class SListener(StreamListener):
 		self.data_output = open(self.fprefix + '-counts_data.txt', 'w')
 		self.id_output = open(self.fprefix + '-ids.txt', 'w')
 		self.tweet_output = open(self.fprefix + '-tweets.txt', 'w')
+		self.tweet_json_output = open(self.fprefix + '-tweets.json', 'w')
 		self.user_output = open(self.fprefix + '-users.txt', 'w')
 		self.delout = open(self.fprefix + '-delete.txt', 'w')
 
@@ -56,9 +57,9 @@ class SListener(StreamListener):
 					return False
 			elif 'limit' in data:
 				if self.on_limit(json.loads(data)['limit']['track']) is False:
-						return False
+					return False
 			elif 'warning' in data:
-				warning = json.loads(data)['warnings']
+				warning = json.loads(data)['warning']
 				print "Warning: %s." % warning['message']
 				return false
 
@@ -94,12 +95,18 @@ class SListener(StreamListener):
 		tweet_text = tweet['text']
 		tweet_id = tweet["id_str"]
 
-		if tweet_user in self.users and self.contains_either_team(text):
-			print "Received tweet #" + tweet_id + "."
-			self.write_and_flush(self.user_output, tweet_id + ', ')
+		if tweet_user in self.users:
+			if self.contains_either_team(tweet_text):
+				print "Received tweet #" + tweet_id + "."
+				self.write_and_flush(self.user_output, tweet_id + ', ')
+			else:
+				return True
 
 		self.write_and_flush(self.id_output, tweet_id + ', ')
 		self.write_and_flush(self.tweet_output, tweet_text.encode('utf-8') + ', ')
+
+		# TO-DO: write tweet object to db
+		#json.dump(status, self.tweet_json_output)
 
 		if delta > self.write_limit:
 			self.write_line(totalTime)
@@ -119,7 +126,7 @@ class SListener(StreamListener):
 
 	def on_limit(self, track):
 		sys.stderr.write(track + "\n")
-		return
+		raise SystemError('Reached limit of API requests!')
 
 	def on_error(self, status_code):
 		sys.stderr.write("Error: " + str(status_code) + "\n")

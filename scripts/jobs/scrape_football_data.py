@@ -7,7 +7,9 @@ import datetime
 import csv
 import traceback
 
-resources_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 'resources')
+file_loc = os.path.abspath(__file__)
+resources_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(file_loc))), 'resources')
+print resources_path
 sys.path.append(resources_path)
 import constants
 

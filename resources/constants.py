@@ -8,7 +8,7 @@ RUN_FREQ = 1
 NUM_COLS = TOT_MINUTES / RUN_FREQ
 
 # number of secrets
-NUM_SECRETS = 13
+NUM_SECRETS = 3
 
 # refresh time for getting new keys for Twitter API call
 REFRESH_TIME = 45 * 60
@@ -39,7 +39,8 @@ CONSUMERS_DIR = os.path.join(SECRETS_DIR, "consumers/")
 TOKENS_DIR = os.path.join(SECRETS_DIR, "tokens/")
 
 # files
-SECRETS_FILE = os.path.join(SECRETS_DIR, "secrets.csv")
+SECRETS_CSV = os.path.join(SECRETS_DIR, "secrets.csv")
+SECRETS_JSON = os.path.join(SECRETS_DIR, "secrets.json")
 CLUBS_CSV = os.path.join(RESOURCES_DIR, "twitter_clubs.csv")
 CLUBS_JSON = os.path.join(RESOURCES_DIR, "twitter_clubs.json")
 

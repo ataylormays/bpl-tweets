@@ -1,35 +1,1 @@
-club,hashtags,handle,primary_color,secondary_color
-Arsenal,"#Arsenal, #arsenal, #afc, #AFC, #ArsenalFC, #arsenalfc, #Gunners",Arsenal,#E60000,#C4A959
-Aston Villa,"#astonvilla, #avfc, #ASTONVILLA, #AVFC, #AstonVilla",AVFCOfficial,#6E0025,#B1CBE6
-Birmingham City,"#BirminghamCity, #BCFC, #birminghamcity",BCFC,#1D1D8F,#F0F0F8
-Blackburn Rovers,"#BlackburnRovers, #brfc, #blackburnrovers, #BRFC",OneRovers,#6CB5FF,#FFFFFF
-Blackpool,"#BlackpoolFC, #blackpoolfc, #blackpoolFC",BlackpoolFC,#FF9900,#000000
-Bolton Wanderers,"#BoltonWanderers, #boltonwanderers, #bwfc, #BOLTONWANDERERS, #BWFC",OfficialBWFC,,
-Bournemouth,#Bournemouth,afcbournemouth,,
-Burnley,#afcb,BurnleyOfficial,,
-Cardiff City,"#cardiffcity, #Cardiffcity, #CardiffCity",CardiffCityFC,,
-Chelsea,"#Chelsea, #chelsea, #cfc, #CFC, #chelseafc, #ChelseaFC",ChelseaFC,,
-Crystal Palace,"#crystalpalacefc, #cpfc, #CrystalPalaceFC, #CPFC",CPFC,,
-Derby County,"#DerbyCounty, #dcfc, #derbycounty",dcfcofficial,,
-Everton,"#Everton, #everton, #EFC, #efc, #Toffees, #toffees",Everton,,
-Fulham,"#fulham, #Fulham, #FFC, #ffc",FulhamFC,,
-Hull City,"#HullCity, #Hullcity, #hullcity, #HCFC, #hcfc, #hcafc, #HCAFC",HullCity,,
-Leicester City,"#lcfc, #leicestercity, #LeicesterCity",OfficialFOXES,,
-Liverpool,"#Liverpool, #LiverpoolFC, #LFC, #ynwa",LFC,,
-Manchester City,"#Mancity, #MCFC, #mancity, #mcfc, #ManchesterCity",MCFC,,
-Manchester United,"#ManchesterUnited, #MUFC, #mufc, #manutd, #ManUtd, #manchesterunitedfc, #GGMU",ManUtd,,
-Middlesbrough,#boro,Boro,,
-Newcastle United,"#NUFC, #nufc, #NewcastleUnited, #toonarmy, #ToonArmy, #TOONARMY",NUFC,,
-Norwich City,"#ncfc, #norwichcity, #NCFC, #NorwichCity",NorwichCityFC,,
-Portsmouth,"#pompey, #Pompey",officialpompey,,
-Queens Park Rangers,"#QPR, #qpr",QPRFC,,
-Reading FC,"#ReadingFC, #readingfc",ReadingFC,,
-Southampton,"#SaintsFC, #saintsfc, #SFC, #sfc",SouthamptonFC,,
-Stoke City,"#SCFC, #scfc, #GoArnStoke, #goarnstoke",stokecity,,
-Sunderland,#SunderlandFC,SunderlandAFC,,
-Swansea City,"#SwanseaCity, #Swans, #swans",SwansOfficial,,
-Tottenham Hotspur,"#THFC, #thfc",SpursOfficial,,
-West Bromwich Albion,"#WBA, #wba, #WBAfc, #wbafc, #Baggies, #baggies",WBAFCofficial,,
-West Ham United,"#WHUFC, #whufc, #WestHam, #westham",whufc_official,,
-Wigan Athletic,"#WiganAthletic, #wiganathletic, #wafc, #WAFC",LaticsOfficial,,
-Wolverhampton Wanderers,"#Wolverhampton, #wolverhampton, #WWFC, #wwfc",OfficialWolves,,
+club,hashtags,handle,primary_color,secondary_colorArsenal,"#Arsenal, #arsenal, #afc, #AFC, #ArsenalFC, #arsenalfc, #Gunners",Arsenal,#E60000,#C4A959Aston Villa,"#astonvilla, #avfc, #ASTONVILLA, #AVFC, #AstonVilla",AVFCOfficial,#6E0025,#B1CBE6Birmingham City,"#BirminghamCity, #BCFC, #birminghamcity",BCFC,#1D1D8F,#F0F0F8Blackburn Rovers,"#BlackburnRovers, #brfc, #blackburnrovers, #BRFC",OneRovers,#6CB5FF,#FFFFFFBlackpool,"#BlackpoolFC, #blackpoolfc, #blackpoolFC",BlackpoolFC,#FF9900,#000000Bolton Wanderers,"#BoltonWanderers, #boltonwanderers, #bwfc, #BOLTONWANDERERS, #BWFC",OfficialBWFC,#003875,#EE1C25Bournemouth,#Bournemouth,afcbournemouth,#D3151B,#000000Burnley,#afcb,BurnleyOfficial,#8BD3F5,#FFF516Cardiff City,"#cardiffcity, #Cardiffcity, #CardiffCity",CardiffCityFC,#035EA7,#B51F2AChelsea,"#Chelsea, #chelsea, #cfc, #CFC, #chelseafc, #ChelseaFC",ChelseaFC,#0A4595,#FFFFFFCrystal Palace,"#crystalpalacefc, #cpfc, #CrystalPalaceFC, #CPFC",CPFC,#1B458F,#C4122EDerby County,"#DerbyCounty, #dcfc, #derbycounty",dcfcofficial,#FFFFFF,#000000Everton,"#Everton, #everton, #EFC, #efc, #Toffees, #toffees",Everton,#274488,#FFFFFFFulham,"#fulham, #Fulham, #FFC, #ffc",FulhamFC,#FFFFFF,#EC4047Hull City,"#HullCity, #Hullcity, #hullcity, #HCFC, #hcfc, #hcafc, #HCAFC",HullCity,#FAA61A,#000000Leicester City,"#lcfc, #leicestercity, #LeicesterCity",OfficialFOXES,,Liverpool,"#Liverpool, #LiverpoolFC, #LFC, #ynwa",LFC,,Manchester City,"#Mancity, #MCFC, #mancity, #mcfc, #ManchesterCity",MCFC,,Manchester United,"#ManchesterUnited, #MUFC, #mufc, #manutd, #ManUtd, #manchesterunitedfc, #GGMU",ManUtd,,Middlesbrough,#boro,Boro,,Newcastle United,"#NUFC, #nufc, #NewcastleUnited, #toonarmy, #ToonArmy, #TOONARMY",NUFC,,Norwich City,"#ncfc, #norwichcity, #NCFC, #NorwichCity",NorwichCityFC,,Portsmouth,"#pompey, #Pompey",officialpompey,,Queens Park Rangers,"#QPR, #qpr",QPRFC,,Reading FC,"#ReadingFC, #readingfc",ReadingFC,,Southampton,"#SaintsFC, #saintsfc, #SFC, #sfc",SouthamptonFC,,Stoke City,"#SCFC, #scfc, #GoArnStoke, #goarnstoke",stokecity,,Sunderland,#SunderlandFC,SunderlandAFC,,Swansea City,"#SwanseaCity, #Swans, #swans",SwansOfficial,,Tottenham Hotspur,"#THFC, #thfc",SpursOfficial,,Watford,#watfordfc,@WatfordFC,,West Bromwich Albion,"#WBA, #wba, #WBAfc, #wbafc, #Baggies, #baggies",WBAFCofficial,,West Ham United,"#WHUFC, #whufc, #WestHam, #westham",whufc_official,,Wigan Athletic,"#WiganAthletic, #wiganathletic, #wafc, #WAFC",LaticsOfficial,,Wolverhampton Wanderers,"#Wolverhampton, #wolverhampton, #WWFC, #wwfc",OfficialWolves,,
