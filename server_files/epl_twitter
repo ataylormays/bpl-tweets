@@ -38,6 +38,6 @@ server
 	########################################
    	location /static/
 	{
-		alias /home/ubuntu/bpl-tweets/epl_twitter/static/;
+		alias /home/ubuntu/BplTweets/bpl-tweets/epl_twitter/static/;
 	}
 }
