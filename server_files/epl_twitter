@@ -1,0 +1,43 @@
+# This file should be placed at /etc/nginx/sites-available
+# A symlink should be made to it at /etc/nginx/sites-enabled
+
+upstream epl_twitter_server
+{
+	server unix:/home/ubuntu/BplTweets/sockets/epl_twitter-gunicorn.sock fail_timeout=0;
+}
+
+server
+{
+	########################################
+	# Basic Settings
+	########################################
+    	listen 80;
+    	server_name bpltweets.com
+	client_max_body_size 4G;
+	access_log /home/ubuntu/BplTweets/logs/epl_twitter-nginx-access.log;
+	error_log /home/ubuntu/BplTweets/logs/epl_twitter-nginx-error.log;
+
+	########################################
+	# Site root
+	########################################
+	location /
+	{
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        	proxy_set_header Host $http_host;
+        	proxy_redirect off;
+
+        	if (!-f $request_filename)
+		{
+			proxy_pass http://epl_twitter_server;
+	   		break;
+		}
+	}
+
+ 	########################################
+	# Static files
+	########################################
+   	location /static/
+	{
+		alias /home/ubuntu/bpl-tweets/epl_twitter/static/;
+	}
+}

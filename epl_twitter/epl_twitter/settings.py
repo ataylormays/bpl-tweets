@@ -37,6 +37,7 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	'gunicorn',
 	'mvc',
 )
 
@@ -102,4 +103,5 @@ STATICFILES_DIRS = (
 	os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'bpl-tweets-data/streaming_data')
 )
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets/admin_files')
+#STATIC_ROOT = os.path.join(BASE_DIR, 'assets/admin_files')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
