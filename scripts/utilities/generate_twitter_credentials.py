@@ -59,15 +59,10 @@ def login_to_apps_site():
 	assert "Login on Twitter" in driver.title
 
 	# enter username/pwd
-<<<<<<< HEAD
-	enter_text(driver, "css", "input.js-username-field", "bpltweetsxxx@gmail.com")
-	enter_text(driver, "css", "input.js-password-field", "bpltweets123", enter=True)
-=======
 	enter_text(
 		driver, "css", "input.js-username-field", "bpltweetsxxx@gmail.com")
 	enter_text(
 		driver, "css", "input.js-password-field", password, enter=True)
->>>>>>> ef160dc186d53170db701817289419dfc3d71783
 
 	# wait for page to load then redirect to apps site
 	time.sleep(2)
