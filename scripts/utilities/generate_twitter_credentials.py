@@ -1,9 +1,14 @@
+#!/usr/bin/python
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-import time
-import ordinals
+
+import argparse
 import json
-import os, sys
+import ordinals
+import os
+import sys
+import time
 
 file_loc = os.path.abspath(__file__)
 resources_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(file_loc))), 'resources')
@@ -26,7 +31,7 @@ def enter_text(driver, find_method, elt_name, content="", enter=False, click=Fal
 		elt = driver.find_element_by_css_selector(elt_name)
 	elif find_method == "id":
 		elt = driver.find_element_by_id(elt_name)
-	
+
 	if content != "":
 		elt.send_keys(content)
 	if enter:
@@ -86,7 +91,7 @@ def get_last_app_number():
 
 	last_app_name = driver.find_element_by_xpath("//li[contains(@class, 'last')]/div/div[@class='app-details']/h2/a").text
 	last_app_number = int(last_app_name[len(app_name):])
-	
+
 	driver.close()
 
 	return last_app_number
@@ -111,18 +116,18 @@ def get_app_credentials(iteration=None, credentials=[], driver=None, close=True)
 	print iteration
 
 	apps = driver.find_elements_by_css_selector("div.app-details")
-	
+
 	time.sleep(1)
 	link = apps[iteration].find_element_by_xpath(".//h2/a")
 	link.click()
-	
+
 	keys = driver.find_element_by_link_text("manage keys and access tokens")
 	keys.click()
 
 	settings_spans = driver.find_elements_by_xpath("//div[@class='app-settings']/div/span")
 	consumer_key = settings_spans[1].text
 	consumer_secret = settings_spans[3].text
-	
+
 	details_spans = driver.find_elements_by_xpath("//div[@class='access']/div/span")
 	access_token = details_spans[1].text
 	access_token_secret = details_spans[3].text
@@ -134,7 +139,7 @@ def get_app_credentials(iteration=None, credentials=[], driver=None, close=True)
 
 	credentials += [secrets]
 
-	credentials = get_app_credentials(iteration-1, credentials, driver)	
+	credentials = get_app_credentials(iteration-1, credentials, driver)
 
 	if close:
 		driver.close()
@@ -156,11 +161,11 @@ def delete_last_app():
 		last_app_exists = False
 
 	# go into last app, click delete button, click delete
-	if last_app_exists: 
+	if last_app_exists:
 		driver.find_element_by_xpath("//li[@class='last']/div/div[@class='app-details']/h2/a").click()
 		driver.find_element_by_link_text("Delete Application").click()
 		driver.find_element_by_id("edit-submit-delete").click()
-	
+
 	driver.close()
 
 	return last_app_exists
@@ -178,10 +183,21 @@ def rebuild(number_of_apps=int(constants.NUM_SECRETS)):
 		generate_new_app()
 	get_app_credentials()
 
+def main():
+	parser = argparse.ArgumentParser()
+	parser.add_argument(
+		"-p",
+		"--password",
+		type=str,
+		help="Password to use for credential generation.",
+		required = True)
+	args = parser.parse_args()
+
+
 
 #rebuild()
 #for i in xrange(10):
-#	generate_new_app(close=False)	
+#	generate_new_app(close=False)
 #delete_last_app()
 #write_credentials()
 #generate_new_app(close=False)
