@@ -1,0 +1,9 @@
+# Append the contents of this file to the end of /home/ubuntu/.bashrc
+########################################
+# These lines are needed for the site to work
+########################################
+export WORKON_HOME=$HOME/.virtualenvs
+source /usr/local/bin/virtualenvwrapper.sh
+
+export PATH=/usr/local/lib/python2.7.10/bin/:$PATH
+export PYTHONPATH=/usr/local/lib/python2.7/dist-packages/:$PYTHONPATH
