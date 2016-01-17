@@ -20,11 +20,14 @@ TWEET_TYPE = "popular"
 RESOURCE_URL = "https://api.twitter.com/1.1/search/tweets.json"
 
 # phrases to remove from query results
-BANNED_PHRASES=[
+BANNED_PHRASES = [
 	"RT",
 	"PRE ORDER",
 	"PRE-ORDER"
 ]
+
+# live vs. placeholder
+LIVE_MODE = False
 
 # directories
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -5,13 +5,16 @@ from django.conf import settings
 from django.contrib import admin
 from django.conf.urls import url
 from . import views
+import constants
 
 parse_teams_regex = \
 	'(?P<team1>[A-Za-z_]+)' \
 	'-(?P<team2>[A-Za-z_]+)' \
 	'-(?P<date>[0-9]{4}[0-1][0-9][0-3][0-9])'
 
-urlpatterns = [
+urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+live_urlpatterns = [
 	url(r'^admin/', include(admin.site.urls)),
 	url(r'^home/', views.home, name='home'),
 	url(r'^club/(?P<club_nm>[A-Za-z_]+)/$', views.club, name='club'),
@@ -22,4 +25,13 @@ urlpatterns = [
 	url(r'^archive/', views.archive, name='archive'),
 	url(r'^matches/', views.matches, name='matches'),
 	url(r'^$', views.home, name='home'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
+
+placeholder_urlpatterns = [
+	url(r'^home/', views.placeholder, name='home'),
+]
+
+if constants.LIVE_MODE:
+	urlpatterns += live_urlpatterns
+else:
+	urlpatterns += placeholder_urlpatterns
