@@ -43,7 +43,7 @@ def login_to_apps_site():
 
 	# enter username/pwd
 	enter_text(driver, "css", "input.js-username-field", "bpltweetsxxx@gmail.com")
-	enter_text(driver, "css", "input.js-password-field", "", enter=True)
+	enter_text(driver, "css", "input.js-password-field", "bpltweets123", enter=True)
 
 	# wait for page to load then redirect to apps site
 	time.sleep(2)
@@ -80,7 +80,6 @@ def generate_new_app(close=True):
 	if close:
 		driver.close()
 
-<<<<<<< HEAD
 def get_last_app_number():
 	driver = login_to_apps_site()
 
@@ -180,8 +179,9 @@ def rebuild(number_of_apps=int(constants.NUM_SECRETS)):
 
 
 #rebuild()
-#for i in xrange(10):
-#	generate_new_app(close=False)	
+# for i in xrange(5):
+# 	generate_new_app(close=False)
+# 	time.sleep(5 * 60)	
 #delete_last_app()
 #write_credentials()
 #generate_new_app(close=False)

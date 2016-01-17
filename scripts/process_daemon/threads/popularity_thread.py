@@ -23,10 +23,10 @@ class PopularityThread(threading.Thread):
 
 	def run(self):
 		# at start of match
-		twitter_access.build_params(self.club)
-		since_id = twitter_access.update_since_id(self.club)
-		# after 1st run of match, every n minutes
-		runs = 1
+		runs = 0
+		api = twitter_access.authorize_api(runs)
+		since_id = twitter_access.update_since_id(api, self.club)
+		
 		while(runs < constants.NUM_COLS):
 			twitter_access.populate_popularity(
 				club_nm=self.club,

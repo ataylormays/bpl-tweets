@@ -7,6 +7,9 @@ import sys
 import time
 import urllib
 import urllib2
+import tweepy
+from random import randint
+
 
 resources_path = os.path.abspath(os.path.join('../../../..', 'resources'))
 sys.path.append(resources_path)
@@ -47,20 +50,20 @@ def get_since_id(club_nm):
 	else:
 		return ''
 
-def get_top_id(query, club_nm):
-	data = query_twitter_api(query, club_nm)
-	if data["statuses"] == []:
+def get_top_id(api, query):
+	data = query_twitter_api(api, query, count=1)
+	if len(data)==0:
 		print "twitter_access::get_top_id: No data."
 	else:
-		return data["statuses"][0]["id_str"]
+		return data[0].id_str
 
-def update_since_id(club_nm, since_id=""):
+def update_since_id(api, club_nm, since_id=""):
 	club_since_file = os.path.join(
 		constants.SINCE_DIR,
 		club_nm.lower().replace(" ", "_") + "_since_id.txt")
 	old_id = ""
 	if since_id == "":
-		old_id = get_top_id(query_builder(club_nm), club_nm)
+		old_id = get_top_id(api, query_builder(club_nm))
 	if os.path.exists(club_since_file):
 		with open(club_since_file, 'r+') as f:
 			old_id = f.read()
@@ -70,8 +73,7 @@ def update_since_id(club_nm, since_id=""):
 			f.flush()
 	else:
 		with open(club_since_file, 'w') as f:
-			f.write(since_id)
-			f.flush()
+			f.write(since_id).flush()
 		old_id = since_id
 	return old_id
 
@@ -149,6 +151,22 @@ def build_params(club_nm):
 	with open(tokens_file_nm, 'w') as ft:
 		pickle.dump(tokens, ft)
 
+def authorize_api(index):
+	with open(constants.SECRETS_JSON, 'r') as secrets_file:
+		secrets = json.load(secrets_file)
+
+	secret = secrets[index]
+	consumer_key = secret["consumer_key"]
+	consumer_secret = secret["consumer_secret"]
+	access_token = secret["access_token"]
+	access_token_secret = secret["access_token_secret"]
+	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+	auth.set_access_token(access_token, access_token_secret)
+	api = tweepy.API(auth)
+
+	return api
+
+
 def analyze_text(text):
 	APPLICATION_ID = '' # application id
 	APPLICATION_KEY = '' # application key
@@ -165,55 +183,33 @@ def analyze_text(text):
 	response = opener.open(request);
 	return json.loads(response.read())
 
+# must have count and/or since id, cannot be called with neither or will hit rate limit
 def query_twitter_api(
+	api,
 	query,
-	club_nm,
-	count=1,
-	since_id="",
-	max_id="",
-	result_type="",
-	index=0):
+	count=None,
+	result_type='mixed',
+	since_id=""):
 
-	# read secret files
-	club_file = club_nm.lower().replace(" ", "_")
-
-	params_file_nm = os.path.join(constants.PARAMS_DIR, club_file) + "_params.json" 
-	with open(params_file_nm, 'r') as fp:
-		api_params = json.load(fp)
-
-	consumers_file_nm = os.path.join(constants.CONSUMERS_DIR, club_file) + "_consumers.con"
-	with open(consumers_file_nm, 'r') as fc:
-		consumers = pickle.load(fc)
-
-	tokens_file_nm = os.path.join(constants.TOKENS_DIR, club_file) + "_tokens.tok"
-	with open(tokens_file_nm, 'r') as ft:
-		tokens = pickle.load(ft)
-
-	params = api_params[index]
-	url = constants.RESOURCE_URL
-	params["q"] = query
-	params["count"] = count # number of tweets per page
-	params["since_id"] = since_id # returns tweets more recent than
-	params["max_id"] = max_id # returns tweets older than
-	params["result_type"] = result_type # popular, recent, mixed
-	req = oauth2.Request(method="GET", url=url, parameters=params)
-	signature_method = oauth2.SignatureMethod_HMAC_SHA1()
-	req.sign_request(signature_method, consumers[index], tokens[index])
-	headers = req.to_header()
-	url = req.to_url()
-	response = urllib2.Request(url)
-	return json.load(urllib2.urlopen(response))
+	results = [status for status in tweepy.Cursor(api.search, 
+		q=query, 
+		since_id=since_id, 
+		result_type=result_type).items(count)]
+	return results
 
 def populate_popularity(club_nm, since_id="", iteration=1):
 
-	tot_time_start = time.time()
+	# build api object using secrets
+	with open(constants.SECRETS_JSON, 'r') as secrets_file:
+		secrets = json.load(secrets_file)
+
+	secrets_index = iteration % constants.NUM_SECRETS
+	api = authorize_api(secrets_index)
+	
 	if since_id == "":
-		since_id = update_since_id(club_nm)
+		since_id = update_since_id(api, club_nm)
 	i = 0
 	query = query_builder(club_nm)
-	prev_id = get_top_id(query, club_nm)
-	collected_tweets = set()
-	index = 0
 	all_data = []
 	tweet_data = []
 
@@ -228,62 +224,50 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 	except:
 		tweet_data = []
 
-	# breaks when no more data
-	while(True):
-		# if program has been running for > 45 minutes, get new tokens
-		if time.time() - tot_time_start > constants.REFRESH_TIME:
-			build_params()
+	tweets = query_twitter_api(
+		api,
+		query,
+		result_type=constants.TWEET_TYPE,
+		since_id=since_id)
 
-		start = time.time()
-		data = query_twitter_api(
-			query,
-			club_nm,
-			count=100,
-			max_id=prev_id,
-			since_id=since_id,
-			index=index,
-			result_type=constants.TWEET_TYPE)
-
-		if data["statuses"] == []:
-			break
-		else:
-			prev_id = int(data["statuses"][-1]["id"])-1
-			i += 1
-			# empty tweet_data variable after first run
-			if i != 1:
-				tweet_data = []
-			for status in data["statuses"]:
-				id_str =  status["id_str"]
-				if id_str in collected_tweets:
-					continue
-				else:
-					collected_tweets.add(id_str)
-
-				popularity = str(
-					status["retweet_count"] + \
-					status["favorite_count"])
-				new_tweet = True
-				for row in tweet_data:
-					if(row[0] == id_str):
-						row[iteration] = popularity
-						new_tweet = False
-						break
-				if new_tweet:
-					content = [id_str] + \
-						["0"] * (iteration-1) + \
-						[str(popularity)] + \
-						["0"] * \
-						(
-							int(
-							constants.NUM_COLS) - \
-							iteration)
-					tweet_data += [content]
+	if len(tweets) == 0:
+		print 'no tweets today :('
+	else:
+		for status in tweets:
+			id_str =  status.id_str
+			popularity = str(
+				status.retweet_count + \
+				status.favorite_count)
+			new_tweet = True
+			for row in tweet_data:
+				if(row[0] == id_str):
+					row[iteration] = popularity
+					new_tweet = False
+					break
+			if new_tweet:
+				content = [id_str] + \
+					["0"] * (iteration-1) + \
+					[popularity] + \
+					["0"] * \
+					(
+						int(constants.NUM_COLS) - \
+						iteration)
+				tweet_data += [content]
 
 		all_data += tweet_data
-		end = time.time()
-		index += 1
-		index = index % int(constants.NUM_SECRETS)
 
 	#write data (overwrites file)
 	with open(input_file_nm, 'w+') as f:
 		csv.writer(f, delimiter=",").writerows(all_data)
+
+if __name__ == '__main__':
+	api = authorize_api(0)
+	query = query_builder("Manchester United")
+
+	since_id = get_top_id(api, query)
+	print since_id
+	time.sleep(30)
+	populate_popularity("Manchester United", since_id)
+	
+
+
