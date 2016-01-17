@@ -10,8 +10,9 @@ import tweepy
 
 file_loc = os.path.abspath(__file__)
 resources_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(file_loc))), 'resources'))
-streaming_path = os.path.abspath('streaming')
-twitter_access_path = os.path.abspath('threads/twitter_access')
+parent_directory = os.path.dirname(file_loc)
+streaming_path = os.path.join(parent_directory, 'streaming')
+twitter_access_path = os.path.join(parent_directory, 'threads/twitter_access')
 
 import_paths = [resources_path, streaming_path, twitter_access_path]
 for ip in import_paths:
