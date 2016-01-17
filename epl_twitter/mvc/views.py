@@ -121,6 +121,12 @@ def get_club_names():
 				[(name.replace(' ', '_').lower(), name)])
 	return club_names
 
+def placeholder(request):
+	template = loader.get_template('placeholder.html')
+	context = RequestContext(request)
+
+	return HttpResponse(template.render(context))
+
 def home(request):
 
 	template = loader.get_template('home.html')

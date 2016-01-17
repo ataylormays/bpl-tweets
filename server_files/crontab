@@ -1,0 +1,3 @@
+# Put the below in the crontob for the user ubuntu (using crontab -e).
+
+0 0 * * 1 /home/ubuntu/BplTweets/bpl-tweets/scripts/jobs/scrape_football_data.py
