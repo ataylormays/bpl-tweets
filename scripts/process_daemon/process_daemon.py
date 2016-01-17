@@ -54,7 +54,6 @@ def team_mode(team1, team2):
 	lt_thread = LTT(
 		team1,
 		team2,
-		constants.SECRETS_DIR,
 		60 * constants.TOT_MINUTES)
 	p_threads = [PT(team1), PT(team2)]
 
@@ -81,7 +80,6 @@ def daemon_mode():
 					LTT(
 						m[0],
 						m[1],
-						constants.SECRETS_DIR,
 						60 * constants.TOT_MINUTES)
 				for m in matches]
 
