@@ -28,7 +28,7 @@ live_urlpatterns = [
 ]
 
 placeholder_urlpatterns = [
-	url(r'^home/', views.placeholder, name='home'),
+	url(r'^', views.placeholder, name='home'),
 ]
 
 if constants.LIVE_MODE:
