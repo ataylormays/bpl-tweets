@@ -8,7 +8,7 @@ RUN_FREQ = 1
 NUM_COLS = TOT_MINUTES / RUN_FREQ
 
 # number of secrets
-NUM_SECRETS = 3
+NUM_SECRETS = 15
 
 # refresh time for getting new keys for Twitter API call
 REFRESH_TIME = 45 * 60

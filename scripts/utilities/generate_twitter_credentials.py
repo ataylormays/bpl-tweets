@@ -149,6 +149,14 @@ def get_app_credentials(
 
 	details_spans = driver.find_elements_by_xpath(
 		"//div[@class='access']/div/span")
+	# generate creds consumer key and secret if not there yet
+	if len(details_spans) == 0:
+		driver.find_element_by_id("edit-submit-owner-token").click()
+		# wait for page to load
+		time.sleep(2)
+		details_spans = driver.find_elements_by_xpath(
+		"//div[@class='access']/div/span")
+	
 	access_token = details_spans[1].text
 	access_token_secret = details_spans[3].text
 
@@ -200,7 +208,7 @@ def rebuild(number_of_apps=int(constants.NUM_SECRETS)):
 	purge()
 	for i in xrange(number_of_apps):
 		print "Sleeping...", i
-		time.sleep(3 * 60)
+		time.sleep(4 * 60)
 		generate_new_app()
 	get_app_credentials()
 
@@ -213,9 +221,53 @@ def main():
 		type=str,
 		help="Password to use for credential generation.",
 		required = True)
+	parser.add_argument(
+		"-x",
+		"--extra",
+		type=int,
+		help="Number of extra credentials to generate.",
+		required = False)
+	parser.add_argument(
+		"-f",
+		"--fill",
+		type=bool,
+		help="Boolean - if true, will add credentials until NUM_SECRETS is reached.",
+		required = False)
+	parser.add_argument(
+		"-r",
+		"--rebuild",
+		type=bool,
+		help="Boolean - if true, will purge credentials and rebuild NUM_SECRETS.",
+		required = False)
+	parser.add_argument(
+		"-w",
+		"--write",
+		type=bool,
+		help="Boolean - if true, will write credentials to SECRETS_JSON.",
+		required = False)
+	
 	args = parser.parse_args()
 	password = args.password
-	rebuild()
+	extra = args.extra
+	fill = args.fill
+	rebuild = args.rebuild
+	write = args.write
+	if extra:
+		for i in xrange(extra):
+			print "Iteration: ", i
+			generate_new_app()
+			time.sleep(4 * 60)
+	if fill:
+		missing = constants.NUM_SECRETS - get_last_app_number()
+		print missing
+		for i in xrange(missing):
+			print "Iteration: ", i
+			generate_new_app()
+			time.sleep(4 * 60)
+	if rebuild:
+		rebuild()
+	if write:
+		write_credentials()
 
 if __name__ == '__main__':
 	main()
