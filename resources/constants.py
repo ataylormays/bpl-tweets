@@ -1,7 +1,7 @@
 import os
 
 # 90 min game + 15 min half time + 15 min buffer = 120 min
-TOT_MINUTES = 60
+TOT_MINUTES = 120
 RUN_FREQ = 1
 
 # number of cols in popularity file
@@ -47,4 +47,14 @@ SECRETS_JSON = os.path.join(SECRETS_DIR, "secrets.json")
 CLUBS_CSV = os.path.join(RESOURCES_DIR, "twitter_clubs.csv")
 CLUBS_JSON = os.path.join(RESOURCES_DIR, "twitter_clubs.json")
 
+# db configs
+TWITTER_TIME_FORMAT = '%a %b %d %H:%M:%S +0000 %Y'
+TWITTER_DB = 'twitter_db'
+TWITTER_COLLECTION = 'twitter_collection'
+TWITTER_TEST_DB = 'twitter_test_db'
+TWITTER_TEST_COLLECTION = 'twitter_test_collection'
+LIVE_COLLECTION = 'live_tweets'
+
+
+#Archive configs
 ARCHIVE_START = "August 2015"

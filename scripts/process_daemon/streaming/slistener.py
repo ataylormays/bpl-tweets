@@ -1,10 +1,22 @@
 import json
-import os
-import sys
+import os, sys
 import time
 
 from tweepy import StreamListener
 from tweepy import API
+
+file_loc = os.path.abspath(__file__)
+resources_path = os.path.abspath(os.path.join(
+	os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(file_loc)))), 'resources'))
+sys.path.append(resources_path)
+
+import constants
+
+utilities_path = os.path.abspath(os.path.join(
+	constants.BASE_DIR, 'scripts/utilities'))
+sys.path.append(utilities_path)
+
+import mongo_utilities as mongo
 
 class SListener(StreamListener):
 
@@ -12,6 +24,7 @@ class SListener(StreamListener):
 		self,
 		team1,
 		team2,
+		match_date, 
 		users = [],
 		api = None,
 		fprefix = 'streamer',
@@ -29,6 +42,7 @@ class SListener(StreamListener):
 		self.total_limit = total_limit
 		self.team1 = team1
 		self.team2 = team2
+		self.match_date = match_date
 		self.users = users
 		self.t1_counter = 0
 		self.t2_counter = 0
@@ -53,6 +67,10 @@ class SListener(StreamListener):
 		self.split_value = 10
 		self.file_handles = { }
 		self.lines_written = { }
+
+		# db configs
+		self.db = mongo.get_db(constants.TWITTER_DB)
+		self.collection = mongo.get_collection(self.db, constants.LIVE_COLLECTION)
 
 	def on_data(self, data):
 		if 'in_reply_to_status' in data:
@@ -105,6 +123,17 @@ class SListener(StreamListener):
 		t = text.lower()
 		return self.team1.lower() in t or self.team2.lower() in t
 
+	def build_document(self, status, team):
+		# get dict subfield of tweepy's Status object
+		tweet = json.loads(status)
+
+		# add tweet's unix ts, the match date, and team to tweet object
+		tweet["unix_ts"] = mongo.twitter_time_to_unix(tweet["created_at"])
+		tweet["team"] = team
+		tweet["match_date"] = self.match_date
+		
+		return tweet
+
 	def on_status(self, status):
 		totalTime = time.time() - self.start_time
 		delta = time.time() - self.time
@@ -144,8 +173,12 @@ class SListener(StreamListener):
 			self.time = time.time()
 
 		if self.team1.lower() in tweet_text.lower():
+			document = self.build_document(status, self.team1)
+			mongo.insert_object(self.collection, document)
 			self.t1_counter += 1
 		if self.team2.lower() in tweet_text.lower():
+			document = self.build_document(status, self.team2)
+			mongo.insert_object(self.collection, document)
 			self.t2_counter += 1
 		return True
 

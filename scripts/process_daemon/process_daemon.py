@@ -9,9 +9,9 @@ import time
 import tweepy
 
 file_loc = os.path.abspath(__file__)
-resources_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(file_loc))), 'resources'))
 parent_directory = os.path.dirname(file_loc)
 streaming_path = os.path.join(parent_directory, 'streaming')
+resources_path = os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(parent_directory)), 'resources'))
 twitter_access_path = os.path.join(parent_directory, 'threads/twitter_access')
 
 import_paths = [resources_path, streaming_path, twitter_access_path]
@@ -55,6 +55,7 @@ def team_mode(team1, team2):
 	lt_thread = LTT(
 		team1,
 		team2,
+		datetime.date.today().strftime("%d %B %Y"),
 		60 * constants.TOT_MINUTES)
 	p_threads = [PT(team1), PT(team2)]
 
@@ -81,6 +82,7 @@ def daemon_mode():
 					LTT(
 						m[0],
 						m[1],
+						today,
 						60 * constants.TOT_MINUTES)
 				for m in matches]
 
@@ -142,6 +144,6 @@ def main():
 
 if __name__ == "__main__":
 	main()
-	#t = LTT("Manchester United", "Arsenal", 60 * constants.TOT_MINUTES)
+	#t = LTT("Manchester United", "Arsenal", datetime.date.today().strftime("%d %B %Y"), 15)
 	#t = PT("Manchester United")
 	#t.start()
