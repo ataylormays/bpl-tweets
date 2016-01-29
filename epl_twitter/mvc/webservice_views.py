@@ -9,9 +9,8 @@ resources_path = os.path.join(BASE_DIR, 'resources')
 sys.path.append(resources_path)
 db_path = os.path.join(BASE_DIR, 'scripts/utilities')
 sys.path.append(db_path)
-import test_db_connection as mongodb
+import mongo_utilities as mongodb
 import constants
-print sys.path
 
 import constants
 
