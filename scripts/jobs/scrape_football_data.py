@@ -3,7 +3,7 @@
 from bs4 import BeautifulSoup
 import requests
 import os, sys
-import datetime
+import datetime, time
 import csv
 import traceback
 
@@ -12,6 +12,15 @@ resources_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(fi
 print resources_path
 sys.path.append(resources_path)
 import constants
+
+def datetime2timestamp(match_dt):
+
+	# sample dt: 17 January 2016 10:15 AM
+	match_dt_format = "%d %B %Y %H:%M"
+	t = time.strptime(match_dt, match_dt_format)
+	match_ts = time.mktime(t)
+
+	return match_ts
 
 def scrape_match_data(url, dest, weeks=1):
 	r = requests.get(url)
@@ -48,10 +57,11 @@ def scrape_match_data(url, dest, weeks=1):
 			continue	
 		for elt in md:
 			if "shsRow0Row" in str(elt) or "shsRow1Row" in str(elt):
-				time = elt.find_all('span', {"class":"shsCTZone"})[0].text.replace(" CT", "")
+				time = elt.find_all('span', {"class":"shsGMTZone"})[0].text.replace(" GMT", "")
 				home = elt.find_all('td', {"class":"shsNamD"})[1].text
 				away = elt.find_all('td', {"class":"shsNamD"})[2].text
-				matches += [[date, time, home, away]]
+				match_ts = datetime2timestamp(date + " " + time)
+				matches += [[date, time, str(match_ts), home, away]]
 
 	with open(dest + 'matches.csv', 'w') as f:
 		csv.writer(f, delimiter=",").writerows(matches)

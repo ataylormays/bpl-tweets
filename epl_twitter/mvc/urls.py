@@ -33,7 +33,7 @@ live_urlpatterns = [
 
 placeholder_urlpatterns = [
 	url(r'^home/', views.placeholder, name='home'),
-	url(r'^tweets/ws/startAndEnd$', webservice_views.start_and_end, name='webservice')
+	url(r'^tweets/ws/startAndEnd$', webservice_views.start_and_end, name='webservice'),
 	url(r'^tweets/ws/liveTweetsCount$', webservice_views.live_tweets_count, name='liveTweetsCount')
 ]
 

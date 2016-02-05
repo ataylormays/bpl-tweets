@@ -54,6 +54,7 @@ TWITTER_COLLECTION = 'twitter_collection'
 TWITTER_TEST_DB = 'twitter_test_db'
 TWITTER_TEST_COLLECTION = 'twitter_test_collection'
 LIVE_COLLECTION = 'live_tweets'
+LIVE_TEST_COLLECTION = 'live_tweets_test'
 
 
 #Archive configs

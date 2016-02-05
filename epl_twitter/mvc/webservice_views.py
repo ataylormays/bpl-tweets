@@ -1,6 +1,7 @@
 from django.http import JsonResponse, Http404
 import json
 import time
+import csv
 import os, sys
 
 file_loc = os.path.abspath(__file__)
@@ -34,7 +35,7 @@ def start_and_end(request):
 		collection = init_collection()
 		query = {"unix_ts": {"$lt": end, "$gt": start}}
 		result = mongodb.query_collection(collection, query)
-
+		
 		# serialize result
 		for r in result:
 			r["_id"] = str(r["_id"])
@@ -43,12 +44,86 @@ def start_and_end(request):
 	except:
 		raise Http404("Internal Server Error")
 
+def find_match(team1, team2):	
+	matches_filename = os.path.join(constants.MATCHES_DIR, "matches.csv")
+
+	team1 = team1.replace("_", " ").title()
+	team2 = team2.replace("_", " ").title()
+	
+	with open(matches_filename, "r") as f:
+		matches_reader = csv.reader(f, delimiter=",")
+		for row in matches_reader:
+			match = {"date" : row[0],
+				"time" : row[1], 
+				"timestamp" : row[2],
+				"home" : row[3], 
+				"away" : row[4]
+			}
+			if ((match["home"] == team1 and match["away"] == team2)
+				or match["home"] == team2 and match["away"] == team1):
+				return match
+			
+	return None
+
+def get_match_ts(match):
+	match_dt = match["date"] + " " + match["time"]
+	
+	# sample dt: 17 January 2016 10:15 AM
+	match_dt_format = "%d %B %Y %I:%M %p"
+	t = time.strptime(match_dt, match_dt_format)
+	match_ts = time.mktime(t) + 6 * 60*60
+
+	return match_ts
+
+def chunks(start, end, chunk_size):
+	chunks = []
+	while(start < end):
+		chunks += [start]
+		start += chunk_size
+	chunks += [end]
+	
+	return chunks
+
+
 def live_tweets_count(request):
 	try:
-		team1 = request.GET.get('home')
-		team2 = request.GET.get('away')
+		collection = init_collection()
+
+		home = request.GET.get('home')
+		away = request.GET.get('away')
+		
+		if 'start' in request.GET:
+			query_start = int(request.GET.get('start'))
+		else:
+			match = find_match(home, away)
+			match_ts = match["timestamp"]
+			query_start = float(match_ts)
 
 		now = time.time()
+		
+		if now < query_start:
+			raise Http404("Invalid request. Start parameter must be less than current time, %s" % now)
 
+		counts = []
+		ts_chunks = chunks(query_start, now, 60)
+		for i in xrange(len(ts_chunks)-1):
+			start = ts_chunks[i]
+			end = ts_chunks[i+1]
+			query = {"unix_ts": {"$lt": end, "$gt": start}, 
+						"$or": [{"team" : home},
+								{"team" : away}
+								]}
+			tweets = mongodb.query_collection(collection, query)
+			counts += [len(tweets)]
+
+		result = {"home" : home,
+					"away" : away,
+					"start" : query_start,
+					"end" : now,
+					"counts" : counts}
+		return JsonResponse(result, safe=False)
+
+	except Http404 as e:
+		raise e
 	except:
 		raise Http404("Internal Server Error")
