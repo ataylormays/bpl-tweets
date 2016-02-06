@@ -203,9 +203,7 @@ def init_collection():
 def update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collection):
 	status = status._json
 	new_tweet = True
-	popularity = str(
-				status["retweet_count"] + \
-				status["favorite_count"])
+	popularity = status["retweet_count"] + status["favorite_count"]
 	for tweet in existing_tweets:
 		if status["id_str"] == tweet["id_str"]:
 			new_tweet = False
@@ -220,9 +218,9 @@ def update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collec
 
 	if new_tweet:
 		print 'new_tweet'
-		popularity_progression = ["0"] * (iteration-1) + \
+		popularity_progression = [0] * (iteration-1) + \
 						[popularity] + \
-						["0"] * (int(constants.NUM_COLS) - iteration)
+						[0] * (int(constants.NUM_COLS) - iteration)
 
 		record = {"id_str" : status["id_str"],
 					"club" : club_nm,
