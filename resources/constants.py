@@ -40,6 +40,9 @@ MATCHES_DIR = os.path.join(DATA_DIR, "matches/")
 PARAMS_DIR = os.path.join(SECRETS_DIR, "params/")
 CONSUMERS_DIR = os.path.join(SECRETS_DIR, "consumers/")
 TOKENS_DIR = os.path.join(SECRETS_DIR, "tokens/")
+SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts/")
+UTILITIES_DIR = os.path.join(SCRIPTS_DIR, "utilities/")
+
 
 # files
 SECRETS_CSV = os.path.join(SECRETS_DIR, "secrets.csv")
@@ -55,6 +58,8 @@ TWITTER_TEST_DB = 'twitter_test_db'
 TWITTER_TEST_COLLECTION = 'twitter_test_collection'
 LIVE_COLLECTION = 'live_tweets'
 LIVE_TEST_COLLECTION = 'live_tweets_test'
+POPULAR_COLLECTION = 'popular_tweets'
+POPULAR_TEST_COLLECTION = 'popular_tweets_test'
 
 
 #Archive configs

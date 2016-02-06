@@ -44,20 +44,20 @@ def read_matches(filename, now, today):
 				continue
 			if row[1] != now:
 					continue
-			curr_matches += [[row[2], row[3]]]
+			curr_matches += [[row[3], row[4], row[2]]]
 	return curr_matches
 
 def dummy_mode():
 	# TODO - Implement!
 	pass
 
-def team_mode(team1, team2):
+def team_mode(team1, team2, match_ts):
 	lt_thread = LTT(
 		team1,
 		team2,
 		datetime.date.today().strftime("%d %B %Y"),
 		60 * constants.TOT_MINUTES)
-	p_threads = [PT(team1), PT(team2)]
+	p_threads = [PT(team1, match_ts), PT(team2, match_ts)]
 
 	start_threads([lt_thread], p_threads)
 
@@ -86,8 +86,8 @@ def daemon_mode():
 						60 * constants.TOT_MINUTES)
 				for m in matches]
 
-				p_threads = [PT(m[0]) for m in matches]
-				p_threads += [PT(m[1]) for m in matches]
+				p_threads = [PT(m[0], m[2]) for m in matches]
+				p_threads += [PT(m[1], m[2]) for m in matches]
 
 				start_threads(lt_threads, p_threads)
 
@@ -138,7 +138,7 @@ def main():
 	if dummy:
 		dummy_mode()
 	elif team1:
-		team_mode(team1, team2)
+		team_mode(team1, team2, match_ts=time.time())
 	else:
 		daemon_mode()
 

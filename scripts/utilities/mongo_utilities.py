@@ -1,4 +1,4 @@
-from pymongo import MongoClient
+from pymongo import MongoClient, ReturnDocument
 import pymongo
 import time
 import os, sys
@@ -30,7 +30,19 @@ def query_collection(collection, query=None, sort=None):
 	results = collection.find(query).sort(sort) if sort else collection.find(query)
 	return [doc for doc in results]
 
+def update_one(collection, query, update):
+	updated_document = collection.find_one_and_update(filter=query, \
+			update={'$set':update}, \
+			return_document=ReturnDocument.AFTER)
+	return updated_document
+
+
 def twitter_time_to_unix(created_at):
 	t = time.strptime(created_at, constants.TWITTER_TIME_FORMAT)
 	unix_ts = time.mktime(t)
 	return unix_ts
+
+if __name__ == '__main__':
+	db = get_db(constants.TWITTER_TEST_DB)
+	collection = get_collection(db, constants.POPULAR_TEST_COLLECTION)
+	print len(query_collection(collection))

@@ -10,11 +10,16 @@ import urllib2
 import tweepy
 from random import randint
 
-
-resources_path = os.path.abspath(os.path.join('../../../..', 'resources'))
+file_loc = os.path.abspath(__file__)
+parent_directory = os.path.dirname(file_loc)
+base_path = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(parent_directory))))
+resources_path = os.path.join(base_path, 'resources')
 sys.path.append(resources_path)
 
 import constants
+
+sys.path.append(constants.UTILITIES_DIR)
+import mongo_utilities as mongodb
 
 def convert_datetime(twitter_date):
 	old_fmt = '%a %b %d %H:%M:%S +0000 %Y'
@@ -39,6 +44,14 @@ def extract_hashtags(twitter_object):
 		for h in twitter_object[1:]:
 			h_tags += ", " + h["text"]
 		return h_tags
+
+def get_first_id(api, club_nm):
+	query = query_builder(club_nm)
+	data = query_twitter_api(api, query, count=1)
+	if len(data)==0:
+		print "twitter_access::get_top_id: No data."
+	else:
+		return data[0].id_str
 
 def get_since_id(club_nm):
 	club_since_file = os.path.join(
@@ -111,7 +124,16 @@ def query_builder(club_nm):
 	query += qb_hashtags(club_data["hashtags"])
 	query += qb_handle(club_data["handle"])
 	query += qb_exclude(constants.BANNED_PHRASES)
+	
 	return query
+
+def get_existing_tweets(club_nm, match_ts, collection):
+	query = {"club" : club_nm,
+				"match_ts" : match_ts}
+	results = mongodb.query_collection(collection, query)
+
+	return results
+
 
 def build_tweet_url(username, msg_id):
 	return "https://twitter.com/" + username + "/status/" + msg_id
@@ -166,6 +188,47 @@ def authorize_api(index):
 
 	return api
 
+def init_collection():
+	if constants.LIVE_MODE:
+		db_name = constants.TWITTER_DB
+		collection_name = constants.POPULAR_COLLECTION
+	else:
+		db_name = constants.TWITTER_TEST_DB
+		collection_name = constants.POPULAR_TEST_COLLECTION
+	db = mongodb.get_db(db_name)
+	collection = mongodb.get_collection(db, collection_name)
+	
+	return collection
+
+def update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collection):
+	status = status._json
+	new_tweet = True
+	popularity = str(
+				status["retweet_count"] + \
+				status["favorite_count"])
+	for tweet in existing_tweets:
+		if status["id_str"] == tweet["id_str"]:
+			new_tweet = False
+			# insert popularity at iteration index, update DB
+			popularity_progression = tweet["popularity_progression"]
+			popularity_progression[iteration] = popularity
+			update_query = {"id_str" : status["id_str"]}
+			update_statement = {"popularity_progression" : popularity_progression}
+			print 'updating'
+			mongodb.update_one(collection, query = update_query, update=update_statement)
+			break
+
+	if new_tweet:
+		print 'new_tweet'
+		popularity_progression = ["0"] * (iteration-1) + \
+						[popularity] + \
+						["0"] * (int(constants.NUM_COLS) - iteration)
+
+		record = {"id_str" : status["id_str"],
+					"club" : club_nm,
+					"match_ts" : match_ts,
+					"popularity_progression" : popularity_progression}
+		mongodb.insert_object(collection, record)
 
 def analyze_text(text):
 	APPLICATION_ID = '' # application id
@@ -197,7 +260,7 @@ def query_twitter_api(
 		result_type=result_type).items(count)]
 	return results
 
-def populate_popularity(club_nm, since_id="", iteration=1):
+def populate_popularity(club_nm, since_id="", iteration=1, match_ts=time.time()):
 
 	# build api object using secrets
 	with open(constants.SECRETS_JSON, 'r') as secrets_file:
@@ -205,69 +268,34 @@ def populate_popularity(club_nm, since_id="", iteration=1):
 
 	secrets_index = iteration % constants.NUM_SECRETS
 	api = authorize_api(secrets_index)
-	
-	if since_id == "":
-		since_id = update_since_id(api, club_nm)
-	i = 0
+
+	# open db connection
+	collection = init_collection()
+	existing_tweets = get_existing_tweets(club_nm, match_ts, collection)
+
 	query = query_builder(club_nm)
-	all_data = []
-	tweet_data = []
-
-	#read and edit data
-	input_file_nm = os.path.join(
-		constants.POPULARITY_DIR,
-		club_nm.lower().replace(' ', '_') + "_popularity.csv")
-	try:
-		with open(input_file_nm, 'rU') as f:
-			tweet_file = csv.reader(f, delimiter=",")
-			tweet_data = [row for row in tweet_file]
-	except:
-		tweet_data = []
-
-	tweets = query_twitter_api(
+	new_tweets = query_twitter_api(
 		api,
 		query,
 		result_type=constants.TWEET_TYPE,
 		since_id=since_id)
 
-	if len(tweets) == 0:
-		print 'no tweets today :('
+	if len(new_tweets) == 0:
+		print 'no tweets now :('
 	else:
-		for status in tweets:
-			id_str =  status.id_str
-			popularity = str(
-				status.retweet_count + \
-				status.favorite_count)
-			new_tweet = True
-			for row in tweet_data:
-				if(row[0] == id_str):
-					row[iteration] = popularity
-					new_tweet = False
-					break
-			if new_tweet:
-				content = [id_str] + \
-					["0"] * (iteration-1) + \
-					[popularity] + \
-					["0"] * \
-					(
-						int(constants.NUM_COLS) - \
-						iteration)
-				tweet_data += [content]
-
-		all_data += tweet_data
-
-	#write data (overwrites file)
-	with open(input_file_nm, 'w+') as f:
-		csv.writer(f, delimiter=",").writerows(all_data)
+		for status in new_tweets:
+			update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collection)
 
 if __name__ == '__main__':
 	api = authorize_api(0)
 	query = query_builder("Manchester United")
 
-	since_id = get_top_id(api, query)
+	#since_id = get_top_id(api, query)
+	since_id = "695865017288237056"
 	print since_id
-	time.sleep(30)
-	populate_popularity("Manchester United", since_id)
+	print constants.LIVE_MODE
+	#time.sleep(30)
+	populate_popularity("Manchester United", since_id, match_ts=1454795380)
 	
 
 
