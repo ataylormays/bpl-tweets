@@ -19,14 +19,6 @@ live_regex =  team1_regex + \
 urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 live_urlpatterns = [
-	url(r'^about/', views.about, name='about'),
-	url(r'^archive/', views.archive, name='archive'),
-	url(r'^live/' + live_regex, views.live, name='live'),
-	url(r'^matches/', views.matches, name='matches'),
-	url(r'^$', views.matches, name='matches')
-]
-
-placeholder_urlpatterns = [
 	url(
                 r'^tweets/ws/startAndEnd$',
                 webservice_views.start_and_end,
@@ -35,6 +27,14 @@ placeholder_urlpatterns = [
                 r'^tweets/ws/liveTweetsCount$',
                 webservice_views.live_tweets_count,
                 name='liveTweetsCount'),
+	url(r'^about/', views.about, name='about'),
+	url(r'^archive/', views.archive, name='archive'),
+	url(r'^live/' + live_regex, views.live, name='live'),
+	url(r'^matches/', views.matches, name='matches'),
+	url(r'^$', views.matches, name='matches')
+]
+
+placeholder_urlpatterns = [
 	url(r'^', views.placeholder, name='placeholder')
 ]
 
