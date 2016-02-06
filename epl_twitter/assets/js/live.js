@@ -409,6 +409,16 @@ function makeDoubleBarGraph(
 	if (initializing) { window.setInterval(callString, milliseconds * 2); }
 }
 
+function getCounts(url){
+	var jq = document.createElement('script');
+	jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js";
+
+	return $.ajax({
+		url: url,
+		type: 'GET',
+		async: false});
+}
+
 /*
 	loadTweets
 

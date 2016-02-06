@@ -147,18 +147,18 @@ def matches(request):
                 for row in matches_reader:
                         start_dt = row[0] + " " + row[1]
                         start_dt = datetime.datetime.strptime(
-                                start_dt, "%d %B %Y %I:%M %p")
+                                start_dt, "%d %B %Y %H:%M")
                         delta = datetime.timedelta(
                                 minutes=constants.TOT_MINUTES)
                         now = datetime.datetime.now()
-                        match = create_match_url(row[2], row[3], 'live')
+                        match = create_match_url(row[3], row[4], 'live')
                         state = 'live'
                         crest1 = os.path.join(
                                 'club-crests',
-                                row[2].lower().replace(' ', '_') + '-crest.png')
+                                row[3].lower().replace(' ', '_') + '-crest.png')
                         crest2 = os.path.join(
                                 'club-crests',
-                                row[3].lower().replace(' ', '_') + '-crest.png')
+                                row[4].lower().replace(' ', '_') + '-crest.png')
                         if now < start_dt:
                                 state = 'upcoming'
                         elif now > start_dt + delta:

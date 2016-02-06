@@ -53,14 +53,15 @@ def find_match(team1, team2):
 	with open(matches_filename, "r") as f:
 		matches_reader = csv.reader(f, delimiter=",")
 		for row in matches_reader:
-			match = {"date" : row[0],
+			match = {
+                                "date" : row[0],
 				"time" : row[1], 
 				"timestamp" : row[2],
 				"home" : row[3], 
 				"away" : row[4]
 			}
 			if ((match["home"] == team1 and match["away"] == team2)
-				or match["home"] == team2 and match["away"] == team1):
+                            or match["home"] == team2 and match["away"] == team1):
 				return match
 			
 	return None
@@ -91,21 +92,25 @@ def live_tweets_count(request):
 
 		home = request.GET.get('home')
 		away = request.GET.get('away')
-		
+
+                match = find_match(home, away)
+                match_ts = match["timestamp"]
+                default_start = float(match_ts)
+
 		if 'start' in request.GET:
 			query_start = int(request.GET.get('start'))
 		else:
-			match = find_match(home, away)
-			match_ts = match["timestamp"]
-			query_start = float(match_ts)
+			query_start = default_start
 
 		now = time.time()
-		
+		end = min(now, default_start + 120 * 60)
+
 		if now < query_start:
-			raise Http404("Invalid request. Start parameter must be less than current time, %s" % now)
+                        return JsonResponse(None, safe=False)
+			#raise Http404("Invalid request. Start parameter must be less than current time, %s" % now)
 
 		counts = []
-		ts_chunks = chunks(query_start, now, 60)
+		ts_chunks = chunks(query_start, end, 60)
 		for i in xrange(len(ts_chunks)-1):
 			start = ts_chunks[i]
 			end = ts_chunks[i+1]
@@ -116,14 +121,13 @@ def live_tweets_count(request):
 			tweets = mongodb.query_collection(collection, query)
 			counts += [len(tweets)]
 
-		result = {"home" : home,
-					"away" : away,
-					"start" : query_start,
-					"end" : now,
-					"counts" : counts}
+                result = {
+                        "home" : home,
+                        "away" : away,
+                        "start" : query_start,
+                        "end" : end,
+                        "counts" : counts}
 		return JsonResponse(result, safe=False)
 
-	except Http404 as e:
-		raise e
 	except:
-		raise Http404("Internal Server Error")
+                raise
