@@ -1,4 +1,5 @@
 from pymongo import MongoClient
+import pymongo
 import time
 import os, sys
 
@@ -25,12 +26,11 @@ def insert_object(collection, object):
 	elif type(object) == list:
 		collection.insert_many(object)
 
-def query_collection(collection, query=None):
-	results = collection.find(query)
+def query_collection(collection, query=None, sort=None):
+	results = collection.find(query).sort(sort) if sort else collection.find(query)
 	return [doc for doc in results]
 
 def twitter_time_to_unix(created_at):
 	t = time.strptime(created_at, constants.TWITTER_TIME_FORMAT)
 	unix_ts = time.mktime(t)
 	return unix_ts
-	
