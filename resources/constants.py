@@ -27,15 +27,14 @@ BANNED_PHRASES = [
 ]
 
 # live vs. placeholder
-LIVE_MODE = False
+LIVE_MODE = True
 
 # directories
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CRESTS_DIR = os.path.join(BASE_DIR, 'epl_twitter/assets/images/club-crests/')
 RESOURCES_DIR = os.path.join(BASE_DIR, "resources/")
 DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "bpl-tweets-data/")
 SECRETS_DIR = os.path.join(DATA_DIR, "secrets/")
-SINCE_DIR = os.path.join(DATA_DIR, "streaming_data/since_ids/")
-POPULARITY_DIR = os.path.join(DATA_DIR, "streaming_data/popularity/")
 MATCHES_DIR = os.path.join(DATA_DIR, "matches/")
 PARAMS_DIR = os.path.join(SECRETS_DIR, "params/")
 CONSUMERS_DIR = os.path.join(SECRETS_DIR, "consumers/")

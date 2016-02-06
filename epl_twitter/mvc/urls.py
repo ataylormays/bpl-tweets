@@ -19,22 +19,23 @@ live_regex =  team1_regex + \
 urlpatterns = static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 live_urlpatterns = [
-	url(r'^admin/', include(admin.site.urls)),
-	url(r'^home/', views.home, name='home'),
-	url(r'^club/(?P<club_nm>[A-Za-z_]+)/$', views.club, name='club'),
 	url(r'^about/', views.about, name='about'),
-	url(r'^contact/', views.contact, name='contact'),
-	url(r'^teams/', views.teams, name='teams'),
-	url(r'^live/' + live_regex, views.live, name='live'),
 	url(r'^archive/', views.archive, name='archive'),
+	url(r'^live/' + live_regex, views.live, name='live'),
 	url(r'^matches/', views.matches, name='matches'),
-	url(r'^$', views.home, name='home'),
+	url(r'^$', views.matches, name='matches')
 ]
 
 placeholder_urlpatterns = [
-	url(r'^home/', views.placeholder, name='home'),
-	url(r'^tweets/ws/startAndEnd$', webservice_views.start_and_end, name='webservice'),
-	url(r'^tweets/ws/liveTweetsCount$', webservice_views.live_tweets_count, name='liveTweetsCount')
+	url(
+                r'^tweets/ws/startAndEnd$',
+                webservice_views.start_and_end,
+                name='webservice'),
+	url(
+                r'^tweets/ws/liveTweetsCount$',
+                webservice_views.live_tweets_count,
+                name='liveTweetsCount'),
+	url(r'^', views.placeholder, name='placeholder')
 ]
 
 if constants.LIVE_MODE:

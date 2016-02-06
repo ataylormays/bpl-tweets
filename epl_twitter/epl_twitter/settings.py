@@ -99,8 +99,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, 'assets/images'),
 	os.path.join(BASE_DIR, 'assets/stylesheets'),
-	os.path.join(BASE_DIR, 'assets/js'),
-	os.path.join(os.path.dirname(os.path.dirname(BASE_DIR)), 'bpl-tweets-data/streaming_data')
+	os.path.join(BASE_DIR, 'assets/js')
 )
 
 #STATIC_ROOT = os.path.join(BASE_DIR, 'assets/admin_files')

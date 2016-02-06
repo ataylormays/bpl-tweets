@@ -127,31 +127,6 @@ def placeholder(request):
 
 	return HttpResponse(template.render(context))
 
-def home(request):
-
-	template = loader.get_template('home.html')
-
-	today = datetime.date.today().strftime("%Y-%m-%d")
-	last_wk = (
-		datetime.datetime.strptime(today, "%Y-%m-%d")
-		- datetime.timedelta(days=7))
-
-	recent_tweets = Tweet.objects.filter(created__gt=last_wk) \
-		.filter(created__lte=today)
-	hashtags = [
-		h for tweet in recent_tweets
-		for h in tweet.hashtags.split(", ") if h != ""]
-
-	popular_hashtags = [
-		(count, elt[0], elt[1])
-		for count, elt in enumerate(count_elts(hashtags, 20), 1)]
-
-	context = RequestContext(request, {
-		'hashtags': popular_hashtags
-		})
-
-	return HttpResponse(template.render(context))
-
 def about(request):
 	today = datetime.date.today().strftime("%b %d, %Y")
 	template = loader.get_template('about.html')
@@ -164,33 +139,40 @@ def about(request):
 def matches(request):
 	today = datetime.date.today().strftime("%d %B %Y")
 	now = datetime.datetime.now().strftime("%I:%M %p")
-	live_matches = []
-	upcoming_matches = []
-	try:
-		csv_file = os.path.join(constants.MATCHIES_DIR, 'matches.csv')
-		with open(cv_file, 'r') as f:
-			matches_reader = csv.reader(f, delimiter=",")
-			for row in matches_reader:
-				start_dt = row[0] + " " + row[1]
-				start_dt = datetime.datetime \
-					.strptime(start_dt, "%d %B %Y %I:%M %p")
-				delta = datetime.timedetla(
-					minutes=constants.TOT_MINUTES)
-				now = datetime.datetime.now()
-				match = create_match_url(row[2], row[3], 'live')
-				if (
-					now < start_dt or
-					now > start_dt + delta):
-					upcoming_matches += [row + [match]]
-				else:
-					live_matches += [row + [match]]
-	except:
-		print "We fucked up in views.matches"
+        matches = {}
+        rows = 0
+        csv_file = os.path.join(constants.MATCHES_DIR, 'matches.csv')
+        with open(csv_file, 'r') as f:
+                matches_reader = csv.reader(f, delimiter=",")
+                for row in matches_reader:
+                        start_dt = row[0] + " " + row[1]
+                        start_dt = datetime.datetime.strptime(
+                                start_dt, "%d %B %Y %I:%M %p")
+                        delta = datetime.timedelta(
+                                minutes=constants.TOT_MINUTES)
+                        now = datetime.datetime.now()
+                        match = create_match_url(row[2], row[3], 'live')
+                        state = 'live'
+                        crest1 = os.path.join(
+                                'club-crests',
+                                row[2].lower().replace(' ', '_') + '-crest.png')
+                        crest2 = os.path.join(
+                                'club-crests',
+                                row[3].lower().replace(' ', '_') + '-crest.png')
+                        if now < start_dt:
+                                state = 'upcoming'
+                        elif now > start_dt + delta:
+                                state = 'recent'
+                        if row[0] in matches:
+                                matches[row[0]] +=\
+                                [row + [match, state, crest1, crest2]]
+                        else:
+                                matches[row[0]] =\
+                                [(row + [match, state, crest1, crest2])]
 
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
-		'live_matches': live_matches,
-		'upcoming_matches': upcoming_matches,
+                'matches': matches,
 		})
 	return HttpResponse(template.render(context))
 

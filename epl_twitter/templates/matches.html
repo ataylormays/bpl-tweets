@@ -1,20 +1,33 @@
 {% extends "base.html"%}
+
+{% load staticfiles %}
 	
 {%block content%}
 
+<script>
+function unixTimeToTime(day, hour) {
+	var date = new Date(day + ' ' + hour + ' CST');
+	document.write(date.toLocaleTimeString());
+}
+</script>
+
 <div>
 
-	{% if live_matches %}
-		<h3> Live Matches </h3>
-		{% for m in live_matches %}
-			<li><a href={{m.4}}>{{m.2}} vs {{m.3}}</a></li>
-		{% endfor %}
-	{% endif %}
-
-	{% if upcoming_matches %}
-		<h3> Upcoming Matches </h3>
-		{% for m in upcoming_matches %}
-			<li><a href={{m.4}}>{{m.2}} vs {{m.3}}</a></li>
+	{% if matches %}
+		{% for date, l in matches.items %}
+			<h2>{{date}}</h2>
+			<table align="center">
+			{% for item in l %}
+				<tr onclick="window.document.location='{{item.4}}';">
+				    <td>{{item.2}}</td>
+				    <td><img src={% static "" %}{{item.6}} height="30px" width="30px"></td>
+				    <td><script>unixTimeToTime('{{item.0}}', '{{item.1}}')</script></td>
+				    <td><img src={% static "" %}{{item.7}} height="30px" width="30px"></td>
+				    <td>{{item.3}}</td>
+				    <td>({{item.5}})</td>
+				</tr>
+			{% endfor %}
+			<table>
 		{% endfor %}
 	{% endif %}
 

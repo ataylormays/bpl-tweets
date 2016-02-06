@@ -22,6 +22,17 @@ body {
 	color: #1E266B;
 }
 
+tr:hover {
+	cursor: pointer;
+}
+
+td:hover {
+	cursor: pointer;
+}
+tr:hover {
+    background-color: #ccc;
+}
+
 /* Scrollbox */
 div.scroll {
 	width: 50%;
