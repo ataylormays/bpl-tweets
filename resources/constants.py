@@ -27,7 +27,7 @@ BANNED_PHRASES = [
 ]
 
 # live vs. placeholder
-LIVE_MODE = True
+LIVE_MODE = False
 
 # directories
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

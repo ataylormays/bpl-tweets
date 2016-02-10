@@ -176,14 +176,14 @@ def matches(request):
 		})
 	return HttpResponse(template.render(context))
 
-def live(request, team1, team2, date):
+def live(request, team1, team2, timestamp):
 	template = loader.get_template('live.html')
 	context = RequestContext(request, {
 		'team1Title': team1.title().replace('_', ' '),
 		'team2Title': team2.title().replace('_', ' '),
 		'team1': team1,
 		'team2': team2,
-		'date': date,
+		'timestamp': timestamp,
 	})
 	return HttpResponse(template.render(context))
 

@@ -263,7 +263,7 @@ def main():
 		for i in xrange(missing):
 			print "Iteration: ", i
 			generate_new_app()
-			time.sleep(4 * 60)
+			time.sleep(5 * 60)
 	if rebuild:
 		rebuild()
 	if write:

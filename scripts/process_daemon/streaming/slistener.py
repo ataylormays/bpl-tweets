@@ -108,7 +108,6 @@ class SListener(StreamListener):
 		#json.dump(status, self.tweet_json_output)
 
 		if delta > self.write_limit:
-			self.write_line(totalTime)
 			self.t1_counter = 0
 			self.t2_counter = 0
 			self.time = time.time()

@@ -3,7 +3,7 @@
 from bs4 import BeautifulSoup
 import requests
 import os, sys
-import datetime, time
+import datetime, time, calendar
 import csv
 import traceback
 
@@ -18,7 +18,7 @@ def datetime2timestamp(match_dt):
 	# sample dt: 17 January 2016 10:15 AM
 	match_dt_format = "%d %B %Y %H:%M"
 	t = time.strptime(match_dt, match_dt_format)
-	match_ts = time.mktime(t)
+	match_ts = calendar.timegm(t)
 
 	return match_ts
 

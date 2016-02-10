@@ -33,7 +33,7 @@ class PopularityThread(threading.Thread):
 				club_nm=self.club,
 				since_id=since_id,
 				iteration=runs,
-				match_ts=match_ts)
+				match_ts=self.match_ts)
 			template = "PopularityThread sleeping for %d."
 			print template % (constants.RUN_FREQ * 60)
 			time.sleep(constants.RUN_FREQ * 60)

@@ -45,4 +45,4 @@ def twitter_time_to_unix(created_at):
 if __name__ == '__main__':
 	db = get_db(constants.TWITTER_TEST_DB)
 	collection = get_collection(db, constants.POPULAR_TEST_COLLECTION)
-	print len(query_collection(collection))
+	print query_collection(collection)[122]
