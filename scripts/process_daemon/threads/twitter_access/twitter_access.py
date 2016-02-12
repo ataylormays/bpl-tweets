@@ -188,18 +188,6 @@ def authorize_api(index):
 
 	return api
 
-def init_collection():
-	if constants.LIVE_MODE:
-		db_name = constants.TWITTER_DB
-		collection_name = constants.POPULAR_COLLECTION
-	else:
-		db_name = constants.TWITTER_TEST_DB
-		collection_name = constants.POPULAR_TEST_COLLECTION
-	db = mongodb.get_db(db_name)
-	collection = mongodb.get_collection(db, collection_name)
-	
-	return collection
-
 def update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collection):
 	status = status._json
 	new_tweet = True
@@ -268,7 +256,7 @@ def populate_popularity(club_nm, since_id="", iteration=1, match_ts=time.time())
 	api = authorize_api(secrets_index)
 
 	# open db connection
-	collection = init_collection()
+	collection = mongodb.init_collection('popular')
 	existing_tweets = get_existing_tweets(club_nm, match_ts, collection)
 
 	query = query_builder(club_nm)

@@ -37,14 +37,11 @@ def count_elts(numbers, limit):
 			output[n] = 1
 	return sorted(output.items(), key=lambda x:-1*x[1])[:limit]
 
-def create_match_url(team1, team2, parent_dir):
+def create_match_url(team1, team2, timestamp):
 	t1, t2 = (
 		team1.lower().replace(' ', '_'),
 		team2.lower().replace(' ', '_'))
-	url = os.path.join(
-		'..',
-		parent_dir,
-		t1 + '-' + t2 + '-' + datetime.date.today().strftime("%Y%m%d"))
+	url = '/live/' + t1 + '-' + t2 + '-' + str(timestamp)
 	return url
 
 # create sorted list between two dates with placeholders for counts of sentiment
@@ -151,7 +148,7 @@ def matches(request):
                         delta = datetime.timedelta(
                                 minutes=constants.TOT_MINUTES)
                         now = datetime.datetime.now()
-                        match = create_match_url(row[3], row[4], 'live')
+                        match = create_match_url(row[3], row[4], row[2])
                         state = 'live'
                         crest1 = os.path.join(
                                 'club-crests',

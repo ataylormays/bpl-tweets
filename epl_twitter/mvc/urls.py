@@ -39,14 +39,10 @@ live_urlpatterns = [
 ]
 
 placeholder_urlpatterns = [
-	url(
-				r'^tweets/ws/getPopularTweet$',
-				webservice_views.most_popular_tweet,
-				name='getPopularTweet'),
 	url(r'^', views.placeholder, name='placeholder')
 ]
 
-if constants.LIVE_MODE:
+if constants.LIVE_MODE or constants.QA_MODE:
 	urlpatterns += live_urlpatterns
 else:
 	urlpatterns += placeholder_urlpatterns

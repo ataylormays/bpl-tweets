@@ -16,6 +16,19 @@ def get_db(database_name, server_url=None):
 def get_collection(db, collection_name):
 	return db['collection_name']
 
+def init_collection(collection_type):
+	if constants.LIVE_MODE:
+		env = 'prod'
+	elif constants.QA_MODE:
+		env = 'qa'
+
+	db_name = constants.TWITTER_DB[env]
+	collection_name = constants.TWITTER_COLLECTIONS[env][collection_type]
+	db = get_db(db_name)
+	collection = get_collection(db, collection_name)
+	
+	return collection
+
 def insert_object(collection, object):
 	assert (type(object) == dict or 
 		type(object) == list)

@@ -99,6 +99,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, 'assets/images'),
 	os.path.join(BASE_DIR, 'assets/stylesheets'),
+	os.path.join(BASE_DIR, 'assets/stylesheets/less'),
 	os.path.join(BASE_DIR, 'assets/js')
 )
 

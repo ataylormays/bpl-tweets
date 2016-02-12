@@ -16,18 +16,6 @@ db_path = os.path.join(BASE_DIR, 'scripts/utilities')
 sys.path.append(db_path)
 import mongo_utilities as mongodb
 
-def init_collection():
-	if constants.LIVE_MODE:
-		db_name = constants.TWITTER_DB
-		collection_name = constants.TWITTER_COLLECTION
-	else:
-		db_name = constants.TWITTER_TEST_DB
-		collection_name = constants.TWITTER_TEST_COLLECTION#LIVE_TEST_COLLECTION
-	db = mongodb.get_db(db_name)
-	collection = mongodb.get_collection(db, collection_name)
-	
-	return collection
-
 def get_matches():
 	matches_filename = os.path.join(constants.MATCHES_DIR, "matches.csv")
 	matches = []
@@ -45,7 +33,7 @@ def get_matches():
 	return matches
 
 def get_tweets_for_match(match):
-	collection = init_collection()
+	collection = mongodb.init_collection('live')
 	query = {"match_date" : match["date"], 
 		"$or": [{"team" : match["home"]},
 				{"team" : match["away"]}

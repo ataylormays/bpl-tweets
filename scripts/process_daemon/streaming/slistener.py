@@ -50,8 +50,7 @@ class SListener(StreamListener):
 			[team1, team2])
 
 		# db configs
-		self.db = mongo.get_db(constants.TWITTER_DB)
-		self.collection = mongo.get_collection(self.db, constants.LIVE_COLLECTION)
+		self.collection = mongo.init_collection('live')
 
 	def on_data(self, data):
 		if 'in_reply_to_status' in data:

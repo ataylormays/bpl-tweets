@@ -27,7 +27,10 @@ BANNED_PHRASES = [
 ]
 
 # live vs. placeholder
-LIVE_MODE = False
+LIVE_MODE = True
+
+# mongo collections to use
+QA_MODE = True
 
 # directories
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -51,15 +54,16 @@ CLUBS_JSON = os.path.join(RESOURCES_DIR, "twitter_clubs.json")
 
 # db configs
 TWITTER_TIME_FORMAT = '%a %b %d %H:%M:%S +0000 %Y'
-TWITTER_DB = 'twitter_db'
-TWITTER_COLLECTION = 'twitter_collection'
-TWITTER_TEST_DB = 'twitter_test_db'
-TWITTER_TEST_COLLECTION = 'twitter_test_collection'
-LIVE_COLLECTION = 'live_tweets'
-LIVE_TEST_COLLECTION = 'live_tweets_test'
-POPULAR_COLLECTION = 'popular_tweets'
-POPULAR_TEST_COLLECTION = 'popular_tweets_test'
-
+TWITTER_DB = {'prod':'twitter_db','qa':'twitter_test_db'}
+TWITTER_COLLECTIONS = {'prod':{}, 'qa':{}}
+TWITTER_COLLECTIONS["prod"]["tweets"] = 'twitter_collection'
+TWITTER_COLLECTIONS["prod"]["live"] = 'live_tweets'
+TWITTER_COLLECTIONS["prod"]["popular"] = 'popular_tweets'
+TWITTER_COLLECTIONS["prod"]["matches"] = 'matches'
+TWITTER_COLLECTIONS["qa"]["tweets"] = 'twitter_test_collection'
+TWITTER_COLLECTIONS["qa"]["live"] = 'live_test_tweets'
+TWITTER_COLLECTIONS["qa"]["popular"] = 'popular_test_tweets'
+TWITTER_COLLECTIONS["qa"]["matches"] = 'test_matches'
 
 #Archive configs
 ARCHIVE_START = "August 2015"

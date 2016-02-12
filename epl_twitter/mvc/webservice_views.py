@@ -16,34 +16,12 @@ import constants
 
 import constants
 
-def init_collection(collection_type):
-	if constants.LIVE_MODE:
-		db_name = constants.TWITTER_DB
-		if collection_type == "twitter":
-			collection_name = constants.TWITTER_COLLECTION
-		elif collection_type == "live":
-			collection_name = constants.LIVE_COLLECTION
-		elif collection_type == "popular":
-			collection_name = constants.POPULAR_COLLECTION
-	else:
-		db_name = constants.TWITTER_TEST_DB
-		if collection_type == "twitter":
-			collection_name = constants.TWITTER_TEST_COLLECTION
-		elif collection_type == "live":
-			collection_name = constants.LIVE_TEST_COLLECTION
-		elif collection_type == "popular":
-			collection_name = constants.POPULAR_TEST_COLLECTION
-	db = mongodb.get_db(db_name)
-	collection = mongodb.get_collection(db, collection_name)
-	
-	return collection
-
 def start_and_end(request):
 	try:
 		start = int(request.GET.get('start'))
 		end = int(request.GET.get('end'))
 
-		collection = init_collection("twitter")
+		collection = mongodb.init_collection("twitter")
 		query = {"unix_ts": {"$lt": end, "$gt": start}}
 		result = mongodb.query_collection(collection, query)
 		
@@ -104,7 +82,7 @@ def chunks(start, end, chunk_size):
 
 def live_tweets_count(request):
 	try:
-		collection = init_collection("live")
+		collection = mongodb.init_collection("live")
 
 		home = request.GET.get('home')
 		away = request.GET.get('away')
@@ -123,8 +101,7 @@ def live_tweets_count(request):
 
 		if now < query_start:
 			return JsonResponse(None, safe=False)
-			#raise Http404("Invalid request. Start parameter must be less than current time, %s" % now)
-
+			
 		counts = []
 		ts_chunks = chunks(query_start, end, 60)
 		for i in xrange(len(ts_chunks)-1):
@@ -137,12 +114,12 @@ def live_tweets_count(request):
 			tweets = mongodb.query_collection(collection, query)
 			counts += [len(tweets)]
 
-                result = {
-                        "home" : home,
-                        "away" : away,
-                        "start" : query_start,
-                        "end" : end,
-                        "counts" : counts}
+		result = {
+		    "home" : home,
+		    "away" : away,
+		    "start" : query_start,
+		    "end" : end,
+		    "counts" : counts}
 		return JsonResponse(result, safe=False)
 
 	except:
@@ -164,45 +141,53 @@ def find_most_popular_tweet(tweets, start_index=None, end_index=None):
 	return sorted_tweets[0]
 
 def most_popular_tweet(request):
-	body = json.loads(request.body)
-	
-	# required params
-	club = body["club"]
-	match_ts = body["match_timestamp"]
+	try:
+		body = json.loads(request.body)
+		
+		# required params
+		club = body["club"]
+		match_ts = body["match_timestamp"]
 
-	# optional params
-	since_ts = body["since_ts"] if "since_ts" in body else None
-	exclusions = body["exclusions"] if "exclusions" in body else []
+		# optional params
+		since_ts = body["since_ts"] if "since_ts" in body else None
+		exclusions = body["exclusions"] if "exclusions" in body else []
 
-	print exclusions
+		print exclusions
 
-	collection = init_collection("popular")
-	query = {"club" : club,
-				"match_ts" : match_ts,
-				"id_str" : {"$nin" : exclusions}
-			}
-	tweets = mongodb.query_collection(collection, query)
+		collection = mongodb.init_collection("popular")
+		query = {"club" : club,
+					"match_ts" : match_ts,
+					"id_str" : {"$nin" : exclusions}
+				}
+		tweets = mongodb.query_collection(collection, query)
+		
+		print len(tweets)
+		if len(tweets) == 0:
+			return JsonResponse(None, safe=False)
 
-	# if current time is past match end, return most popular tweet
-	match_end = float(match_ts) + constants.TOT_MINUTES * 60
-	now = time.time()
-	if match_end < now:
-		top_tweet = find_most_popular_tweet(tweets)
-	else:
-		# if since_ts was provided, return most popular tweet over that time period
-		# else, return most popular tweet of the match
-		if since_ts:
-			time_window = time.time() - float(since_ts)
-			num_minutes = int(time_window / 60)
-			start_index = int((float(since_ts) - match_ts) / 60)
-			end_index = start_index + num_minutes
-			print start_index, num_minutes, end_index
-			top_tweet = find_most_popular_tweet(tweets, start_index, end_index)
-		else:
+		# if current time is past match end, return most popular tweet
+		match_end = float(match_ts) + constants.TOT_MINUTES * 60
+		now = time.time()
+		if match_end < now:
 			top_tweet = find_most_popular_tweet(tweets)
+		else:
+			# if since_ts was provided, return most popular tweet over that time period
+			# else, return most popular tweet of the match
+			if since_ts:
+				time_window = time.time() - float(since_ts)
+				num_minutes = int(time_window / 60)
+				start_index = int((float(since_ts) - match_ts) / 60)
+				end_index = start_index + num_minutes
+				print start_index, num_minutes, end_index
+				top_tweet = find_most_popular_tweet(tweets, start_index, end_index)
+			else:
+				top_tweet = find_most_popular_tweet(tweets)
 
-	result = {"club" : club,
-				"num_tweets" : len(tweets),
-				"top_tweet" : top_tweet}
-	
-	return JsonResponse(result, safe=False)
+		result = {"club" : club,
+					"num_tweets" : len(tweets),
+					"top_tweet" : top_tweet}
+		
+		return JsonResponse(result, safe=False)
+	except:
+		raise Http404("Internal Server Error")
+
