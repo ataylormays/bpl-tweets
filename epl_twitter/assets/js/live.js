@@ -92,7 +92,7 @@ function rescale(v, min, max) {
 	`team1PrimaryColor` and `team1SecondaryColor`, completing half the
 	period every `milliseconds` milliseconds.
 
-	The final element of the .barUp class will blink similary between
+	The final element of the .barUp class will blink similarly between
 	the `team2PrimaryColor` and 'team2SecondaryColor.'
 
 */
@@ -413,10 +413,28 @@ function getCounts(url){
 	var jq = document.createElement('script');
 	jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js";
 
-	return $.ajax({
+	var result = $.ajax({
 		url: url,
 		type: 'GET',
 		async: false});
+
+	console.log('getCounts response: ' + result.responseText);
+
+	return result.responseText;
+}
+
+function getPopularTweet(url, body){
+	var result = $.ajax({
+		type: "POST",
+		url: url,
+		data: JSON.stringify(body),
+		async: false
+	});
+
+	console.log('getPopularTweet response: ' + result.responseText);
+
+	return result.responseText;
+
 }
 
 /*
