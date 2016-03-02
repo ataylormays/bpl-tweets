@@ -28,6 +28,9 @@ except ImportError, e:
 	except Exception, e:
 		print 'Cannot give details on constants (%s)' % e
 
+sys.path.append(constants.UTILITIES_DIR)
+import mongo_utilities as mongo
+
 def count_elts(numbers, limit):
 	output = {}
 	for n in numbers:
@@ -134,42 +137,49 @@ def about(request):
 	return HttpResponse(template.render(context))
 
 def matches(request):
-	today = datetime.date.today().strftime("%d %B %Y")
-	now = datetime.datetime.now().strftime("%I:%M %p")
+	today = datetime.date.today()
         matches = {}
-        rows = 0
-        csv_file = os.path.join(constants.MATCHES_DIR, 'matches.csv')
-        with open(csv_file, 'r') as f:
-                matches_reader = csv.reader(f, delimiter=",")
-                for row in matches_reader:
-                        start_dt = row[0] + " " + row[1]
-                        start_dt = datetime.datetime.strptime(
-                                start_dt, "%d %B %Y %H:%M")
-                        delta = datetime.timedelta(
-                                minutes=constants.TOT_MINUTES)
+        collection = mongo.init_collection('matches')
+        matches_by_date = {}
+        for i in xrange(7):
+                date = (today + datetime.timedelta(days=i)).strftime("%-d %B %Y")
+                results = mongo.query_collection(collection, {"date" : date})
+
+                for match in results:
+                        delta = datetime.timedelta(minutes=constants.TOT_MINUTES)
                         now = datetime.datetime.now()
-                        match = create_match_url(row[3], row[4], row[2])
-                        state = 'live'
                         crest1 = os.path.join(
                                 'club-crests',
-                                row[3].lower().replace(' ', '_') + '-crest.png')
+                                match['home'].lower().replace(' ', '_') + '-crest.png')
                         crest2 = os.path.join(
                                 'club-crests',
-                                row[4].lower().replace(' ', '_') + '-crest.png')
-                        if now < start_dt:
-                                state = 'upcoming'
-                        elif now > start_dt + delta:
-                                state = 'recent'
-                        if row[0] in matches:
-                                matches[row[0]] +=\
-                                [row + [match, state, crest1, crest2]]
-                        else:
-                                matches[row[0]] =\
-                                [(row + [match, state, crest1, crest2])]
+                                match['away'].lower().replace(' ', '_') + '-crest.png')
 
+                        start = datetime.datetime.fromtimestamp(float(match['time']))
+                        date_string = match['date']
+                        state = 'live'
+                        if now < start:
+                                state = 'upcoming'
+                        elif now > start + delta:
+                                state = 'recent'
+                        url = create_match_url(match['home'], match['away'], match['time'])
+                        to_insert = [ match['date'],
+                                      match['human_time'],
+                                      match['time'],
+                                      match['home'],
+                                      match['away'],
+                                      state,
+                                      crest1,
+                                      crest2,
+                                      url ]
+                        if date in matches_by_date:
+                                matches_by_date[date_string].append(to_insert)
+                        else:
+                                matches_by_date[date_string] = [to_insert]
+ 
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
-                'matches': matches,
+                'matches': matches_by_date
 		})
 	return HttpResponse(template.render(context))
 

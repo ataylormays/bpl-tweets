@@ -5,32 +5,29 @@
 {%block content%}
 
 <script>
-function unixTimeToTime(day, hour) {
+function convertTime(day, hour) {
 	var date = new Date(day + ' ' + hour + ' CST');
 	document.write(date.toLocaleTimeString());
 }
 </script>
 
 <div>
-
 	{% if matches %}
 		{% for date, l in matches.items %}
 			<h2>{{date}}</h2>
 			<table align="center">
 			{% for item in l %}
-				<tr onclick="window.document.location='{{item.5}}';">
+				<tr onclick="window.document.location='{{item.8}}';">
 				    <td>{{item.3}}</td>
+				    <td><img src={% static "" %}{{item.6}} height="30px" width="30px"></td>
+				    <td><script>convertTime('{{item.0}}', '{{item.1}}')</script></td>
 				    <td><img src={% static "" %}{{item.7}} height="30px" width="30px"></td>
-				    <td><script>unixTimeToTime('{{item.0}}', '{{item.1}}')</script></td>
-				    <td><img src={% static "" %}{{item.8}} height="30px" width="30px"></td>
 				    <td>{{item.4}}</td>
-				    <td>({{item.6}})</td>
 				</tr>
 			{% endfor %}
 			<table>
 		{% endfor %}
 	{% endif %}
-
 </div>
 
 {% endblock %}

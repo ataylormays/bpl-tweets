@@ -12,6 +12,9 @@ resources_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(fi
 sys.path.append(resources_path)
 import constants
 
+sys.path.append(constants.UTILITIES_DIR)
+import mongo_utilities as mongo
+
 def datetime2timestamp(match_dt):
 
 	# sample dt: 17 January 2016 10:15 AM
@@ -21,7 +24,7 @@ def datetime2timestamp(match_dt):
 
 	return match_ts
 
-def scrape_match_data(url, dest, weeks=1):
+def scrape_match_data(url, collection, weeks=1):
 	r = requests.get(url)
 
 	soup = BeautifulSoup(r.content, "html.parser")
@@ -62,9 +65,28 @@ def scrape_match_data(url, dest, weeks=1):
 				match_ts = datetime2timestamp(date + " " + time)
 				matches += [[date, time, str(match_ts), home, away]]
 
-	with open(dest + 'matches.csv', 'w') as f:
-		csv.writer(f, delimiter=",").writerows(matches)
-	
+        
+        flag = False
+        for match in matches:
+                date = match[0]
+                human_time = match[1]
+                time = match[2]
+                home = match[3]
+                away = match[4]
+                match_dict = { "time" : time,
+                               "home" : home,
+                               "away" : away,
+                               "human_time" : human_time,
+                               "date" : date }
+                query = { "time" : time,
+                          "home" : home,
+                          "away" : away }
+                results = mongo.query_collection(collection, query)
+                if not results:
+                        mongo.insert_object(collection, match_dict)
+                else:
+                        mongo.update_one(collection, query, match_dict)
+
 if __name__ == '__main__':
 	# print constants.MATCHES_DIR
 	month = datetime.datetime.now().month
@@ -73,7 +95,8 @@ if __name__ == '__main__':
 		sys.exit()
 	url = "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month)
 	try:
-		scrape_match_data(url, constants.MATCHES_DIR)
+                collection = mongo.init_collection('matches')
+		scrape_match_data(url, collection)
 	except:
 		print "Error in scraping football data from %s" % url
 		traceback.print_exc()
