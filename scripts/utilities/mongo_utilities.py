@@ -14,18 +14,20 @@ def get_db(database_name, server_url=None):
 	return client[database_name]
 
 def get_collection(db, collection_name):
-	return db['collection_name']
+	return db[collection_name]
 
 def init_collection(collection_type):
 	if constants.LIVE_MODE:
 		env = 'prod'
-	elif constants.QA_MODE:
+	if constants.QA_MODE:
 		env = 'qa'
 
 	db_name = constants.TWITTER_DB[env]
 	collection_name = constants.TWITTER_COLLECTIONS[env][collection_type]
 	db = get_db(db_name)
 	collection = get_collection(db, collection_name)
+
+	print db_name, collection_name
 	
 	return collection
 
@@ -56,6 +58,7 @@ def twitter_time_to_unix(created_at):
 	return unix_ts
 
 if __name__ == '__main__':
-	db = get_db(constants.TWITTER_TEST_DB)
-	collection = get_collection(db, constants.POPULAR_TEST_COLLECTION)
-	print query_collection(collection)[122]
+	collection = init_collection('matches')
+	matches = query_collection(collection)
+	for m in matches:
+		print m
