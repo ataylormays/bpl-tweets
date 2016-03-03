@@ -63,7 +63,7 @@ def scrape_match_data(url, collection, weeks=1):
 				home = elt.find_all('td', {"class":"shsNamD"})[1].text
 				away = elt.find_all('td', {"class":"shsNamD"})[2].text
 				match_ts = datetime2timestamp(date + " " + time)
-				matches += [[date, time, str(match_ts), home, away]]
+				matches += [[date, time, match_ts, home, away]]
 
         
         flag = False
