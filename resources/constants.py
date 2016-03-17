@@ -60,10 +60,12 @@ TWITTER_COLLECTIONS["prod"]["tweets"] = 'twitter_collection'
 TWITTER_COLLECTIONS["prod"]["live"] = 'live_tweets'
 TWITTER_COLLECTIONS["prod"]["popular"] = 'popular_tweets'
 TWITTER_COLLECTIONS["prod"]["matches"] = 'matches'
+TWITTER_COLLECTIONS["prod"]["archive"] = 'archive'
 TWITTER_COLLECTIONS["qa"]["tweets"] = 'twitter_test_collection'
 TWITTER_COLLECTIONS["qa"]["live"] = 'live_test_tweets'
 TWITTER_COLLECTIONS["qa"]["popular"] = 'popular_test_tweets'
 TWITTER_COLLECTIONS["qa"]["matches"] = 'test_matches'
+TWITTER_COLLECTIONS["qa"]["archive"] = 'test_archive'
 
 #Archive configs
 ARCHIVE_START = "August 2015"
