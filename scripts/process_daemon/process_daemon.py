@@ -2,7 +2,7 @@
 
 import argparse
 import csv
-import datetime
+import time
 import os
 import sys
 import time
@@ -19,13 +19,22 @@ for ip in import_paths:
 	sys.path.append(ip)
 
 import constants
+sys.path.append(constants.UTILITIES_DIR)
+import mongo_utilities as mongo
+
 from threads.live_tweets_thread import LiveTweetsThread as LTT
 from threads.popularity_thread import PopularityThread as PT
+from threads.post_match_processing_thread import PostMatchProcessingThread as PMPT
 
-def remove_zeropading(time_obj):
-	return time_obj[1:] if time_obj[0] == '0' else time_obj
+def set_live_in_db(collection, matches, live):
+	update = {"live": live}
+	for m in matches:
+		query = {"home" : m["home"],
+					"away" : m["away"],
+					"timestamp" : m["timestamp"]}
+		updated_record = mongo.update_one(collection, query, update)
 
-def start_threads(lt_threads, p_threads):
+def start_threads(lt_threads, p_threads, pmp_threads):
 	live_template = "Starting live tweet collection for %s and %s."
 	for thread in lt_threads:
 		print live_template % (thread.home, thread.away)
@@ -34,18 +43,10 @@ def start_threads(lt_threads, p_threads):
 	for thread in p_threads:
 		print popularity_template % thread.club
 		thread.start()
-
-def read_matches(filename, now, today):
-	with open(filename, "r") as f:
-		matches_reader = csv.reader(f, delimiter=",")
-		curr_matches = []
-		for row in matches_reader:
-			if row[0] != today:
-				continue
-			if row[1] != now:
-					continue
-			curr_matches += [[row[3], row[4], row[2]]]
-	return curr_matches
+	post_match_template = "Starting post-match for %s vs %s"
+	for thread in pmp_threads:
+		print post_match_template % (thread.match["home"], thread.match["away"])
+		thread.start()
 
 def dummy_mode():
 	# TODO - Implement!
@@ -55,7 +56,7 @@ def team_mode(team1, team2, match_ts):
 	lt_thread = LTT(
 		team1,
 		team2,
-		datetime.date.today().strftime("%d %B %Y"),
+		int(time.time()),
 		60 * constants.TOT_MINUTES)
 	p_threads = [PT(team1, match_ts), PT(team2, match_ts)]
 
@@ -64,35 +65,40 @@ def team_mode(team1, team2, match_ts):
 def daemon_mode():
 	loop = True
 
+	live_threads = []
 	while True:
-		now = datetime.datetime.now().strftime("%I:%M %p")
-		today = datetime.date.today().strftime("%d %B %Y")
-
-		now = remove_zeropading(now)
-		today = remove_zeropading(today)
-
+		now = int(time.time())
+		start = now - 30;
+		end = now + 30;
+		collection = mongo.init_collection('matches')
+		query = {"timestamp": {"$lt": end, "$gt": start}}
+		matches = mongo.query_collection(collection, query)
 		try:
-			filename = os.path.join(
-				constants.MATCHES_DIR,
-				"matches.csv")
-			matches = read_matches(filename, now, today)
-
 			if matches:
 				lt_threads = [
 					LTT(
-						m[0],
-						m[1],
+						m["home"],
+						m["away"],
 						today,
 						60 * constants.TOT_MINUTES)
 				for m in matches]
 
-				p_threads = [PT(m[0], m[2]) for m in matches]
-				p_threads += [PT(m[1], m[2]) for m in matches]
+				p_threads = [PT(m["home"], m["timestamp"]) for m in matches]
+				p_threads += [PT(m["away"], m["timestamp"]) for m in matches]
 
-				start_threads(lt_threads, p_threads)
+				pmp_threads = [PMPT(m) for m in matches]
+
+				set_live_in_db(collection, matches, live=True)
+				start_threads(lt_threads, p_threads, pmp_threads)
+				for t in live_threads:
+				    if not t.isAlive():
+				        # initialize post-match processing
+				        t.processed = True
+				live_threads = [t for t in p_threads if not t.processed]
 
 		except:
 			print "Daemon caught exception. Ending process."
+			set_live_in_db(collection, matches, live=False)
 			raise
 			loop = False
 
@@ -144,6 +150,6 @@ def main():
 
 if __name__ == "__main__":
 	main()
-	#t = LTT("Manchester United", "Arsenal", datetime.date.today().strftime("%d %B %Y"), 15)
+	#t = LTT("Manchester United", "Arsenal", int(time.time()), 15)
 	#t = PT("Manchester United")
 	#t.start()

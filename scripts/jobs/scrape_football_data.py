@@ -4,7 +4,6 @@ from bs4 import BeautifulSoup
 import requests
 import os, sys
 import datetime, time, calendar
-import csv
 import traceback
 
 file_loc = os.path.abspath(__file__)
@@ -73,12 +72,12 @@ def scrape_match_data(url, collection, weeks=1):
                 time = match[2]
                 home = match[3]
                 away = match[4]
-                match_dict = { "time" : time,
+                match_dict = { "timestamp" : time,
                                "home" : home,
                                "away" : away,
                                "human_time" : human_time,
                                "date" : date }
-                query = { "time" : time,
+                query = { "timestamp" : time,
                           "home" : home,
                           "away" : away }
                 results = mongo.query_collection(collection, query)

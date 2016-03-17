@@ -24,7 +24,7 @@ class SListener(StreamListener):
 		self,
 		team1,
 		team2,
-		match_date, 
+		match_ts, 
 		users = [],
 		api = None,
 		fprefix = 'streamer',
@@ -41,7 +41,7 @@ class SListener(StreamListener):
 		self.total_limit = total_limit
 		self.team1 = team1
 		self.team2 = team2
-		self.match_date = match_date
+		self.match_ts = match_ts
 		self.users = users
 		self.t1_counter = 0
 		self.t2_counter = 0
@@ -80,7 +80,7 @@ class SListener(StreamListener):
 		# add tweet's unix ts, the match date, and team to tweet object
 		tweet["unix_ts"] = mongo.twitter_time_to_unix(tweet["created_at"])
 		tweet["team"] = team
-		tweet["match_date"] = self.match_date
+		tweet["match_ts"] = self.match_ts
 		
 		return tweet
 

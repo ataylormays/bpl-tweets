@@ -41,22 +41,22 @@ class StreamingTweets:
 				for screen_name in users]]
 		return users_ids
 
-	def get_stream(self, api, auth, home, away, match_date, users_ids, runtime):
+	def get_stream(self, api, auth, home, away, match_ts, users_ids, runtime):
 		listen = SListener(
 			api=api,
 			team1=home,
 			team2=away,
-			match_date=match_date,
+			match_ts=match_ts,
 			users = users_ids,
 			total_limit=runtime)
 		
 		return tweepy.Stream(auth, listen)
 
-	def start_streaming(self, home, away, match_date, users, runtime):
+	def start_streaming(self, home, away, match_ts, users, runtime):
 		try:
 			api, auth = self.authorize_api(self.secrets)
 			users_ids = self.get_user_ids(users, api)
-			self.stream = self.get_stream(api, auth, home, away, match_date, users_ids, runtime)
+			self.stream = self.get_stream(api, auth, home, away, match_ts, users_ids, runtime)
 
 			print "Streaming started for %s vs %s." % (home, away)
 
@@ -68,9 +68,9 @@ class StreamingTweets:
 		except:
 			raise
 
-	def start(self, home, away, match_date, users = [], runtime=30):
+	def start(self, home, away, match_ts, users = [], runtime=30):
 		try:
-			self.start_streaming(home, away, match_date, users, runtime)
+			self.start_streaming(home, away, match_ts, users, runtime)
 			
 		#reached rate limit
 		except SystemError:

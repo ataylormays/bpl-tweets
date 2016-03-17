@@ -1,4 +1,3 @@
-import csv
 import os
 import sys
 import threading
@@ -16,11 +15,11 @@ from streaming_tweets import StreamingTweets
 
 class LiveTweetsThread(threading.Thread):
 	"""docstring for LiveTweetsThread"""
-	def __init__(self, home, away, match_date, runtime):
+	def __init__(self, home, away, match_ts, runtime):
 		threading.Thread.__init__(self)
 		self.home = home
 		self.away = away
-		self.match_date = match_date
+		self.match_ts = match_ts
 		self.runtime = runtime
 		self.name = home + "_vs_" + away + "_LiveTweetThread"
 
@@ -29,4 +28,4 @@ class LiveTweetsThread(threading.Thread):
 		
 		#TO-DO: get list of VIP users from config file
 		users = ["OptaJoe"]
-		streamer.start(self.home, self.away, self.match_date, users, self.runtime)
+		streamer.start(self.home, self.away, self.match_ts, users, self.runtime)

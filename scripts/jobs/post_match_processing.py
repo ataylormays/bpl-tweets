@@ -12,11 +12,10 @@ resources_path = os.path.abspath(os.path.join(BASE_DIR, 'resources'))
 sys.path.append(resources_path)
 import constants
 
-db_path = os.path.join(BASE_DIR, 'scripts/utilities')
-sys.path.append(db_path)
+sys.path.append(constants.UTILITIES_DIR)
 import mongo_utilities as mongodb
 
-def get_matches():
+def get_matches(match_ts):
 	matches_filename = os.path.join(constants.MATCHES_DIR, "matches.csv")
 	matches = []
 	with open(matches_filename, "r") as f:
@@ -34,7 +33,7 @@ def get_matches():
 
 def get_tweets_for_match(match):
 	collection = mongodb.init_collection('live')
-	query = {"match_date" : match["date"], 
+	query = {"match_ts" : match["timestamp"], 
 		"$or": [{"team" : match["home"]},
 				{"team" : match["away"]}
 				]}
@@ -92,7 +91,7 @@ accepts set of tweets sorted ascending by timestamp
 returns list of counts of tweets per minute
 '''
 def get_counts_for_match(tweets, match):
-	match_start = float(match["timestamp"])
+	match_start = int(match["timestamp"])
 	match_end = match_start + constants.TOT_MINUTES * 60
 
 	curr_tweet_index = 0
