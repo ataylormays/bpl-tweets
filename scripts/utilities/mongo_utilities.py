@@ -56,13 +56,13 @@ def twitter_time_to_unix(created_at):
 	return unix_ts
 
 if __name__ == '__main__':
-	collection = init_collection('matches')
+	collection = init_collection('live')
 	matches = query_collection(collection)
 	mtime = 1457190000 - 13
 	start = mtime - 30
 	end = mtime + 30
 	query = {"timestamp": {"$lt": end, "$gt": start}, "home":"Chelsea"}
-	ms = query_collection(collection, query={"timestamp":{"$gt": time.time()}})
+	ms = query_collection(collection, query={"timestamp":{"$gt": time.time()-1000}})
 	update = {"live" : False}
 	#updated_record = update_one(collection, query, update)
 	for m in ms:
