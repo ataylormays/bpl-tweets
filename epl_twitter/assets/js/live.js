@@ -139,7 +139,7 @@ function blinkFinalBars(
 	width: a number
 	y1: a number
 	y2: a number
-	N: a number
+	N: a number,  number of bars at end of game
 	strokeWidth: a number
 	team1PrimaryColor: a color
 	team2PrimaryColor: a color
@@ -434,6 +434,8 @@ function getPopularTweet(url, body){
 		async: false
 	});
 
+	console.log(url);
+	console.log(JSON.stringify(body));
 	console.log('getPopularTweet response: ' + result.responseText);
 	
 	return result.responseJSON;
@@ -468,7 +470,7 @@ function loadGraph(
 		600,
 		team1Arr,
 		team2Arr,
-		30,
+		120,
 		1,
 		"DarkBlue",
 		"DarkRed",

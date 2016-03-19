@@ -59,8 +59,8 @@ $(function() {
 <script>
 	var popularTweetsUrl = host + '/tweets/ws/getPopularTweet';
 	var popularTweetsBody = {
-		"club" : "{{team1}}",
-		"match_timestamp" : "{{timestamp}}",
+		"club" : "{{team1Title}}",
+		"match_timestamp" : {{timestamp}},
 		"exclusions" : exclusions
 	}
 	var new_tweets = getPopularTweet(popularTweetsUrl, popularTweetsBody);
