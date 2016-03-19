@@ -27,7 +27,7 @@ BANNED_PHRASES = [
 ]
 
 # live vs. placeholder
-LIVE_MODE = True
+LIVE_MODE = False
 
 # mongo collections to use
 QA_MODE = True

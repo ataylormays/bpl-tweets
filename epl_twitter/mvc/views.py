@@ -157,11 +157,11 @@ def matches(request):
 
                         start = datetime.datetime.fromtimestamp(float(match['timestamp']))
                         date_string = match['date']
-                        state = 'live'
+                        state = 'LIVE'
                         if now < start:
-                                state = 'upcoming'
+                                state = '(upcoming)'
                         elif now > start + delta:
-                                state = 'recent'
+                                state = 'FT'
                         url = create_match_url(match['home'], match['away'], match['timestamp'])
                         to_insert = [ match['date'],
                                       match['human_time'],

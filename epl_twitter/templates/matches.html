@@ -5,9 +5,17 @@
 {%block content%}
 
 <script>
-function convertTime(day, hour) {
-	var date = new Date(day + ' ' + hour + ' CST');
-	document.write(date.toLocaleTimeString());
+function description(state, timestamp) {
+
+	var date = new Date(timestamp * 1000);
+	var timeString = date.toLocaleTimeString(
+		navigator.language,
+		{hour: '2-digit', minute:'2-digit'});
+	if (state === '(upcoming)') {
+		document.write(timeString + '<br>' + state);
+	} else {
+		document.write(state + '<br>(' + timeString + ')');
+	}
 }
 </script>
 
@@ -15,14 +23,14 @@ function convertTime(day, hour) {
 	{% if matches %}
 		{% for date, l in matches.items %}
 			<h2>{{date}}</h2>
-			<table align="center">
+			<table align="center" width="900px" style="border-collapse: collapse;">
 			{% for item in l %}
-				<tr onclick="window.document.location='{{item.8}}';">
-				    <td>{{item.3}}</td>
-				    <td><img src={% static "" %}{{item.6}} height="30px" width="30px"></td>
-				    <td><script>convertTime('{{item.0}}', '{{item.1}}')</script></td>
-				    <td><img src={% static "" %}{{item.7}} height="30px" width="30px"></td>
-				    <td>{{item.4}}</td>
+				<tr onclick="window.document.location='{{item.8}}';" height="120px">
+				    <td width="120px"><img src={% static "" %}{{item.6}} height="75px" width="75px"></td>
+				    <td align="left" style="font-size:120%">{{item.3}}</td>
+				    <td style="font-size:90%"><script>description('{{item.5}}', {{item.2}})</script></td>
+				    <td align="right" style="font-size:120%">{{item.4}}</td>
+				    <td width="120px"><img src={% static "" %}{{item.7}} height="75px" width="75px"></td>
 				</tr>
 			{% endfor %}
 			<table>
