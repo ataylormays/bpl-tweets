@@ -79,7 +79,7 @@ def daemon_mode():
 					LTT(
 						m["home"],
 						m["away"],
-						today,
+						m["timestamp"],
 						60 * constants.TOT_MINUTES)
 				for m in matches]
 

@@ -27,8 +27,6 @@ def init_collection(collection_type):
 	db = get_db(db_name)
 	collection = get_collection(db, collection_name)
 
-	print db_name, collection_name
-	
 	return collection
 
 def insert_object(collection, object):
@@ -60,5 +58,15 @@ def twitter_time_to_unix(created_at):
 if __name__ == '__main__':
 	collection = init_collection('matches')
 	matches = query_collection(collection)
-	for m in matches:
+	mtime = 1457190000 - 13
+	start = mtime - 30
+	end = mtime + 30
+	query = {"timestamp": {"$lt": end, "$gt": start}, "home":"Chelsea"}
+	ms = query_collection(collection, query={"timestamp":{"$gt": time.time()}})
+	update = {"live" : False}
+	#updated_record = update_one(collection, query, update)
+	for m in ms:
 		print m
+		
+	# for m in matches:
+	# 	print m

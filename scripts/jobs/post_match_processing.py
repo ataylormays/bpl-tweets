@@ -3,6 +3,7 @@ import datetime
 import requests
 import operator
 import os, sys
+import time
 from bs4 import BeautifulSoup
 
 file_loc = os.path.abspath(__file__)

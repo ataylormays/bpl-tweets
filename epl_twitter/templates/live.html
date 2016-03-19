@@ -43,9 +43,17 @@ $(function() {
 <div id='tweets'></div>
 <div id='liveGraph'></div>
 <script>
-	var liveTweetsUrl = host + '/tweets/ws/liveTweetsCount?home={{team1}}&away={{team2}}';
+	var liveTweetsUrl = host + '/tweets/ws/liveTweetsCount?home={{team1}}&away={{team2}}&match_ts={{timestamp}}';
 	var initCountData = getCounts(liveTweetsUrl);
-	if (!initCountData) { alert('No response from liveTweetsCount!'); }
+	if (!initCountData) { console.log('No response from liveTweetsCount!'); };
+	loadGraph(
+		initCountData,
+		"liveGraph",
+		liveTweetsUrl,
+		15,
+		12,
+		true
+		);
 </script>
 
 <script>
@@ -56,7 +64,7 @@ $(function() {
 		"exclusions" : exclusions
 	}
 	var new_tweets = getPopularTweet(popularTweetsUrl, popularTweetsBody);
-	if (!new_tweets) { alert('No response from getPopularTweet')}
+	if (!new_tweets) { console.log('No response from getPopularTweet')}
 
 </script>
 

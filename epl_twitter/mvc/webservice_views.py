@@ -1,7 +1,6 @@
 from django.http import JsonResponse, Http404
 import json
 import time
-import csv
 import operator
 import os, sys
 
@@ -34,31 +33,26 @@ def start_and_end(request):
 		raise Http404("Internal Server Error")
 
 def find_match(team1, team2=None, match_ts=None):	
-	matches_filename = os.path.join(constants.MATCHES_DIR, "matches.csv")
+	matches_collection = mongodb.init_collection('matches')
 
 	team1 = team1.replace("_", " ").title()
-	team2 = team2.replace("_", " ").title()
+	if team2:
+		team2 = team2.replace("_", " ").title()
 	
-	with open(matches_filename, "r") as f:
-		matches_reader = csv.reader(f, delimiter=",")
-		for row in matches_reader:
-			match = {
-                                "date" : row[0],
-				"time" : row[1], 
-				"timestamp" : row[2],
-				"home" : row[3], 
-				"away" : row[4]
-			}
-			# find match by t1, t2
-			if ((match["home"] == team1 and match["away"] == team2)
-                            or match["home"] == team2 and match["away"] == team1):
-				return match
-			# find match by t1, match_ts
-			elif match["timestamp"] == match_ts:
-				if (match["home"] == team1 or match["away"] == team1):
-					return match
-			
-	return None
+	query = {"$or": [{"home" : team1},
+				{"away" : team1}
+				],
+			"$or": [{"home" : team2},
+				{"away" : team2}
+				],	
+			"timestamp" : match_ts}
+
+	result = mongodb.query_collection(matches_collection, query)
+	if len(result) > 1:
+		print 'Mistake in matches collection. Following query returns >1 result:'
+		print query
+
+	return result[0]
 
 def get_match_ts(match):
 	match_dt = match["date"] + " " + match["time"]
@@ -87,9 +81,10 @@ def live_tweets_count(request):
 		home = request.GET.get('home')
 		away = request.GET.get('away')
 
-                match = find_match(home, away)
-                match_ts = match["timestamp"]
-                default_start = float(match_ts)
+		match_ts = float(request.GET.get('match_ts'))
+
+		match = find_match(home, away, match_ts)
+		default_start = match_ts
 
 		if 'start' in request.GET:
 			query_start = int(request.GET.get('start'))
@@ -102,24 +97,25 @@ def live_tweets_count(request):
 		if now < query_start:
 			return JsonResponse(None, safe=False)
 			
-		counts = []
+		home_counts, away_counts = [], []
 		ts_chunks = chunks(query_start, end, 60)
 		for i in xrange(len(ts_chunks)-1):
 			start = ts_chunks[i]
 			end = ts_chunks[i+1]
-			query = {"unix_ts": {"$lt": end, "$gt": start}, 
-						"$or": [{"team" : home},
-								{"team" : away}
-								]}
-			tweets = mongodb.query_collection(collection, query)
-			counts += [len(tweets)]
+			home_query = {"unix_ts": {"$lt": end, "$gt": start}, 
+							"team" : home}
+			away_query = {"unix_ts": {"$lt": end, "$gt": start}, 
+							"team" : away}
+			home_tweets = mongodb.query_collection(collection, home_query)
+			away_tweets = mongodb.query_collection(collection, away_query)
+			home_counts += [len(home_tweets)]
+			away_counts += [len(away_tweets)]
 
 		result = {
-		    "home" : home,
-		    "away" : away,
+		    "home" : {"club":home, "counts":home_counts},
+		    "away" : {"club":away, "counts":away_counts},
 		    "start" : query_start,
-		    "end" : end,
-		    "counts" : counts}
+		    "end" : end}
 		return JsonResponse(result, safe=False)
 
 	except:
@@ -152,8 +148,6 @@ def most_popular_tweet(request):
 		since_ts = body["since_ts"] if "since_ts" in body else None
 		exclusions = body["exclusions"] if "exclusions" in body else []
 
-		print exclusions
-
 		collection = mongodb.init_collection("popular")
 		query = {"club" : club,
 					"match_ts" : match_ts,
@@ -161,7 +155,6 @@ def most_popular_tweet(request):
 				}
 		tweets = mongodb.query_collection(collection, query)
 		
-		print len(tweets)
 		if len(tweets) == 0:
 			return JsonResponse(None, safe=False)
 
@@ -178,7 +171,6 @@ def most_popular_tweet(request):
 				num_minutes = int(time_window / 60)
 				start_index = int((float(since_ts) - match_ts) / 60)
 				end_index = start_index + num_minutes
-				print start_index, num_minutes, end_index
 				top_tweet = find_most_popular_tweet(tweets, start_index, end_index)
 			else:
 				top_tweet = find_most_popular_tweet(tweets)

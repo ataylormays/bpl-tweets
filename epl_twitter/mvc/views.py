@@ -155,17 +155,17 @@ def matches(request):
                                 'club-crests',
                                 match['away'].lower().replace(' ', '_') + '-crest.png')
 
-                        start = datetime.datetime.fromtimestamp(float(match['time']))
+                        start = datetime.datetime.fromtimestamp(float(match['timestamp']))
                         date_string = match['date']
                         state = 'live'
                         if now < start:
                                 state = 'upcoming'
                         elif now > start + delta:
                                 state = 'recent'
-                        url = create_match_url(match['home'], match['away'], match['time'])
+                        url = create_match_url(match['home'], match['away'], match['timestamp'])
                         to_insert = [ match['date'],
                                       match['human_time'],
-                                      match['time'],
+                                      match['timestamp'],
                                       match['home'],
                                       match['away'],
                                       state,

@@ -177,7 +177,8 @@ function makeDoubleBarGraph(
 	nTimeTickMarks,
 	initializing) {
 
-	console.log("makeDoubleBarGraph(...)");
+	alert(y2);
+
 	assert(
 		y1.length == y2.length,
 		"Vectors must have same length.");
@@ -188,18 +189,20 @@ function makeDoubleBarGraph(
 		"Vectors must have length less than N.");
 
 
-	d3.select("#graph")
-		.selectAll("svg")
-		.data([[height, width]])
-		.enter()
-		.append("svg")
-		.attr("height", function(d) { return d[0]; })
-		.attr("width", function(d) { return d[1]; })
-		.style({ "background-color" : backgroundColor,
-						 "margin" : "auto",
-						 "display" : "block",
-						 "width" : width,
-						 "position" : "relative"});
+	var canvas = d3.select("#liveGraph")
+					.selectAll("svg")
+					.data([[height, width]])
+					.enter()
+					.append("svg")
+					.attr("height", function(d) { return d[0]; })
+					.attr("width", function(d) { return d[1]; })
+					.style({ "background-color" : backgroundColor,
+									 "margin" : "auto",
+									 "display" : "block",
+									 "width" : width,
+									 "position" : "relative"});
+
+	console.log("did first d3 operation");
 
 	// First get the sides of the rectangle
 	var xBegin = width * xPadding;
@@ -218,7 +221,7 @@ function makeDoubleBarGraph(
 	var yMidUp = yMid + yMidWidth;
 	var yMidDown = yMid - yMidWidth;
 
-	var lineList = d3.select("#graph")
+	var lineList = d3.select("#liveGraph")
 		.select("svg")
 		.selectAll("line")
 
@@ -246,7 +249,7 @@ function makeDoubleBarGraph(
 	}
 
 	function addTicks(tickBottom, tickTop) {
-		lineList = d3.select("#graph")
+		lineList = d3.select("#liveGraph")
 			.select("svg")
 			.selectAll("tick")
 			.data(xTicks)
@@ -305,7 +308,7 @@ function makeDoubleBarGraph(
 	}
 
 	function makeDottedLineList(y) {
-		d3.select("#graph")
+		d3.select("#liveGraph")
 			.select("svg")
 			.selectAll(".dottedLine")
 			.data(y)
@@ -343,7 +346,7 @@ function makeDoubleBarGraph(
 	}
 
 	function makeRectangleList(rectangles, barClass, color){
-		d3.select("#graph")
+		d3.select("#liveGraph")
 			.select("svg")
 			.selectAll("." + barClass)
 			.remove()
@@ -391,7 +394,7 @@ function makeDoubleBarGraph(
 			i * tickInterval + xInnerBegin]);
 	}
 
-	var text = d3.select("#graph")
+	var text = d3.select("#liveGraph")
 		.select("svg")
 		.selectAll("text")
 		.data(times)
@@ -419,8 +422,8 @@ function getCounts(url){
 		async: false});
 
 	console.log('getCounts response: ' + result.responseText);
-
-	return result.responseText;
+	
+	return result.responseJSON;
 }
 
 function getPopularTweet(url, body){
@@ -432,52 +435,17 @@ function getPopularTweet(url, body){
 	});
 
 	console.log('getPopularTweet response: ' + result.responseText);
+	
+	return result.responseJSON;
 
-	return result.responseText;
-
-}
-
-/*
-	loadTweets
-
-	hidden: a string giving the id of a hidden div
-	container: a string giving the id of a div for display
-	file: a string giving the file to read data from
-	counter: the number of lines that have been read from the file
-		previously
-	timeout: a number specifying the amount of time until the function
-		should call itself recursively
-
-	This function loads the file containing data for the central graph
-	and then passes that data to makeDoubleBarGraph(...).
-*/
-function loadTweets(hidden, container, file, counter) {
-	var tweets = $('#' + hidden).text().split('\n');
-	for (i = counter; i < tweets.length; i++) {
-		twttr.widgets.createTweet(
-			tweets[i],
-			document.getElementById(container),
-			{
-				cards: 'hidden',
-				width: 350
-			});
-	}
-	var counter = tweets.length - 1;
-
-	setTimeout(function() {
-		$('#' + hidden).load(file, function() {
-			loadTweets(hidden, container, file, counter);
-		});
-	}, 3000);
 }
 
 
 /*
 	loadGraph
 
-	hidden: a string giving the id of a hidden div
+	countsData: the object returned by getCounts
 	container: a string giving the id of a div for display
-	file: a string giving the file to read data from
 	barDuration: a number giving the number of seconds each bar
 		in the graph should correspond to.
 	timeout: a number specifying the amount of time until the function
@@ -485,39 +453,15 @@ function loadTweets(hidden, container, file, counter) {
 
 */
 function loadGraph(
-	hidden,
+	countsData,
 	container,
-	file,
+	liveTweetsUrl,
 	barDuration,
 	timeout,
 	initializing) {
-	var lines = $('#' + hidden).text().split('\n');
-	var n = lines.length;
-	var now = 0;
-	var team1Total = 0;
-	var team2Total = 0;
-	var team1Arr = [];
-	var team2Arr = [];
-	for (i = 0; i < n - 1; i++) {
-		var line = lines[i];
-		var split = line.split(',');
-		var time = split[0];
-		var team1 = parseInt(split[1]);
-		var team2 = parseInt(split[2]);
-		if (time < barDuration + now) {
-			team1Total += team1;
-			team2Total += team2;
-		} else {
-			team1Arr.push(team1Total);
-			team2Arr.push(team2Total);
-			team1Total = 0;
-			team2Total = 0;
-			now = now + barDuration;
-			i--;
-		}
-	}
-	team1Arr.push(team1Total);
-	team2Arr.push(team2Total);
+		
+	var team1Arr = countsData ? countsData.home.counts : [];
+	var team2Arr = countsData ? countsData.away.counts : [];
 
 	makeDoubleBarGraph(
 		400,
@@ -543,15 +487,41 @@ function loadGraph(
 		9,
 		initializing);
 
+	function replaceUrlParam(url, paramName, paramValue){
+	    var pattern = new RegExp('\\b('+paramName+'=).*?(&|$)')
+	    if(url.search(pattern)>=0){
+	        return url.replace(pattern,'$1' + paramValue + '$2');
+	    }
+	    return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue 
+	}
+
+	function addIncrementalCountData(oldCountsData, newCountsData){
+		if(oldCountsData){
+			for (var i = 0; i < newCountsData.home.counts.length; i++) {
+			oldCountsData.home.counts.push(newCountsData.home.counts[i]);
+			};
+			for (var i = 0; i < newCountsData.away.counts.length; i++) {
+				oldCountsData.away.counts.push(newCountsData.away.counts[i]);
+			};
+			return oldCountsData;
+		}
+		return newCountsData;
+	}
+
 	setTimeout(function() {
-		$('#' + hidden).load(file, function() {
-			loadGraph(
-				hidden,
-				container,
-				file,
-				barDuration,
-				timeout,
-				false);
-		});
+		var now = Math.floor(new Date().getTime() / 1000);
+		//get data from last minute
+		start = now - 59;
+		console.log(liveTweetsUrl);
+		liveTweetsUrl = replaceUrlParam(liveTweetsUrl, 'start', Math.floor(start).toString())
+		newCountsData = getCounts(liveTweetsUrl);
+		countsData = addIncrementalCountData(countsData, newCountsData);
+		loadGraph(
+			countsData,
+			container,
+			liveTweetsUrl,
+			barDuration,
+			timeout,
+			initializing);
 	}, timeout * 1000);
 }
