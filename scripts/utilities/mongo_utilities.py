@@ -65,8 +65,6 @@ if __name__ == '__main__':
 	ms = query_collection(collection, query={"timestamp":{"$gt": time.time()-1000}})
 	update = {"live" : False}
 	#updated_record = update_one(collection, query, update)
-	for m in ms:
-		print m
-		
+
 	# for m in matches:
 	# 	print m

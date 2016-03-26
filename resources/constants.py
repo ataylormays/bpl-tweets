@@ -27,10 +27,10 @@ BANNED_PHRASES = [
 ]
 
 # live vs. placeholder
-LIVE_MODE = False
+LIVE_MODE = True
 
 # mongo collections to use
-QA_MODE = True
+QA_MODE = False
 
 # directories
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

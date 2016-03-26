@@ -23,7 +23,7 @@ def datetime2timestamp(match_dt):
 
 	return match_ts
 
-def scrape_match_data(url, collection, weeks=1):
+def scrape_match_data(urls, collection, weeks=1):
 	r = requests.get(url)
 
 	soup = BeautifulSoup(r.content, "html.parser")
@@ -92,10 +92,13 @@ if __name__ == '__main__':
 	if month in [6, 7]:
 		print "it's summer dum dum, there's no football happening"
 		sys.exit()
-	url = "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month)
+	urls = [
+                "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month),
+                "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str((month + 1) % 12) ]
 	try:
                 collection = mongo.init_collection('matches')
-		scrape_match_data(url, collection)
+                for url in urls:
+                        scrape_match_data(url, collection)
 	except:
 		print "Error in scraping football data from %s" % url
 		traceback.print_exc()

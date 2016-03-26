@@ -172,10 +172,10 @@ def matches(request):
                                       crest1,
                                       crest2,
                                       url ]
-                        if date in matches_by_date:
-                                matches_by_date[date_string].append(to_insert)
+                        if date_string in matches_by_date:
+                                matches_by_date[date_string].append(to_insert[:])
                         else:
-                                matches_by_date[date_string] = [to_insert]
+                                matches_by_date[date_string] = [to_insert[:]]
  
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
