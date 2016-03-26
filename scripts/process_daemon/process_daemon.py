@@ -91,9 +91,7 @@ def daemon_mode():
 				set_live_in_db(collection, matches, live=True)
 				start_threads(lt_threads, p_threads, pmp_threads)
 				for t in live_threads:
-				    if not t.isAlive():
-				        # initialize post-match processing
-				        t.processed = True
+					t.processed = t.isAlive()
 				live_threads = [t for t in p_threads if not t.processed]
 
 		except:

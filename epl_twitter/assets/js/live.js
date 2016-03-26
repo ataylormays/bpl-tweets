@@ -177,7 +177,7 @@ function makeDoubleBarGraph(
 	nTimeTickMarks,
 	initializing) {
 
-	alert(y2);
+	//alert(y2);
 
 	assert(
 		y1.length == y2.length,
@@ -427,20 +427,52 @@ function getCounts(url){
 }
 
 function getPopularTweet(url, body){
-	var result = $.ajax({
+	$.ajax({
 		type: "POST",
 		url: url,
 		data: JSON.stringify(body),
-		async: false
+		success: function(data, status){
+			console.log(url);
+			console.log(JSON.stringify(body));
+			console.log('getPopularTweet response: ' + JSON.stringify(data));
+			console.log('getPopularTweet status: ' + status);
+			loadTweets(data.top_tweet, url, body);
+		}
 	});
-
-	console.log(url);
-	console.log(JSON.stringify(body));
-	console.log('getPopularTweet response: ' + result.responseText);
-	
-	return result.responseJSON;
-
 }
+
+/*
+	loadTweets
+	hidden: a string giving the id of a hidden div
+	container: a string giving the id of a div for display
+	file: a string giving the file to read data from
+	counter: the number of lines that have been read from the file
+		previously
+	timeout: a number specifying the amount of time until the function
+		should call itself recursively
+	This function loads the file containing data for the central graph
+	and then passes that data to makeDoubleBarGraph(...).
+*/
+function loadTweets(tweet_id, url, body) {
+	console.log('inside loadTweets with tweet #' + tweet_id);
+	twttr.widgets.createTweet(
+		tweet_id,
+		document.getElementById("tweets"),
+		{
+			cards: 'hidden',
+			width: 350
+		});
+
+	if(body.exclusions){
+		body.exclusions.push(tweet_id);
+	} else {
+		body.exclusions = [tweet_id];
+	}
+	setTimeout(function() {
+		getPopularTweet(url, body);
+	}, 3000);
+}
+
 
 
 /*

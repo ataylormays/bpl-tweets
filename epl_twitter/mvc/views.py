@@ -141,9 +141,10 @@ def matches(request):
         matches = {}
         collection = mongo.init_collection('matches')
         matches_by_date = {}
-        for i in xrange(7):
+        for i in xrange(8):
                 date = (today + datetime.timedelta(days=i)).strftime("%-d %B %Y")
                 results = mongo.query_collection(collection, {"date" : date})
+                print results
 
                 for match in results:
                         delta = datetime.timedelta(minutes=constants.TOT_MINUTES)

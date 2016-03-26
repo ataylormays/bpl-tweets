@@ -3,6 +3,7 @@ div.tweet {
 	width: 350px;
 	position: relative;
 	margin: auto;
+	overflow: scroll;
 }
 
 div.bar {

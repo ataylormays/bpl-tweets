@@ -179,7 +179,6 @@ def most_popular_tweet(request):
 					"num_tweets" : len(tweets),
 					"top_tweet" : top_tweet}
 		
-		print result
 		return JsonResponse(result, safe=False)
 	except:
 		raise Http404("Internal Server Error")
