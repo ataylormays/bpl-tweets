@@ -78,8 +78,8 @@ def live_tweets_count(request):
 	try:
 		collection = mongodb.init_collection("live")
 
-		home = request.GET.get('home')
-		away = request.GET.get('away')
+		home = request.GET.get('home').replace("_", " ").title()
+		away = request.GET.get('away').replace("_", " ").title()
 
 		match_ts = float(request.GET.get('match_ts'))
 
@@ -106,6 +106,7 @@ def live_tweets_count(request):
 							"team" : home}
 			away_query = {"unix_ts": {"$lt": end, "$gt": start}, 
 							"team" : away}
+			print away_query
 			home_tweets = mongodb.query_collection(collection, home_query)
 			away_tweets = mongodb.query_collection(collection, away_query)
 			home_counts += [len(home_tweets)]

@@ -56,11 +56,11 @@ def team_mode(team1, team2, match_ts):
 	lt_thread = LTT(
 		team1,
 		team2,
-		int(time.time()),
+		match_ts,
 		60 * constants.TOT_MINUTES)
 	p_threads = [PT(team1, match_ts), PT(team2, match_ts)]
 
-	start_threads([lt_thread], p_threads)
+	start_threads([lt_thread], p_threads, None)
 
 def daemon_mode():
 	loop = True
@@ -119,6 +119,11 @@ def main():
 		type=str,
 		help="Team 2 to collect tweets from, if ignoring matches file.")
 	parser.add_argument(
+		"-mts",
+		"--match_timestamp",
+		type=str,
+		help="Timestamp of match if in teammode.")
+	parser.add_argument(
 		"-d",
 		"--dummy",
 		action="store_true",
@@ -128,6 +133,7 @@ def main():
 	dummy = args.dummy
 	team1 = args.team1
 	team2 = args.team2
+	match_timestamp = args.match_timestamp
 
 	error1 = "Do not specify --team1 or --team2 in dummy mode."
 	error2 = "--team1 and --team2 must be specified together or not at all."
@@ -142,7 +148,7 @@ def main():
 	if dummy:
 		dummy_mode()
 	elif team1:
-		team_mode(team1, team2, match_ts=time.time())
+		team_mode(team1, team2, match_ts=match_timestamp)
 	else:
 		daemon_mode()
 
