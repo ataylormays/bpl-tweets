@@ -53,14 +53,17 @@ def dummy_mode():
 	pass
 
 def team_mode(team1, team2, match_ts):
+        m = { "timestamp" : match_ts,
+              "home" : team1,
+              "away" : team2 }
 	lt_thread = LTT(
-		team1,
-		team2,
-		match_ts,
+		m["home"],
+		m["away"],
+                m["timestamp"],
 		60 * constants.TOT_MINUTES)
 	p_threads = [PT(team1, match_ts), PT(team2, match_ts)]
-
-	start_threads([lt_thread], p_threads, None)
+        pmp_threads = [PMPT(m)]
+	start_threads([lt_thread], p_threads, pmp_threads)
 
 def daemon_mode():
 	loop = True
@@ -148,12 +151,12 @@ def main():
 	if dummy:
 		dummy_mode()
 	elif team1:
-		team_mode(team1, team2, match_ts=match_timestamp)
+		team_mode(team1, team2, match_ts=int(time.time()))
 	else:
 		daemon_mode()
 
 if __name__ == "__main__":
-	main()
+        main()
 	#t = LTT("Manchester United", "Arsenal", int(time.time()), 15)
 	#t = PT("Manchester United")
 	#t.start()

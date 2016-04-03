@@ -10,6 +10,7 @@ from forms import DatesForm
 import datetime
 import time
 import os, sys
+import collections
 
 path = os.path.abspath(os.path.join('..', 'resources'))
 sys.path.append(path)
@@ -141,7 +142,7 @@ def matches(request):
         matches = {}
         collection = mongo.init_collection('matches')
         matches_by_date = {}
-        for i in xrange(8):
+        for i in xrange(-2, 8):
                 date = (today + datetime.timedelta(days=i)).strftime("%-d %B %Y")
                 results = mongo.query_collection(collection, {"date" : date})
                 print results
@@ -180,7 +181,7 @@ def matches(request):
  
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
-                'matches': matches_by_date
+                'matches': collections.OrderedDict(sorted(matches_by_date.items()))
 		})
 	return HttpResponse(template.render(context))
 

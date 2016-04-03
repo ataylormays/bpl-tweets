@@ -1,6 +1,6 @@
 from pymongo import MongoClient, ReturnDocument
 import pymongo
-import time
+import time, calendar
 import os, sys
 
 file_loc = os.path.abspath(__file__)
@@ -52,7 +52,7 @@ def update_one(collection, query, update):
 
 def twitter_time_to_unix(created_at):
 	t = time.strptime(created_at, constants.TWITTER_TIME_FORMAT)
-	unix_ts = time.mktime(t)
+	unix_ts = calendar.timegm(t)
 	return unix_ts
 
 if __name__ == '__main__':
