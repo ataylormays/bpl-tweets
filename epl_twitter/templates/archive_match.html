@@ -1,0 +1,15 @@
+{% extends "base.html"%}
+
+{% load staticfiles %}
+	
+{%block content%}
+<div>
+	{% if match_data %}
+
+	{% else %}
+		<p>No data available for {{home}} vs {{away}}!</p>
+		
+	{% endif %}
+</div>
+
+{% endblock %}

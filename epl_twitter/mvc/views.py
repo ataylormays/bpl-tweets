@@ -40,11 +40,15 @@ def count_elts(numbers, limit):
 			output[n] = 1
 	return sorted(output.items(), key=lambda x:-1*x[1])[:limit]
 
-def create_match_url(team1, team2, timestamp):
+def create_match_url(team1, team2, timestamp, page_type):
 	t1, t2 = (
 		team1.lower().replace(' ', '_'),
 		team2.lower().replace(' ', '_'))
-	url = '/live/' + t1 + '-' + t2 + '-' + str(timestamp)
+	if page_type == 'live':
+		url = '/live/'
+	elif page_type == 'archive':
+		url = '/archive/'
+	url += t1 + '-' + t2 + '-' + str(timestamp)
 	return url
 
 # create sorted list between two dates with placeholders for counts of sentiment
@@ -121,6 +125,11 @@ def get_club_names():
 				[(name.replace(' ', '_').lower(), name)])
 	return club_names
 
+def format_match_dt_from_db(date_string):
+	dt = datetime.datetime.strptime(date_string, "%d %B %Y")
+	formatted_date_string = datetime.datetime.strftime(dt, "%B %d %Y").lstrip("0").replace(" 0", " ")
+	return formatted_date_string
+
 def placeholder(request):
 	template = loader.get_template('placeholder.html')
 	context = RequestContext(request)
@@ -128,7 +137,7 @@ def placeholder(request):
 	return HttpResponse(template.render(context))
 
 def about(request):
-	today = datetime.date.today().strftime("%b %d, %Y")
+	today = datetime.date.today().strftime("%B %d, %Y").lstrip("0").replace(" 0", " ")
 	template = loader.get_template('about.html')
 	context = RequestContext(request, {
 		'today': today,
@@ -144,7 +153,6 @@ def matches(request):
         for i in xrange(8):
                 date = (today + datetime.timedelta(days=i)).strftime("%-d %B %Y")
                 results = mongo.query_collection(collection, {"date" : date})
-                print results
 
                 for match in results:
                         delta = datetime.timedelta(minutes=constants.TOT_MINUTES)
@@ -163,7 +171,7 @@ def matches(request):
                                 state = '(upcoming)'
                         elif now > start + delta:
                                 state = 'FT'
-                        url = create_match_url(match['home'], match['away'], match['timestamp'])
+                        url = create_match_url(match['home'], match['away'], match['timestamp'], 'live')
                         to_insert = [ match['date'],
                                       match['human_time'],
                                       match['timestamp'],
@@ -211,28 +219,45 @@ def contact(request):
 	return HttpResponse(template.render(context))
 
 def archive(request):
-	date_format = "%B %Y"
-	date_list = [constants.ARCHIVE_START]
-	d = datetime.datetime.strptime(constants.ARCHIVE_START, date_format) \
-		.date()
-	end_string = (datetime.date.today() + relativedelta(months=1)) \
-		.strftime(date_format)
-	while(d.strftime(date_format) != end_string):
-		d += relativedelta(months=1)
-		date_list += [d.strftime(date_format)]
+	matches_collection = mongo.init_collection('matches')
+	matches = mongo.query_collection(matches_collection)
+
+	archive_data = []
+	for m in matches:
+		match_data = {}
+		match_data["date"] = format_match_dt_from_db(m["date"])
+		match_data["home"] = m["home"]
+		match_data["away"] = m["away"]
+		match_data["home_crest"] = os.path.join(
+                                'club-crests',
+                                m['home'].lower().replace(' ', '_') + '-crest.png')
+		match_data["away_crest"] = os.path.join(
+                                'club-crests',
+                                m['away'].lower().replace(' ', '_') + '-crest.png')
+		match_data["url"] = create_match_url(m['home'], m['away'], m['timestamp'], 'archive')
+		archive_data += [match_data]
 
 	template = loader.get_template('archive.html')
 	context = RequestContext(request, {
-		'date_list': date_list[::-1],
+		'archive_data' : archive_data,
 		})
+
 	return HttpResponse(template.render(context))
 
-def archive_match(request, team1, team2, date):
+def archive_match(request, team1, team2, timestamp):
+	archive_collection = mongo.init_collection('archive')
+	home = team1.title().replace('_', ' ')
+	away = team2.title().replace('_', ' ')
+	query = {"home" : home,
+				"away" : away,
+				"timestamp" : timestamp}
+	match_data = mongo.query_collection(archive_collection, query)
+
 	template = loader.get_template('archive_match.html')
 	context = RequestContext(request, {
-		'team1': team1.title().replace('_', ' '),
-		'team2': team2.title().replace('_', ' '),
-		'date': date,
+		'home' : home,
+		'away' : away,
+		'match_data' : match_data
 		})
 	return HttpResponse(template.render(context))
 

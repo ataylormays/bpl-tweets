@@ -23,7 +23,7 @@ def datetime2timestamp(match_dt):
 
 	return match_ts
 
-def scrape_match_data(urls, collection, weeks=1):
+def scrape_match_data(urls, collection, weeks=2):
 	r = requests.get(url)
 
 	soup = BeautifulSoup(r.content, "html.parser")
@@ -58,12 +58,15 @@ def scrape_match_data(urls, collection, weeks=1):
 			continue	
 		for elt in md:
 			if "shsRow0Row" in str(elt) or "shsRow1Row" in str(elt):
-				time = elt.find_all('span', {"class":"shsGMTZone"})[0].text.replace(" GMT", "")
-				home = elt.find_all('td', {"class":"shsNamD"})[1].text
-				away = elt.find_all('td', {"class":"shsNamD"})[2].text
-				match_ts = datetime2timestamp(date + " " + time)
-				matches += [[date, time, match_ts, home, away]]
-
+				try:
+					time = elt.find_all('span', {"class":"shsGMTZone"})[0].text.replace(" GMT", "")
+					home = elt.find_all('td', {"class":"shsNamD"})[1].text
+					away = elt.find_all('td', {"class":"shsNamD"})[2].text
+					match_ts = datetime2timestamp(date + " " + time)
+					matches += [[date, time, match_ts, home, away]]
+				except Exception, e:
+					print 'Failed on row'
+					print elt
         
         flag = False
         for match in matches:

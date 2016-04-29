@@ -459,9 +459,9 @@ function loadTweets(tweet_id, url, body) {
 		tweet_id,
 		document.getElementById("tweets"),
 		{
-			cards: 'hidden',
-			width: 350
-		});
+			cards: 'hidden'
+		}
+		);
 
 	if(body.exclusions){
 		body.exclusions.push(tweet_id);
@@ -470,7 +470,7 @@ function loadTweets(tweet_id, url, body) {
 	}
 	setTimeout(function() {
 		getPopularTweet(url, body);
-	}, 3000);
+	}, 30000);
 }
 
 

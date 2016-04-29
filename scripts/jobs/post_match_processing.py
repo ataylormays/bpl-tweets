@@ -158,6 +158,7 @@ def process_match(match):
 	top_hashtags = find_top_hashtags(5, tweets)
 	post_processing = {"home" : match["home"],
 						"away" : match["away"],
+						"timestamp" : match["timestamp"],
 						"score" : score,
 						"counts" : counts,
 						"top_hashtags" : top_hashtags}

@@ -1,6 +1,6 @@
 from pymongo import MongoClient, ReturnDocument
 import pymongo
-import time
+import time, calendar
 import os, sys
 
 file_loc = os.path.abspath(__file__)
@@ -52,19 +52,22 @@ def update_one(collection, query, update):
 
 def twitter_time_to_unix(created_at):
 	t = time.strptime(created_at, constants.TWITTER_TIME_FORMAT)
-	unix_ts = time.mktime(t)
+	unix_ts = calendar.timegm(t)
 	return unix_ts
 
 if __name__ == '__main__':
-	collection = init_collection('live')
-	matches = query_collection(collection)
-	mtime = 1457190000 - 13
-	start = mtime - 30
-	end = mtime + 30
-	query = {"timestamp": {"$lt": end, "$gt": start}, "home":"Chelsea"}
-	ms = query_collection(collection, query={"timestamp":{"$gt": time.time()-1000}})
-	update = {"live" : False}
-	#updated_record = update_one(collection, query, update)
-
+	matches_collection = init_collection('matches')
+	new_match = {"home":"Manchester United",
+					"away":"Manchester City",
+					"date":"30 March 2016",
+					"timestamp": int(time.time())}
+	live_query = {"match_ts":1459396398}
+	# live_query = {"team" : "Manchester United"}
+	# live_query = {'unix_ts': {'$gt': 1459397958.0, '$lt': 1459398018.0}, 'team': u'manchester_city'}
+	live_collection = init_collection('live')
+	match_query = {'$or': [{'home': u'Manchester City'}, {'away': u'Manchester City'}]}
+	matches = query_collection(matches_collection, match_query)
+	tweets = query_collection(live_collection, live_query)
 	# for m in matches:
 	# 	print m
+	print tweets[81]["team"]

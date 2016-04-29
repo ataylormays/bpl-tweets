@@ -12,7 +12,7 @@ team1_regex = '(?P<team1>[A-Za-z_]+)'
 team2_regex = '(?P<team2>[A-Za-z_]+)'
 ts_regex = '(?P<timestamp>[0-9]{10})'
 
-live_regex =  team1_regex + \
+match_regex =  team1_regex + \
 	'-' + team2_regex + \
 	'-' + ts_regex
 
@@ -32,8 +32,9 @@ live_urlpatterns = [
 				webservice_views.most_popular_tweet,
 				name='getPopularTweet'),
 	url(r'^about/', views.about, name='about'),
-	url(r'^archive/', views.archive, name='archive'),
-	url(r'^live/' + live_regex, views.live, name='live'),
+	url(r'^archive/$', views.archive, name='archive'),
+	url(r'^archive/' + match_regex, views.archive_match, name='archive'),
+	url(r'^live/' + match_regex, views.live, name='live'),
 	url(r'^matches/', views.matches, name='matches'),
 	url(r'^$', views.matches, name='matches'),
 ]

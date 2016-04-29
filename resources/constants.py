@@ -30,7 +30,7 @@ BANNED_PHRASES = [
 LIVE_MODE = True
 
 # mongo collections to use
-QA_MODE = False
+QA_MODE = not LIVE_MODE
 
 # directories
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
