@@ -1,9 +1,10 @@
-div.tweet {
+div#tweets {
 	display: inline-block;
 	width: 350px;
 	position: relative;
 	margin: auto;
-	overflow: scroll;
+	overflow-x: hidden;
+	overflow-y: scroll;
 }
 
 div.bar {
@@ -76,17 +77,13 @@ div#bottom_wrapper {
 	border-color: grey;
 }
 
-div#graph {
-	border-top: 1px solid;
-	border-color: grey;
-	border-left-style: none;
-	border-right-style: none;
-	border-bottom-style: none;
-	display: inline-block;
-	position: relative;
-	width: 600px;
-	height: 401px;
-	z-index: 0;
+div#liveGraph {
+    border: none;
+    display: inline-block;
+    position: relative;
+    width: 600px;
+    height: 600px;
+    z-index: 0;
 }
 
 div#top_wrapper {

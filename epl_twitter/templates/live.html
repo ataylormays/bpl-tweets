@@ -4,15 +4,15 @@
 
 {% load staticfiles %}
 
-	<!-- load less files -->
-	<link rel="stylesheet/less" type="text/css" href={% static "live.less" %} />
-	<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
+<!-- load less files -->
+<link rel="stylesheet/less" type="text/css" href={% static "live.less" %} />
+<script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
 
-	<!-- load global variables -->
-	<script>
-		var host = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
-		var exclusions = [];
-	</script>
+<!-- load global variables -->
+<script>
+  var host = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+  var exclusions = [];
+</script>
 
 {% endblock %}
 
@@ -20,7 +20,7 @@
 
 {% load staticfiles %}
 
-<!-- <link rel="stylesheet" type="text/css" href={% static "live.css" %}> -->
+<link rel="stylesheet" type="text/css" href={% static "live.css" %}>
 <link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.min.css" %}>
 <link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" %}>
 <link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" %}>
@@ -39,13 +39,12 @@ $(function() {
 	<h2>{{team1Title}} vs. {{team2Title}}</h2>
 </div>
 
-
 <div id='tweets'></div>
 <div id='liveGraph'></div>
+
 <script>
 	var liveTweetsUrl = host + '/tweets/ws/liveTweetsCount?home={{team1}}&away={{team2}}&match_ts={{timestamp}}';
 	var initCountData = getCounts(liveTweetsUrl);
-	if (!initCountData) { console.log('No response from liveTweetsCount!'); };
 	loadGraph(
 		initCountData,
 		"liveGraph",
@@ -64,63 +63,7 @@ $(function() {
 		"exclusions" : exclusions
 	}
 	getPopularTweet(popularTweetsUrl, popularTweetsBody);
-	// if (!new_tweets) { console.log('No response from getPopularTweet')}
 
 </script>
-
-<!-- <div id='top_wrapper'> -->
-<!-- 	<div id='left_border'> -->
-<!-- 		<div class='side scrollable'> -->
-<!-- 			<div id='container_left' class='tweet'></div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-<!-- 	<div id='graph'></div> -->
-<!-- 	<div id='right_border'> -->
-<!-- 		<div class='side scrollable'> -->
-<!-- 			<div id="container_right" class="tweet"></div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-<!-- </div> -->
-<!-- <div id='bottom_wrapper'> -->
-<!-- 	<div id='container_bottom' class='scrollable'></div> -->
-<!-- 	<div class='extender'></div> -->
-<!-- </div> -->
-
-<!-- <div id="container_left_loader" style="display: none;"></div> -->
-<!-- <div id="container_right_loader" style="display: none;"></div> -->
-<!-- <div id="bottom_loader" style="display: none;"></div> -->
-<!-- <div id="graph_loader" style="display: none;"></div> -->
-
-<!-- <script type="text/javascript"> -->
-<!-- $( document ).ready(function() { -->
-<!-- 	idsFile = "/static/streamer-{{team1}}-{{team2}}/ids-0.txt"; -->
-<!-- 	//usersFile = "/static/streamer-{{team1}}-{{team2}}/users-0.txt"; -->
-<!-- 	graphFile = "/static/streamer-{{team1}}-{{team2}}/counts-0.txt"; -->
-
-<!-- 	$("#container_left_loader").load(idsFile, function() { -->
-<!-- 		loadTweets( -->
-<!-- 			"container_left_loader", -->
-<!-- 			"container_left", -->
-<!-- 			idsFile, -->
-<!-- 			0); -->
-<!-- 	}); -->
-<!-- 	//$("#container_right_loader").load(usersFile, function() { -->
-<!-- 	//	loadTweets( -->
-<!-- 	//		"container_right_loader", -->
-<!-- 	//		"container_right", -->
-<!-- 	//		usersFile, -->
-<!-- 	//		0); -->
-<!-- 	//}); -->
-<!-- 	$("#graph_loader").load(graphFile, function() { -->
-<!-- 		loadGraph( -->
-<!-- 			"graph_loader", -->
-<!-- 			"graph", -->
-<!-- 			graphFile, -->
-<!-- 			15, -->
-<!-- 			12, -->
-<!-- 			true); -->
-<!-- 	}); -->
-<!-- }); -->
-<!-- </script> -->
 
 {% endblock %}

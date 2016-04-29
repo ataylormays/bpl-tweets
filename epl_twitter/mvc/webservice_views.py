@@ -38,20 +38,14 @@ def find_match(team1, team2=None, match_ts=None):
 	team1 = team1.replace("_", " ").title()
 	if team2:
 		team2 = team2.replace("_", " ").title()
-	
-	query = {"$or": [{"home" : team1},
-				{"away" : team1}
-				],
-			"$or": [{"home" : team2},
-				{"away" : team2}
-				],	
-			"timestamp" : match_ts}
 
-	result = mongodb.query_collection(matches_collection, query)
-	if len(result) > 1:
-		print 'Mistake in matches collection. Following query returns >1 result:'
-		print query
+        query = { "$or" :
+                   [ { "timestamp" : match_ts,
+                       "home" : team1 },
+                     { "timestamp" : match_ts,
+                       "away" : team2 } ] }
 
+	result = mongodb.query_collection(matches_collection, query)        
 	return result[0]
 
 def get_match_ts(match):
@@ -81,9 +75,7 @@ def live_tweets_count(request):
 		home = request.GET.get('home').replace("_", " ").title()
 		away = request.GET.get('away').replace("_", " ").title()
 
-		match_ts = float(request.GET.get('match_ts'))
-
-		match = find_match(home, away, match_ts)
+		match_ts = int(request.GET.get('match_ts'))
 		default_start = match_ts
 
 		if 'start' in request.GET:
@@ -91,12 +83,12 @@ def live_tweets_count(request):
 		else:
 			query_start = default_start
 
-		now = time.time()
+                now = time.time()
 		end = min(now, default_start + 120 * 60)
 
 		if now < query_start:
 			return JsonResponse(None, safe=False)
-			
+
 		home_counts, away_counts = [], []
 		ts_chunks = chunks(query_start, end, 60)
 		for i in xrange(len(ts_chunks)-1):
@@ -106,17 +98,16 @@ def live_tweets_count(request):
 							"team" : home}
 			away_query = {"unix_ts": {"$lt": end, "$gt": start}, 
 							"team" : away}
-			print away_query
 			home_tweets = mongodb.query_collection(collection, home_query)
 			away_tweets = mongodb.query_collection(collection, away_query)
 			home_counts += [len(home_tweets)]
 			away_counts += [len(away_tweets)]
-
 		result = {
 		    "home" : {"club":home, "counts":home_counts},
 		    "away" : {"club":away, "counts":away_counts},
 		    "start" : query_start,
 		    "end" : end}
+
 		return JsonResponse(result, safe=False)
 
 	except:
@@ -151,11 +142,11 @@ def most_popular_tweet(request):
 
 		collection = mongodb.init_collection("popular")
 		query = {"club" : club,
-					"match_ts" : match_ts,
-					"id_str" : {"$nin" : exclusions}
-				}
+                         "match_ts" : match_ts,
+                         "id_str" : {"$nin" : exclusions}
+                }
 		tweets = mongodb.query_collection(collection, query)
-		
+
 		if len(tweets) == 0:
 			return JsonResponse(None, safe=False)
 
@@ -177,8 +168,8 @@ def most_popular_tweet(request):
 				top_tweet = find_most_popular_tweet(tweets)
 
 		result = {"club" : club,
-					"num_tweets" : len(tweets),
-					"top_tweet" : top_tweet}
+                          "num_tweets" : len(tweets),
+                          "top_tweet" : top_tweet}
 		
 		return JsonResponse(result, safe=False)
 	except:
