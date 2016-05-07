@@ -200,12 +200,10 @@ def update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collec
 			popularity_progression[iteration] = popularity
 			update_query = {"id_str" : status["id_str"]}
 			update_statement = {"popularity_progression" : popularity_progression}
-			print 'updating'
 			mongodb.update_one(collection, query = update_query, update=update_statement)
 			break
 
 	if new_tweet:
-		print 'new_tweet'
 		popularity_progression = [0] * (iteration-1) + \
 						[popularity] + \
 						[0] * (int(constants.NUM_COLS) - iteration)
