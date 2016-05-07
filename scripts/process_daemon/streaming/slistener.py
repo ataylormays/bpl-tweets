@@ -61,12 +61,11 @@ class SListener(StreamListener):
 				if self.on_delete(delete['id'], delete['user_id']) is False:
 					return False
 			elif 'limit' in data:
-				if self.on_limit(json.loads(data)['limit']['track']) is False:
-					return False
+				self.on_limit(data)
 			elif 'warning' in data:
 				warning = json.loads(data)['warning']
 				print "Warning: %s." % warning['message']
-				return false
+				return False
 
 
 	def contains_either_team(self, text):
@@ -90,21 +89,12 @@ class SListener(StreamListener):
 
 		if totalTime > self.total_limit:
 			print "Time limit exceed. Terminating slistener."
-			self.write_line(totalTime)
-			self.data_output.close()
-			self.id_output.close()
-			self.tweet_output.close()
-			self.user_output.close()
-			self.delout.close()
 			return False
 
 		tweet = json.loads(status)
 		tweet_user = tweet["user"]["id_str"]
 		tweet_text = tweet['text']
 		tweet_id = tweet["id_str"]
-
-		# TO-DO: write tweet object to db
-		#json.dump(status, self.tweet_json_output)
 
 		if delta > self.write_limit:
 			self.t1_counter = 0
@@ -124,8 +114,9 @@ class SListener(StreamListener):
 	def on_delete(self, status_id, user_id):
 		return
 
-	def on_limit(self, track):
-		sys.stderr.write(track + "\n")
+	def on_limit(self, data):
+		print 'Reached limit of API requests!'
+		print data
 		raise SystemError('Reached limit of API requests!')
 
 	def on_error(self, status_code):
