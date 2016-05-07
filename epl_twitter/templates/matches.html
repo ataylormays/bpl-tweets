@@ -21,16 +21,31 @@ function description(state, timestamp) {
 
 <div>
 	{% if matches %}
-		{% for date, l in matches.items %}
+		{% for date, match_data in matches.items %}
 			<h2>{{date}}</h2>
 			<table align="center" width="900px" style="border-collapse: collapse;">
-			{% for item in l %}
-				<tr onclick="window.document.location='{{item.8}}';" height="120px">
-				    <td width="120px"><img src={% static "" %}{{item.6}} height="75px" width="75px"></td>
-				    <td align="left" style="font-size:120%">{{item.3}}</td>
-				    <td style="font-size:90%"><script>description('{{item.5}}', {{item.2}})</script></td>
-				    <td align="right" style="font-size:120%">{{item.4}}</td>
-				    <td width="120px"><img src={% static "" %}{{item.7}} height="75px" width="75px"></td>
+			{% for match in match_data %}
+				<tr onclick="window.document.location='{{match.dest_url}}';" height="120px">
+					<!-- home crest -->
+					<td width="120px">
+						<img src={% static "" %}{{match.home_crest}} height="75px" width="75px">
+					</td>
+					
+					<!-- home team name -->
+					<td align="left" style="font-size:120%">{{match.home}}</td>
+					
+					<!-- description of match staticfiles -->
+					<td style="font-size:90%">
+						<script>description('{{match.state}}', {{match.timestamp}})</script>
+					</td>
+					
+					<!-- away team name -->
+					<td align="right" style="font-size:120%">{{match.away}}</td>
+					
+					<!-- away crest -->
+					<td width="120px">
+						<img src={% static "" %}{{match.away_crest}} height="75px" width="75px">
+					</td>
 				</tr>
 			{% endfor %}
 			<table>

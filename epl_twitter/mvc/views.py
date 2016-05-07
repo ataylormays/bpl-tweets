@@ -148,50 +148,52 @@ def about(request):
 
 def matches(request):
 	today = datetime.date.today()
-        matches = {}
-        collection = mongo.init_collection('matches')
-        matches_by_date = {}
-        for i in xrange(-2, 8):
-                date = (today + datetime.timedelta(days=i)).strftime("%-d %B %Y")
-                results = mongo.query_collection(collection, {"date" : date})
+	matches = {}
+	collection = mongo.init_collection('matches')
+	matches_by_date = {}
+	for i in xrange(-2, 8):
+		date = (today + datetime.timedelta(days=i)).strftime("%-d %B %Y")
+		results = mongo.query_collection(collection, {"date" : date})
 
-                for match in results:
-                        delta = datetime.timedelta(minutes=constants.TOT_MINUTES)
-                        now = datetime.datetime.now()
-                        crest1 = os.path.join(
-                                'club-crests',
-                                match['home'].lower().replace(' ', '_') + '-crest.png')
-                        crest2 = os.path.join(
-                                'club-crests',
-                                match['away'].lower().replace(' ', '_') + '-crest.png')
+		for match in results:
+			delta = datetime.timedelta(minutes=constants.TOT_MINUTES)
+			now = datetime.datetime.now()
+			crest1 = os.path.join(
+				'club-crests',
+				match['home'].lower().replace(' ', '_') + '-crest.png')
+			crest2 = os.path.join(
+				'club-crests',
+				match['away'].lower().replace(' ', '_') + '-crest.png')
 
-                        start = datetime.datetime.fromtimestamp(float(match['timestamp']))
-                        date_string = match['date']
-                        state = 'LIVE'
-                        if now < start:
-                                state = '(upcoming)'
-                        elif now > start + delta:
-                                state = 'FT'
-                        url = create_match_url(match['home'], match['away'], match['timestamp'], 'live')
-                        to_insert = [ match['date'],
-                                      match['human_time'],
-                                      match['timestamp'],
-                                      match['home'],
-                                      match['away'],
-                                      state,
-                                      crest1,
-                                      crest2,
-                                      url ]
-                        if date_string in matches_by_date:
-                                matches_by_date[date_string].append(to_insert[:])
-                        else:
-                                matches_by_date[date_string] = [to_insert[:]]
+			start = datetime.datetime.fromtimestamp(float(match['timestamp']))
+			date_string = match['date']
+			state = 'LIVE'
+			if now < start:
+				state = '(upcoming)'
+			elif now > start + delta:
+				state = 'FT'
+			url = create_match_url(match['home'], match['away'], match['timestamp'], 'live')
+			match_data = { "date" :  match['date'],
+							"time" : match['human_time'],
+							"timestamp" : match['timestamp'],
+							"home" : match['home'],
+							"away" : match['away'],
+							"state" : state,
+							"home_crest" : crest1,
+							"away_crest" : crest2,
+							"dest_url" : url }
+			if date_string in matches_by_date:
+				matches_by_date[date_string].append(match_data)
+			else:
+				matches_by_date[date_string] = [match_data]
  
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
-                'matches': collections.OrderedDict(sorted(matches_by_date.items()))
-		})
+				'matches': collections.OrderedDict(sorted(matches_by_date.items()))
+				})
+
 	return HttpResponse(template.render(context))
+
 
 def live(request, team1, team2, timestamp):
 	template = loader.get_template('live.html')
