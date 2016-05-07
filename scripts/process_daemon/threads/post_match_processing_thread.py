@@ -27,6 +27,6 @@ class PostMatchProcessingThread(threading.Thread):
 					"away" : self.match["away"],
 					"timestamp" : self.match["timestamp"]}
 		updated_record = mongo.update_one(matches_collection, query, update)
-		processed_record = pmp.process_match(match)
+		processed_record = pmp.process_match(self.match)
 		archive_collection = mongo.init_collection('archive')
 		mongo.insert_object(archive_collection, processed_record)
