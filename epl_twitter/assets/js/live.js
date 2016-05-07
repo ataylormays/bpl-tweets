@@ -465,22 +465,23 @@ function getPopularTweet(url, body) {
 */
 function loadTweets(tweet_id, url, body) {
     if (tweet_id) {
-	twttr.widgets.createTweet(
-		tweet_id,
-		document.getElementById("tweets"),
-		{
-			cards: 'hidden'
-		}
-		);
+		twttr.widgets.createTweet(
+			tweet_id,
+			document.getElementById("tweets"),
+			{
+				cards: 'hidden'
+			}
+			);
 
-	if(body.exclusions){
-	    body.exclusions.push(tweet_id);
-	} else {
-	    body.exclusions = [tweet_id];
+		if(body.exclusions){
+		    body.exclusions.push(tweet_id);
+		} else {
+		    body.exclusions = [tweet_id];
+		}
+		setTimeout(function() {
+			getPopularTweet(url, body);
+		}, 30000);
 	}
-	setTimeout(function() {
-		getPopularTweet(url, body);
-	}, 30000);
 }
 
 
@@ -532,39 +533,39 @@ function loadGraph(
 	initializing);
 
     function replaceUrlParam(url, paramName, paramValue) {
-	var pattern = new RegExp('\\b('+paramName+'=).*?(&|$)')
-	if(url.search(pattern)>=0){
-	    return url.replace(pattern,'$1' + paramValue + '$2');
-	}
-	return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue 
-    }
+		var pattern = new RegExp('\\b('+paramName+'=).*?(&|$)')
+		if(url.search(pattern)>=0){
+		    return url.replace(pattern,'$1' + paramValue + '$2');
+		}
+		return url + (url.indexOf('?')>0 ? '&' : '?') + paramName + '=' + paramValue 
+	    }
 
     function addIncrementalCountData(oldCountsData, newCountsData){
-	if(oldCountsData){
-	    for (var i = 0; i < newCountsData.home.counts.length; i++) {
-		oldCountsData.home.counts.push(newCountsData.home.counts[i]);
-	    };
-	    for (var i = 0; i < newCountsData.away.counts.length; i++) {
-		oldCountsData.away.counts.push(newCountsData.away.counts[i]);
-	    };
-	    return oldCountsData;
+		if(oldCountsData){
+		    for (var i = 0; i < newCountsData.home.counts.length; i++) {
+			oldCountsData.home.counts.push(newCountsData.home.counts[i]);
+		    };
+		    for (var i = 0; i < newCountsData.away.counts.length; i++) {
+			oldCountsData.away.counts.push(newCountsData.away.counts[i]);
+		    };
+		    return oldCountsData;
+		}
+		return newCountsData;
 	}
-	return newCountsData;
-    }
 
     setTimeout(function() {
-	var now = Math.floor(new Date().getTime() / 1000);
-	//get data from last minute
-	start = now - 59;
-	liveTweetsUrl = replaceUrlParam(liveTweetsUrl, 'start', Math.floor(start).toString())
-	newCountsData = getCounts(liveTweetsUrl);
-	countsData = addIncrementalCountData(countsData, newCountsData);
-	loadGraph(
-	    countsData,
-	    container,
-	    liveTweetsUrl,
-	    barDuration,
-	    timeout,
-	    initializing);
-    }, timeout * 1000);
+		var now = Math.floor(new Date().getTime() / 1000);
+		//get data from last minute
+		start = now - 59;
+		liveTweetsUrl = replaceUrlParam(liveTweetsUrl, 'start', Math.floor(start).toString())
+		newCountsData = getCounts(liveTweetsUrl);
+		countsData = addIncrementalCountData(countsData, newCountsData);
+		loadGraph(
+		    countsData,
+		    container,
+		    liveTweetsUrl,
+		    barDuration,
+		    timeout,
+		    initializing);
+	    }, timeout * 1000);
 }
