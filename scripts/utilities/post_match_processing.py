@@ -112,8 +112,9 @@ def get_counts_for_match(tweets, match):
 			if tweets[curr_tweet_index]["team"] == match["away"]:
 				t2_counts[i] += 1
 			curr_tweet_index += 1
-	counts = {"home_counts" : t1_counts,
-				"away_counts" : t2_counts}
+	counts = {"home" : {"counts": t1_counts},
+				"away" : {"counts": t2_counts}
+			}
 
 	return counts
 

@@ -273,6 +273,8 @@ def archive_match(request, team1, team2, timestamp):
 	archive_collection = mongo.init_collection('archive')
 	home = team1.title().replace('_', ' ')
 	away = team2.title().replace('_', ' ')
+	home_crest = os.path.join('club-crests', team1 + '-crest.png')
+	away_crest = os.path.join('club-crests', team2 + '-crest.png')
 	query = {"home" : home,
 				"away" : away,
 				"timestamp" : timestamp}
@@ -282,6 +284,9 @@ def archive_match(request, team1, team2, timestamp):
 	context = RequestContext(request, {
 		'home' : home,
 		'away' : away,
+		'home_crest' : home_crest,
+		'away_crest' : away_crest,
+		'hashtags' : ["#manutd", "#rooney", "#ggmu", "#reddevils", "#fuckarsenal"],
 		'match_data' : match_data
 		})
 	return HttpResponse(template.render(context))

@@ -1,14 +1,75 @@
 {% extends "base.html"%}
 
 {% load staticfiles %}
+
+{% block extrahead %}
+
+<script type="text/javascript" src="{% static "live.js" %}"></script>
+
+<!-- load global variables -->
+<script>
+  var host = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+  var exclusions = [];
+</script>
+
+{% endblock %}
 	
 {%block content%}
 <div>
+	<table align="center" width="900px" style="border-collapse: collapse;">
+		<tr onclick="window.document.location='{{match.dest_url}}';" height="120px">
+			<!-- home crest -->
+			<td width="120px">
+				<img src={% static "" %}{{home_crest}} height="75px" width="75px">
+			</td>
+			
+			<!-- home team name -->
+			<td align="left" width="200px">
+				<h1>{{home}}</h1>
+			</td>
+			
+			<!-- score -->
+			<td style="font-size:120%">
+				{% if match_data %}
+					<h3>{{match_data.score}}</h3>
+				{% else %}
+					<h3>vs.</h3>
+				{% endif %}
+			</td>
+			
+			<!-- away team name -->
+			<td align="right" width="200px">
+				<h1>{{away}}</h1>
+			</td>
+			
+			<!-- away crest -->
+			<td width="120px">
+				<img src={% static "" %}{{away_crest}} height="75px" width="75px">
+			</td>
+		</tr>
+	<table>
+
+	<div>
+		{% for hashtag in hashtags%}
+			<div>{{hashtag}}</div>
+		{% endfor %}
+	</div>
+
 	{% if match_data %}
 
-	{% else %}
-		<p>No data available for {{home}} vs {{away}}!</p>
-		
+	<div id='countsGraph'></div>
+	<script>
+		loadGraph(
+			countsData={{match_data.counts}},
+			container="countsGraph");
+	</script>
+
+	<div>
+		{% for hashtag in match_data.top_hashtags%}
+			<div>hashtag</div>
+		{% endfor %}
+	</div>	
+	
 	{% endif %}
 </div>
 
