@@ -21,10 +21,10 @@ function description(state, timestamp) {
 
 <div>
 	{% if matches %}
-		{% for date, match_data in matches.items %}
-			<h2>{{date}}</h2>
+		{% for match_day in matches %}
+			<h2>{{match_day.0.date}}</h2>
 			<table align="center" width="900px" style="border-collapse: collapse;">
-			{% for match in match_data %}
+			{% for match in match_day %}
 				<tr onclick="window.document.location='{{match.dest_url}}';" height="120px">
 					<!-- home crest -->
 					<td width="120px">
@@ -32,15 +32,15 @@ function description(state, timestamp) {
 					</td>
 					
 					<!-- home team name -->
-					<td align="left" style="font-size:120%">{{match.home}}</td>
+					<td align="left" width="200px" style="font-size:120%">{{match.home}}</td>
 					
-					<!-- description of match staticfiles -->
+					<!-- description of match -->
 					<td style="font-size:90%">
 						<script>description('{{match.state}}', {{match.timestamp}})</script>
 					</td>
 					
 					<!-- away team name -->
-					<td align="right" style="font-size:120%">{{match.away}}</td>
+					<td align="right" width="200px" style="font-size:120%">{{match.away}}</td>
 					
 					<!-- away crest -->
 					<td width="120px">

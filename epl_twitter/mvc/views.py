@@ -150,11 +150,13 @@ def matches(request):
 	today = datetime.date.today()
 	matches = {}
 	collection = mongo.init_collection('matches')
-	matches_by_date = {}
-	for i in xrange(-2, 8):
+	matches_by_date = []
+	# get (in order) today, upcoming, yesterdays matches 
+	for i in [0, 1, 2, 3, 4, 5, 6, 7, -1]:
 		date = (today + datetime.timedelta(days=i)).strftime("%-d %B %Y")
 		results = mongo.query_collection(collection, {"date" : date})
 
+		matches_on_date = []
 		for match in results:
 			delta = datetime.timedelta(minutes=constants.TOT_MINUTES)
 			now = datetime.datetime.now()
@@ -182,14 +184,17 @@ def matches(request):
 							"home_crest" : crest1,
 							"away_crest" : crest2,
 							"dest_url" : url }
-			if date_string in matches_by_date:
-				matches_by_date[date_string].append(match_data)
-			else:
-				matches_by_date[date_string] = [match_data]
- 
+			matches_on_date += [match_data]
+		matches_by_date += [matches_on_date]
+	print matches_by_date
+			# if date_string in matches_by_date:
+			# 	matches_by_date[date_string].append(match_data)
+			# else:
+			# 	matches_by_date[date_string] = [match_data]
+
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
-				'matches': collections.OrderedDict(sorted(matches_by_date.items()))
+				'matches': matches_by_date
 				})
 
 	return HttpResponse(template.render(context))
