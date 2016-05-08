@@ -260,7 +260,6 @@ def archive(request):
 		archive_data += [match_data]
 
 	archive_data = group_archive_data_by_date(archive_data)
-	print archive_data
 
 	template = loader.get_template('archive.html')
 	context = RequestContext(request, {
@@ -286,7 +285,6 @@ def archive_match(request, team1, team2, timestamp):
 		'away' : away,
 		'home_crest' : home_crest,
 		'away_crest' : away_crest,
-		'hashtags' : ["#manutd", "#rooney", "#ggmu", "#reddevils", "#fuckarsenal"],
 		'match_data' : match_data
 		})
 	return HttpResponse(template.render(context))
