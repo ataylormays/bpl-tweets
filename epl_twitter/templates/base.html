@@ -5,9 +5,12 @@
   <head>
 
     <link rel="stylesheet" type="text/css" href={% static "main.css" %}>
-    <link rel="stylesheet" type="text/css" href={% static "header.css" %}>
 
-    <!-- <link rel="stylesheet" type="text/css" href={% static "css/bootstrap.min.css" %}> -->
+    <!-- load less files -->
+    <link rel="stylesheet/less" type="text/css" href={% static "header.less" %} />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href={% static "css/bootstrap.min.css" %}>
 
     <script type="text/javascript" src="{% static "d3.v3.js" %}"></script>
     <script type="text/javascript" src="{% static "widgets.js" %}"></script>
@@ -18,7 +21,7 @@
 
   <body>
     <header>
-      <div class="header-left">
+      <div class="col-md-6 header-left">
         <a class="logo" href="/matches/">
           <span><h2>BPL Tweets</h2></span>
           <img class="bottom-img" src="{% static "bpl_tweets_logo_white.png" %}">
@@ -26,12 +29,16 @@
           
         </a>  
       </div>
-      <div class="header-right">
-        <ul>
-          <li><a href="/matches/">Matches</a></li>
-          <li><a href="/archive/">Archive</a></li>
-          <li><a href="/about/">About</a></li>
-        </ul>
+      <div class="col-md-6">
+        <div class="col-md-4 header-right">
+          <a href="/matches/">Matches</a>
+        </div>
+        <div class="col-md-4 header-right">
+          <a href="/archive/">Archive</a>
+        </div>
+        <div class="col-md-4 header-right">
+          <a href="/about/">About</a>
+        </div>
       </div>
     </header>
 

@@ -21,12 +21,8 @@ header div {
 	display: block;
 }
 
-div.header-left {
-	position: relative;
-}
 
-
-header a.logo {
+/*header a.logo {
 	top: 10%;
 	height: 80%;
 	width: 50%;
@@ -34,7 +30,7 @@ header a.logo {
 	margin: 0;
 	margin-left: 20px;
 	position: absolute;
-}
+}*/
 
 header a img {
 	height: 80px;
@@ -80,14 +76,7 @@ header a:hover{
 	color: rgba(255, 255, 255, 1);
 }
 
-
-div.header-right {
-	text-align: center right;
-	font-size: 18px;
-	position: relative;
-}
-
-header ul {
+/*header ul {
 	top: 39%;
 	height: 22%;
 	width: 100%;
@@ -103,10 +92,10 @@ header ul li {
 	letter-spacing: 1px;
 	list-style-type: none;
 	display: inline;
-}
+}*/
 
 /*fade in underline and color*/
-header ul li a {
+/*header ul li a {
 	border-bottom: 1px solid rgba(255, 255, 255, 0);
 
 	-webkit-transition: 500ms ease;
@@ -119,4 +108,4 @@ header ul li a {
 header ul li a:hover{
 	color: rgba(255, 255, 255, 1);
 	border-bottom: 1px solid rgba(255, 255, 255, 1);
-}
+}*/

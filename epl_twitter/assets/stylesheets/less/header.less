@@ -1,0 +1,62 @@
+@header-height: 100px;
+@header-component-color: #59ADEB;
+@header-background-color: #1E266B;
+@header-link-hover-color: #FFFFFF;
+@header-font-size: 26px;
+@header-img-size: @header-height * 0.8;
+
+header div {
+	background-color: @header-background-color;
+	color: @header-component-color;
+	font-family: "Trebuchet MS";
+	font-size: @header-font-size;
+	height: @header-height;
+}
+
+header a img {
+	height: @header-img-size;
+	width: @header-img-size;
+	position: absolute;
+	vertical-align: middle;
+	margin-left: 240px;
+
+	-webkit-transition: 500ms ease;
+	-moz-transition: 500ms ease;
+	-o-transition: 500ms ease;
+	transition: 500ms ease;
+}
+
+header a:hover img.top-img {
+	opacity: 0;
+}
+
+header a {
+	color: @header-component-color;
+	text-decoration: none;
+
+	-webkit-transition: 500ms ease;
+	-moz-transition: 500ms ease;
+	-ms-transition: 500ms ease;
+	-o-transition: 500ms ease;
+	transition: 500ms ease;
+}
+
+header a h2 {
+	margin: 0;
+	padding-left: 15px;
+	padding-top: 5px;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	top: 10%;
+	bottom: 10%;
+
+}
+
+header a:hover{
+	color: @header-link-hover-color;
+}
+
+.header-right{
+	padding-top: (@header-height - 30px) / 2;
+}
