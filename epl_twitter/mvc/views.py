@@ -186,11 +186,6 @@ def matches(request):
 							"dest_url" : url }
 			matches_on_date += [match_data]
 		matches_by_date += [matches_on_date]
-	print matches_by_date
-			# if date_string in matches_by_date:
-			# 	matches_by_date[date_string].append(match_data)
-			# else:
-			# 	matches_by_date[date_string] = [match_data]
 
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
