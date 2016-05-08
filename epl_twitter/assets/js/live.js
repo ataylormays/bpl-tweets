@@ -465,23 +465,30 @@ function getPopularTweet(url, body) {
 */
 function loadTweets(tweet_id, url, body) {
     if (tweet_id) {
-		twttr.widgets.createTweet(
-			tweet_id,
-			document.getElementById("tweets"),
-			{
-				cards: 'hidden'
-			}
-			);
-
-		if(body.exclusions){
-		    body.exclusions.push(tweet_id);
-		} else {
-		    body.exclusions = [tweet_id];
+	var divName = 'tweet' + String(tweet_id);
+	var divString = '<div id="' + divName + '"></div>';
+	var oldScrollTop = $('#tweets').scrollTop();
+	$('#tweets').prepend(divString);
+	twttr.widgets.createTweet(
+	    tweet_id,
+	    document.getElementById(divName),
+	    {
+		cards: 'hidden'
+	    }).then(function(element) {
+		if (oldScrollTop > 0) {
+		    var adjustment = $("#" + divName)[0].getBoundingClientRect().height + 10;
+		    $('#tweets').scrollTop(oldScrollTop + adjustment);
 		}
-		setTimeout(function() {
-			getPopularTweet(url, body);
-		}, 30000);
+	    });
+	if(body.exclusions){
+	    body.exclusions.push(tweet_id);
+	} else {
+	    body.exclusions = [tweet_id];
 	}
+	setTimeout(function() {
+	    getPopularTweet(url, body);
+	}, 30000);
+    }
 }
 
 
@@ -509,7 +516,7 @@ function loadGraph(
     var team2Arr = countsData ? countsData.away.counts : [];
 
     makeDoubleBarGraph(
-	400,
+	500,
 	600,
 	team1Arr,
 	team2Arr,

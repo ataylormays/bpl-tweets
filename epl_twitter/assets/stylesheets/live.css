@@ -1,11 +1,32 @@
-div#tweets {
-	display: inline-block;
-	width: 350px;
-	position: relative;
-	margin: auto;
-	overflow-x: hidden;
-	overflow-y: scroll;
+div#content {
+    width: 1000px;
+    margin: 0 auto;
 }
+
+div#tweets {
+    border: none;
+    width: 400px;
+    height: 500px;
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    position: fixed;
+}
+
+div#liveGraph {
+    border: none;
+    width: 600px;
+    height: 500px;
+    z-index: 0;
+}
+
+div#tweetsAndLiveGraph {
+    height: 500px;
+    width: 1000px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px;
+};
 
 div.bar {
 	display: inline-block;
@@ -75,15 +96,6 @@ div#bottom_wrapper {
 	border-bottom-right-radius: 1em;
 	border-top-style: none;
 	border-color: grey;
-}
-
-div#liveGraph {
-    border: none;
-    display: inline-block;
-    position: relative;
-    width: 600px;
-    height: 600px;
-    z-index: 0;
 }
 
 div#top_wrapper {

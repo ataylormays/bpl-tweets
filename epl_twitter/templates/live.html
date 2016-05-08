@@ -35,12 +35,17 @@ $(function() {
 
 
 </script>
-<div id='title'>
-	<h2>{{team1Title}} vs. {{team2Title}}</h2>
-</div>
 
-<div id='tweets'></div>
-<div id='liveGraph'></div>
+<div id='content'>
+  <div id='title'>
+    <h2>{{team1Title}} vs. {{team2Title}}</h2>
+  </div>
+
+  <div id='tweetsAndLiveGraph'>
+    <div id='tweets'></div>
+    <div id='liveGraph'></div>
+  </div>
+</div>
 
 <script>
 	var liveTweetsUrl = host + '/tweets/ws/liveTweetsCount?home={{team1}}&away={{team2}}&match_ts={{timestamp}}';
