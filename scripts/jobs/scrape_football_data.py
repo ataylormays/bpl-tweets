@@ -1,4 +1,5 @@
-#!/usr/local/lib/python2.7.10/bin//python
+#! /usr/bin/python
+# #!/usr/local/lib/python2.7.10/bin//python
 
 from bs4 import BeautifulSoup
 import requests
