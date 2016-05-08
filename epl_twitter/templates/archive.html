@@ -5,16 +5,29 @@
 {%block content%}
 <div>
 	{% if archive_data %}
-		{% for match in archive_data %}
-			<h2>{{match.date}}</h2>
-			<table align="center" width="900px" style="border-collapse: collapse;">
-				<tr onclick="window.document.location='{{match.url}}';" height="120px">
-				    <td width="120px"><img src={% static "" %}{{match.home_crest}} height="75px" width="75px"></td>
-				    <td align="left" style="font-size:120%">{{match.home}}</td>
-				    <td align="right" style="font-size:120%">{{match.away}}</td>
-				    <td width="120px"><img src={% static "" %}{{match.away_crest}} height="75px" width="75px"></td>
-				</tr>
-			</table>
+		{% for match_date in archive_data %}
+			<h2>{{match_date.0.date}}</h2>
+			{% for match in match_date %}
+				<table align="center" width="900px" style="border-collapse: collapse;">
+					<tr onclick="window.document.location='{{match.url}}';" height="120px">
+					    <!-- home crest -->
+					<td width="120px">
+						<img src={% static "" %}{{match.home_crest}} height="75px" width="75px">
+					</td>
+					
+					<!-- home team name -->
+					<td align="left" width="200px" style="font-size:120%">{{match.home}}</td>
+					
+					<!-- away team name -->
+					<td align="right" width="200px" style="font-size:120%">{{match.away}}</td>
+					
+					<!-- away crest -->
+					<td width="120px">
+						<img src={% static "" %}{{match.away_crest}} height="75px" width="75px">
+					</td>
+					</tr>
+				</table>
+			{% endfor%}
 		{% endfor %}
 	{% endif %}
 </div>

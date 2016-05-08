@@ -221,9 +221,28 @@ def contact(request):
 
 	return HttpResponse(template.render(context))
 
+def group_archive_data_by_date(archive_data):
+	grouped_archive_data = []
+	distinct_dates = {}
+	sorted_dates = []
+	for m in archive_data:
+		if m["date"] in distinct_dates:
+			distinct_dates[m["date"]] += [m]
+		else:
+			distinct_dates[m["date"]] = [m]
+			sorted_dates += [m["date"]]
+
+	for date in sorted_dates:
+		grouped_archive_data += [distinct_dates[date]]
+
+	return grouped_archive_data
+
 def archive(request):
 	matches_collection = mongo.init_collection('matches')
 	matches = mongo.query_collection(matches_collection)
+
+	# reverse matches so in reverse chronological order
+	matches = matches[::-1]
 
 	archive_data = []
 	for m in matches:
@@ -239,6 +258,9 @@ def archive(request):
                                 m['away'].lower().replace(' ', '_') + '-crest.png')
 		match_data["url"] = create_match_url(m['home'], m['away'], m['timestamp'], 'archive')
 		archive_data += [match_data]
+
+	archive_data = group_archive_data_by_date(archive_data)
+	print archive_data
 
 	template = loader.get_template('archive.html')
 	context = RequestContext(request, {
