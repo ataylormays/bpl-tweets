@@ -12,7 +12,6 @@ body {
 }
 
 #content-container {
-	display: inline-block;
 	padding-top: 20px;
 	margin: 0 auto;
 	width: 80%;

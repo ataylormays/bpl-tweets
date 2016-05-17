@@ -7,6 +7,7 @@ import os
 import sys
 import time
 import tweepy
+import logging
 
 file_loc = os.path.abspath(__file__)
 parent_directory = os.path.dirname(file_loc)
@@ -25,6 +26,13 @@ import mongo_utilities as mongo
 from threads.live_tweets_thread import LiveTweetsThread as LTT
 from threads.popularity_thread import PopularityThread as PT
 from threads.post_match_processing_thread import PostMatchProcessingThread as PMPT
+
+# initiate logging
+logging.basicConfig(filename=constants.LOG_FILE, 
+						level=constants.LOG_LEVEL,
+						format=constants.LOG_FORMAT)
+
+FILE_NM = "process_daemon"
 
 def set_live_in_db(collection, matches, live):
 	update = {"live": live}
@@ -66,7 +74,7 @@ def team_mode(team1, team2, match_ts):
 	start_threads([lt_thread], p_threads, pmp_threads)
 
 def daemon_mode():
-	loop = True
+	log_prefix = FILE_NM + ":daemon_mode: "
 
 	live_threads = []
 	while True:
@@ -96,18 +104,12 @@ def daemon_mode():
 				for t in live_threads:
 					t.processed = t.isAlive()
 				live_threads = [t for t in p_threads if not t.processed]
-
-		except:
-			print "Daemon caught exception. Ending process."
+		except Exception, e:
+			logging.critical(log_prefix + "Daemon caught exception: %s. Ending process." % str(e)) 
 			set_live_in_db(collection, matches, live=False)
-			raise
-			loop = False
 
-		if loop:
-			print "Daemon sleeping for 55 seconds."
-			time.sleep(55)
-		else:
-			break
+		logging.debug(log_prefix + "Daemon sleeping for 55 seconds")
+		time.sleep(55)
 
 def main():
 	parser = argparse.ArgumentParser()

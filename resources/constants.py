@@ -1,4 +1,5 @@
 import os
+import logging
 
 # 90 min game + 15 min half time + 15 min buffer = 120 min
 TOT_MINUTES = 120
@@ -39,12 +40,17 @@ RESOURCES_DIR = os.path.join(BASE_DIR, "resources/")
 DATA_DIR = os.path.join(os.path.dirname(BASE_DIR), "bpl-tweets-data/")
 SECRETS_DIR = os.path.join(DATA_DIR, "secrets/")
 MATCHES_DIR = os.path.join(DATA_DIR, "matches/")
+LOGS_DIR = os.path.join(DATA_DIR, "logs/")
 PARAMS_DIR = os.path.join(SECRETS_DIR, "params/")
 CONSUMERS_DIR = os.path.join(SECRETS_DIR, "consumers/")
 TOKENS_DIR = os.path.join(SECRETS_DIR, "tokens/")
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts/")
 UTILITIES_DIR = os.path.join(SCRIPTS_DIR, "utilities/")
 
+# logging
+LOG_LEVEL = logging.DEBUG
+LOG_FILE = os.path.join(LOGS_DIR, "bpl-tweets.log")
+LOG_FORMAT = '%(asctime)s - %(levelname)s - %(message)s'
 
 # files
 SECRETS_CSV = os.path.join(SECRETS_DIR, "secrets.csv")

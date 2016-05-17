@@ -8,7 +8,7 @@
 
     <!-- load less files -->
     <link rel="stylesheet/less" type="text/css" href={% static "header.less" %} />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
+    <script type="text/javascript" src="{% static "less.min.js" %}"></script>
 
     <link rel="stylesheet" type="text/css" href={% static "css/bootstrap.min.css" %}>
 
@@ -23,10 +23,11 @@
     <header>
       <div class="col-md-6 header-left">
         <a class="logo" href="/matches/">
-          <span><h2>BPL Tweets</h2></span>
-          <img class="bottom-img" src="{% static "bpl_tweets_logo_white.png" %}">
-          <img class="top-img" src="{% static "bpl_tweets_logo_dblue.png" %}">
-          
+          <h2>BPL Tweets</h2>
+          <span>
+            <img class="bottom-img" src="{% static "bpl_tweets_logo_white.png" %}">
+            <img class="top-img" src="{% static "bpl_tweets_logo_dblue.png" %}">
+          </span>
         </a>  
       </div>
       <div class="col-md-6">
