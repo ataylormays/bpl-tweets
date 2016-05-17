@@ -84,7 +84,7 @@ class StreamingTweets:
 			
 		#reached rate limit
 		except SystemError:
-			log.error(log_prefix + 'reached rate limit, building new stream')
+			logging.error(log_prefix + 'reached rate limit, building new stream')
 			new_runtime = (time.time() - self.start_time) / 60
 			self.stream.disconnect()
 			self.start_streaming(home, away, users, new_runtime)

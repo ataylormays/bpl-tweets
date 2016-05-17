@@ -57,7 +57,7 @@ def get_first_id(api, club_nm):
 	query = query_builder(club_nm)
 	data = query_twitter_api(api, query, count=1)
 	if len(data)==0:
-		log.info(log_prefix + "No data.") 
+		logging.info(log_prefix + "No data.") 
 	else:
 		return data[0].id_str
 
@@ -75,7 +75,7 @@ def get_top_id(api, query):
 	log_prefix = FILE_NM + ":get_first_id: "
 	data = query_twitter_api(api, query, count=1)
 	if len(data)==0:
-		log.info(log_prefix + "No data.")
+		logging.info(log_prefix + "No data.")
 	else:
 		return data[0].id_str
 
@@ -276,7 +276,7 @@ def populate_popularity(club_nm, since_id="", iteration=1, match_ts=time.time())
 		since_id=since_id)
 
 	if len(new_tweets) == 0:
-		log.info(log_prefix + 'no tweets now')
+		logging.info(log_prefix + 'no tweets now')
 	else:
 		for status in new_tweets:
 			update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collection)

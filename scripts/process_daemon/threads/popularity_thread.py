@@ -42,6 +42,6 @@ class PopularityThread(threading.Thread):
 				iteration=runs,
 				match_ts=self.match_ts)
 			template = " sleeping for %d."
-			log.debug(log_prefix + self.name + template % (constants.RUN_FREQ * 60))
+			logging.debug(log_prefix + self.name + template % (constants.RUN_FREQ * 60))
 			time.sleep(constants.RUN_FREQ * 60)
 			runs += 1
