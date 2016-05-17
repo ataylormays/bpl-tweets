@@ -3,6 +3,7 @@ import os
 import sys
 import time
 import tweepy
+import logging
 
 from random import randint
 from slistener import SListener
@@ -11,6 +12,13 @@ resources_path = os.path.abspath(os.path.join('../../..', 'resources'))
 sys.path.append(resources_path)
 
 import constants
+
+# initiate logging
+logging.basicConfig(filename=constants.LOG_FILE, 
+						level=constants.LOG_LEVEL,
+						format=constants.LOG_FORMAT)
+
+FILE_NM = "streaming_tweets"
 
 class StreamingTweets:
 	"""docstring for StreamingTweets"""
@@ -69,18 +77,20 @@ class StreamingTweets:
 			raise
 
 	def start(self, home, away, match_ts, users = [], runtime=30):
+		log_prefix = FILE_NM + ":start: "
+
 		try:
 			self.start_streaming(home, away, match_ts, users, runtime)
 			
 		#reached rate limit
 		except SystemError:
-			print 'reached rate limit, building new stream'
+			log.error(log_prefix + 'reached rate limit, building new stream')
 			new_runtime = (time.time() - self.start_time) / 60
 			self.stream.disconnect()
 			self.start_streaming(home, away, users, new_runtime)
 		
 		#all other exceptions
-		except:
-			print "StreamingTweets caught exception. Ending process."
+		except Exception, e:
+			logging.critical(log_prefix + "StreamingTweets caught exception: %s. Ending process." % str(e))
 			self.stream.disconnect()
 			raise

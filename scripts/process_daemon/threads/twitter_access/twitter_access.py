@@ -21,6 +21,13 @@ import constants
 sys.path.append(constants.UTILITIES_DIR)
 import mongo_utilities as mongodb
 
+# initiate logging
+logging.basicConfig(filename=constants.LOG_FILE, 
+						level=constants.LOG_LEVEL,
+						format=constants.LOG_FORMAT)
+
+FILE_NM = "twitter_access"
+
 def convert_datetime(twitter_date):
 	old_fmt = '%a %b %d %H:%M:%S +0000 %Y'
 	new_fmt = '%Y-%m-%d %H:%M:%S'
@@ -46,10 +53,11 @@ def extract_hashtags(twitter_object):
 		return h_tags
 
 def get_first_id(api, club_nm):
+	log_prefix = FILE_NM + ":get_first_id: "
 	query = query_builder(club_nm)
 	data = query_twitter_api(api, query, count=1)
 	if len(data)==0:
-		print "twitter_access::get_top_id: No data."
+		log.info(log_prefix + "No data.") 
 	else:
 		return data[0].id_str
 
@@ -64,9 +72,10 @@ def get_since_id(club_nm):
 		return ''
 
 def get_top_id(api, query):
+	log_prefix = FILE_NM + ":get_first_id: "
 	data = query_twitter_api(api, query, count=1)
 	if len(data)==0:
-		print "twitter_access::get_top_id: No data."
+		log.info(log_prefix + "No data.")
 	else:
 		return data[0].id_str
 
@@ -246,6 +255,8 @@ def query_twitter_api(
 
 def populate_popularity(club_nm, since_id="", iteration=1, match_ts=time.time()):
 
+	log_prefix = FILE_NM + ":populate_popularity: "
+
 	# build api object using secrets
 	with open(constants.SECRETS_JSON, 'r') as secrets_file:
 		secrets = json.load(secrets_file)
@@ -265,7 +276,7 @@ def populate_popularity(club_nm, since_id="", iteration=1, match_ts=time.time())
 		since_id=since_id)
 
 	if len(new_tweets) == 0:
-		print 'no tweets now :('
+		log.info(log_prefix + 'no tweets now')
 	else:
 		for status in new_tweets:
 			update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collection)

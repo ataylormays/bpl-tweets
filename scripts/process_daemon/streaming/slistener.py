@@ -1,6 +1,7 @@
 import json
 import os, sys
 import time
+import logging
 
 from tweepy import StreamListener
 from tweepy import API
@@ -17,6 +18,14 @@ utilities_path = os.path.abspath(os.path.join(
 sys.path.append(utilities_path)
 
 import mongo_utilities as mongo
+
+# initiate logging
+logging.basicConfig(filename=constants.LOG_FILE, 
+						level=constants.LOG_LEVEL,
+						format=constants.LOG_FORMAT)
+
+FILE_NM = "slistener"
+
 
 class SListener(StreamListener):
 
@@ -53,6 +62,8 @@ class SListener(StreamListener):
 		self.collection = mongo.init_collection('live')
 
 	def on_data(self, data):
+		log_prefix = FILE_NM + ":on_data: "
+
 		if 'in_reply_to_status' in data:
 			if self.on_status(data) is False:
 				return False
@@ -64,7 +75,7 @@ class SListener(StreamListener):
 				self.on_limit(data)
 			elif 'warning' in data:
 				warning = json.loads(data)['warning']
-				print "Warning: %s." % warning['message']
+				logging.warning(log_prefix + "Warning: %s." % warning['message']) 
 				return False
 
 
@@ -84,11 +95,13 @@ class SListener(StreamListener):
 		return tweet
 
 	def on_status(self, status):
+		log_prefix = FILE_NM + ":on_status: "
+
 		totalTime = time.time() - self.start_time
 		delta = time.time() - self.time
 
 		if totalTime > self.total_limit:
-			print "Time limit exceed. Terminating slistener."
+			logging.info(log_prefix + "Time limit exceed. Terminating slistener.") 
 			return False
 
 		tweet = json.loads(status)
@@ -115,15 +128,18 @@ class SListener(StreamListener):
 		return
 
 	def on_limit(self, data):
-		print 'Reached limit of API requests!'
-		print data
+		log_prefix = FILE_NM + ":on_limit: "
+		logging.info(log_prefix + 'Reached limit of API requests!') 
+		logging.debug(log_prefix + "data: " + data)
 		raise SystemError('Reached limit of API requests!')
 
 	def on_error(self, status_code):
-		sys.stderr.write("Error: " + str(status_code) + "\n")
+		log_prefix = FILE_NM + ":on_error: "
+		logging.error("Error in on_error: " + str(status_code))
 		return False
 
 	def on_timeout(self):
-		sys.stderr.write("Timeout, sleeping for 60 seconds.\n")
+		log_prefix = FILE_NM + ":on_timeout: "
+		logging.error(log_prefix + "Timeout, sleeping for 60 seconds.")
 		time.sleep(60)
 		return
