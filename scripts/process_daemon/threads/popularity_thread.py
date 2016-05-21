@@ -1,6 +1,7 @@
 import os, sys
 import threading
 import time
+import logging
 
 resources_path = os.path.abspath(os.path.join('../../..', 'resources'))
 twitter_access_path = os.path.abspath('twitter_access')

@@ -61,13 +61,16 @@ if __name__ == '__main__':
 					"away":"Manchester City",
 					"date":"30 March 2016",
 					"timestamp": int(time.time())}
-	live_query = {"match_ts":1459396398}
+	live_query = {"match_ts":1463320800}
 	# live_query = {"team" : "Manchester United"}
 	# live_query = {'unix_ts': {'$gt': 1459397958.0, '$lt': 1459398018.0}, 'team': u'manchester_city'}
 	live_collection = init_collection('live')
-	match_query = {'$or': [{'home': u'Manchester City'}, {'away': u'Manchester City'}]}
+	match_query = {'$or': [{'home': u'Manchester United'}, {'away': u'Manchester United'}]}
 	matches = query_collection(matches_collection, match_query)
-	tweets = query_collection(live_collection, live_query)
 	# for m in matches:
 	# 	print m
-	print tweets[81]["team"]
+	tweets = query_collection(live_collection, live_query)
+	print len(tweets)
+	# for m in matches:
+	# 	print m
+	# print tweets[81]["team"]

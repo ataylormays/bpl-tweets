@@ -249,8 +249,8 @@ def main():
 	args = parser.parse_args()
 	password = args.password
 	extra = args.extra
-	fill = args.fill
-	rebuild = args.rebuild
+	fill =args.fill
+	rebuild_flag = args.rebuild
 	write = args.write
 	if extra:
 		for i in xrange(extra):
@@ -264,7 +264,7 @@ def main():
 			print "Iteration: ", i
 			generate_new_app()
 			time.sleep(5 * 60)
-	if rebuild:
+	if rebuild_flag:
 		rebuild()
 	if write:
 		write_credentials()

@@ -8,6 +8,7 @@ import time
 import urllib
 import urllib2
 import tweepy
+import logging
 from random import randint
 
 file_loc = os.path.abspath(__file__)
@@ -27,6 +28,8 @@ logging.basicConfig(filename=constants.LOG_FILE,
 						format=constants.LOG_FORMAT)
 
 FILE_NM = "twitter_access"
+
+ct = 0
 
 def convert_datetime(twitter_date):
 	old_fmt = '%a %b %d %H:%M:%S +0000 %Y'
@@ -245,13 +248,66 @@ def query_twitter_api(
 	query,
 	count=None,
 	result_type='mixed',
+	max_id="",
 	since_id=""):
 
 	results = [status for status in tweepy.Cursor(api.search, 
 		q=query, 
-		since_id=since_id, 
+		since_id=since_id,
+		max_id=max_id,
 		result_type=result_type).items(count)]
 	return results
+
+
+def get_tweets_for_match(club_nm, match_ts):
+	print ''
+
+def within(num, min, max):
+	return min <= num <= max
+
+def get_match_start_and_end(match):
+	match_ts = match["timestamp"]
+	match_end = match_ts + 60 * 60 * 2
+	return (match_ts, match_end)
+
+def utc2snowflake(stamp):
+    return (int(round(stamp * 1000)) - 1288834974657) << 22
+
+def snowflake2utc(sf):
+    return ((sf >> 22) + 1288834974657) / 1000.0
+
+def get_team_tweets(api_index, start_timestamp, end_timestamp, club_nm, count, tweets):
+	if end_timestamp == start_timestamp:
+		return api_index, tweets
+	if api_index == 0:
+		print "Currently at ", time.time()
+		print "Sleeping for ", 16 * 60
+		time.sleep(16 * 60)
+	api = authorize_api(api_index)
+	print start_timestamp, end_timestamp
+	query = query_builder(club_nm)
+	since_id = utc2snowflake(start_timestamp)
+	max_id = utc2snowflake(end_timestamp)
+	new_tweets = query_twitter_api(
+		api=api,
+		query=query,
+		since_id=since_id,
+		max_id=max_id,
+		count=count)
+	if len(new_tweets) == 0:
+		return api_index, tweets
+	# print new_tweets[0]._json["created_at"], new_tweets[-1]._json["created_at"]
+	first_timestamp = mongodb.twitter_time_to_unix(new_tweets[-1]._json["created_at"])
+	return get_team_tweets((api_index + 1) % constants.NUM_SECRETS, start_timestamp, first_timestamp, club_nm, count, tweets + new_tweets)
+
+def build_document(status, team, match_ts):
+
+		# add tweet's unix ts, the match date, and team to tweet object
+		tweet["unix_ts"] = mongodb.twitter_time_to_unix(tweet["created_at"])
+		tweet["team"] = team
+		tweet["match_ts"] = match_ts
+		
+		return tweet
 
 def populate_popularity(club_nm, since_id="", iteration=1, match_ts=time.time()):
 
@@ -282,15 +338,79 @@ def populate_popularity(club_nm, since_id="", iteration=1, match_ts=time.time())
 			update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collection)
 
 if __name__ == '__main__':
-	api = authorize_api(0)
-	query = query_builder("Manchester United")
+	#api = authorize_api(8)
+	api_index = 1
+	query = query_builder("Bournemouth")
 
-	#since_id = get_top_id(api, query)
-	since_id = "695865017288237056"
-	print since_id
-	print constants.LIVE_MODE
-	#time.sleep(30)
-	populate_popularity("Manchester United", since_id, match_ts=1454795380)
+	matches_collection = mongodb.init_collection('matches')
+	now = time.time()
+	one_week_ago = now - 60 * 60 * 24 * 7
+	matches_query = {"timestamp" : {"$gt": one_week_ago}}
+	matches = mongodb.query_collection(matches_collection, matches_query)
+	live_collection = mongodb.init_collection('live')
+	for m in matches:
+		print m
+		start, end = get_match_start_and_end(m)
+		home, away = m["home"], m["away"]
+		m_start_id, m_end_id = utc2snowflake(start), utc2snowflake(end)
+		home_query = query_builder(home)
+		away_query = query_builder(away)
+		print 'getting home'
+		api_index, home_tweets = get_team_tweets(api_index, start, end, home, 1000, [])
+		api_index += 1
+		print 'getting away'
+		api_index, away_tweets = get_team_tweets(api_index, start, end, away, 1000, [])
+		api_index += 1
+		# away_tweets = query_twitter_api(
+		# 	api=api,
+		# 	query=away_query, 
+		# 	since_id=m_start_id,
+		# 	max_id=m_end_id,
+		# 	count=1000)
+		print len(home_tweets)
+		for t in home_tweets:
+			tweet = t._json
+			tweet_user = tweet["user"]["id_str"]
+			tweet_text = tweet['text']
+			tweet_id = tweet["id_str"]
+			document = build_document(tweet, home, start)
+			existing_tweet = mongodb.query_collection(live_collection, {"id": tweet_id})
+			if existing_tweet:
+				mongodb.update_one(live_collection, {"id": tweet_id}, document)
+			else:
+				mongodb.insert_object(live_collection, document)
+		for t in away_tweets:
+			tweet = t._json
+			tweet_user = tweet["user"]["id_str"]
+			tweet_text = tweet['text']
+			tweet_id = tweet["id_str"]
+			document = build_document(tweet, away, start)
+			existing_tweet = mongodb.query_collection(live_collection, {"id": tweet_id})
+			if existing_tweet:
+				mongodb.update_one(live_collection, {"id": tweet_id}, document)
+			else:
+				mongodb.insert_object(live_collection, document)
+
+		#print m_start_id, m_end_id
 	
 
 
+	# m = matches[-1]
+	
+
+	#print m["timestamp"], m["home"], m["away"]
+	#print find_first_tweet_for_match(api, m)
+	# for m in matches[-1]:
+	# 	print type(m['home'])
+	# 	#print find_first_tweet_for_match(api, m)
+
+
+	# print constants.LIVE_MODE
+	# print query
+	#tweets = query_twitter_api(api, query, count=1000, since_id="732646868382646272", max_id="732677067371446272")
+	#print len(tweets)
+	ct = 0
+	# for i in cursor.pages():
+	# 	print ct 
+	# 	ct += 1
+	#	print t._json
