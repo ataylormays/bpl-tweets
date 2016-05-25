@@ -338,79 +338,70 @@ def populate_popularity(club_nm, since_id="", iteration=1, match_ts=time.time())
 			update_or_save(status, existing_tweets, club_nm, match_ts, iteration, collection)
 
 if __name__ == '__main__':
-	#api = authorize_api(8)
 	api_index = 1
 	query = query_builder("Bournemouth")
 
 	matches_collection = mongodb.init_collection('matches')
 	now = time.time()
-	one_week_ago = now - 60 * 60 * 24 * 7
-	matches_query = {"timestamp" : {"$gt": one_week_ago}}
+	two_weeks_ago = now - 60 * 60 * 24 * 7 * 2
+	matches_query = {"timestamp" : {"$gt": two_weeks_ago}}
 	matches = mongodb.query_collection(matches_collection, matches_query)
 	live_collection = mongodb.init_collection('live')
 	for m in matches:
 		print m
 		start, end = get_match_start_and_end(m)
-		home, away = m["home"], m["away"]
-		m_start_id, m_end_id = utc2snowflake(start), utc2snowflake(end)
-		home_query = query_builder(home)
-		away_query = query_builder(away)
-		print 'getting home'
-		api_index, home_tweets = get_team_tweets(api_index, start, end, home, 1000, [])
-		api_index += 1
-		print 'getting away'
-		api_index, away_tweets = get_team_tweets(api_index, start, end, away, 1000, [])
-		api_index += 1
-		# away_tweets = query_twitter_api(
-		# 	api=api,
-		# 	query=away_query, 
-		# 	since_id=m_start_id,
-		# 	max_id=m_end_id,
-		# 	count=1000)
-		print len(home_tweets)
-		for t in home_tweets:
-			tweet = t._json
-			tweet_user = tweet["user"]["id_str"]
-			tweet_text = tweet['text']
-			tweet_id = tweet["id_str"]
-			document = build_document(tweet, home, start)
-			existing_tweet = mongodb.query_collection(live_collection, {"id": tweet_id})
-			if existing_tweet:
-				mongodb.update_one(live_collection, {"id": tweet_id}, document)
-			else:
-				mongodb.insert_object(live_collection, document)
-		for t in away_tweets:
-			tweet = t._json
-			tweet_user = tweet["user"]["id_str"]
-			tweet_text = tweet['text']
-			tweet_id = tweet["id_str"]
-			document = build_document(tweet, away, start)
-			existing_tweet = mongodb.query_collection(live_collection, {"id": tweet_id})
-			if existing_tweet:
-				mongodb.update_one(live_collection, {"id": tweet_id}, document)
-			else:
-				mongodb.insert_object(live_collection, document)
+		home, away, match_ts = m["home"], m["away"], m["timestamp"]
+		home_query = {"team": home, "match_ts":match_ts}
+		away_query = {"team": away, "match_ts":match_ts}
+		home_tweets = mongodb.query_collection(live_collection, home_query)
+		away_tweets = mongodb.query_collection(live_collection, away_query)
+		for t in home_tweets + away_tweets:
+			del(t["_id"])
+		home_filename = constants.DATA_DIR + "migration/" + home.lower().replace(" ", "-") + "-" + str(match_ts) + ".json"
+		away_filename = constants.DATA_DIR + "migration/" + away.lower().replace(" ", "-") + "-" + str(match_ts) + ".json"
+		print home_filename
+		with open(home_filename, 'w') as f:
+			json.dump(home_tweets, f)
+		with open(away_filename, 'w') as f:
+			json.dump(away_tweets, f)
 
-		#print m_start_id, m_end_id
-	
+	# 	m_start_id, m_end_id = utc2snowflake(start), utc2snowflake(end)
+	# 	home_query = query_builder(home)
+	# 	away_query = query_builder(away)
+	# 	print 'getting home'
+	# 	api_index, home_tweets = get_team_tweets(api_index, start, end, home, 1000, [])
+	# 	api_index += 1
+	# 	print 'getting away'
+	# 	api_index, away_tweets = get_team_tweets(api_index, start, end, away, 1000, [])
+	# 	api_index += 1
+	# 	# away_tweets = query_twitter_api(
+	# 	# 	api=api,
+	# 	# 	query=away_query, 
+	# 	# 	since_id=m_start_id,
+	# 	# 	max_id=m_end_id,
+	# 	# 	count=1000)
+	# 	print len(home_tweets)
+	# 	for t in home_tweets:
+	# 		tweet = t._json
+	# 		tweet_user = tweet["user"]["id_str"]
+	# 		tweet_text = tweet['text']
+	# 		tweet_id = tweet["id_str"]
+	# 		document = build_document(tweet, home, start)
+	# 		existing_tweet = mongodb.query_collection(live_collection, {"id": tweet_id})
+	# 		if existing_tweet:
+	# 			mongodb.update_one(live_collection, {"id": tweet_id}, document)
+	# 		else:
+	# 			mongodb.insert_object(live_collection, document)
+	# 	for t in away_tweets:
+	# 		tweet = t._json
+	# 		tweet_user = tweet["user"]["id_str"]
+	# 		tweet_text = tweet['text']
+	# 		tweet_id = tweet["id_str"]
+	# 		document = build_document(tweet, away, start)
+	# 		existing_tweet = mongodb.query_collection(live_collection, {"id": tweet_id})
+	# 		if existing_tweet:
+	# 			mongodb.update_one(live_collection, {"id": tweet_id}, document)
+	# 		else:
+	# 			mongodb.insert_object(live_collection, document)
 
-
-	# m = matches[-1]
-	
-
-	#print m["timestamp"], m["home"], m["away"]
-	#print find_first_tweet_for_match(api, m)
-	# for m in matches[-1]:
-	# 	print type(m['home'])
-	# 	#print find_first_tweet_for_match(api, m)
-
-
-	# print constants.LIVE_MODE
-	# print query
-	#tweets = query_twitter_api(api, query, count=1000, since_id="732646868382646272", max_id="732677067371446272")
-	#print len(tweets)
-	ct = 0
-	# for i in cursor.pages():
-	# 	print ct 
-	# 	ct += 1
-	#	print t._json
+	# 	#print m_start_id, m_end_id
