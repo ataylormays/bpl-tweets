@@ -1,0 +1,33 @@
+/*Title*/
+#title {
+	padding-bottom: 40px;
+}
+
+/*Body*/
+.border {
+	border: 1px solid;
+	border-color: grey;
+	box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+
+@container-height: 400px;
+@graph-width: 62%;
+@tweets-width: 100%-@graph-width;
+
+#tweets {
+	height: @container-height;
+	width: @tweets-width;
+	float: left;
+	overflow: scroll;
+	.border;
+}
+
+#countsGraph {
+	height: @container-height;
+	width: @graph-width;
+	margin-bottom: 50px;
+	float: right;
+	.border;
+}

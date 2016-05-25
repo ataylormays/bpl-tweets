@@ -276,8 +276,10 @@ def archive_match(request, team1, team2, timestamp):
 	away_crest = os.path.join('club-crests', team2 + '-crest.png')
 	query = {"home" : home,
 				"away" : away,
-				"timestamp" : timestamp}
-	match_data = mongo.query_collection(archive_collection, query)
+				"timestamp" : int(timestamp)}
+	print query
+	match_data = mongo.query_collection(archive_collection, query)[0]
+	print match_data
 
 	template = loader.get_template('archive_match.html')
 	context = RequestContext(request, {
