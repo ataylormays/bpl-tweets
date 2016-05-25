@@ -41,3 +41,9 @@ class PostMatchProcessingThread(threading.Thread):
 		logging.debug(log_prefix + "processed_record: " + str(processed_record))
 		archive_collection = mongo.init_collection('archive')
 		mongo.insert_object(archive_collection, processed_record)
+
+if __name__ == '__main__':
+	matches_collection = mongo.init_collection('matches')
+	m = mongo.query_collection(matches_collection)[-1]
+	t = PostMatchProcessingThread(m)
+	t.run()
