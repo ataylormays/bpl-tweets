@@ -40,7 +40,7 @@ def insert_object(collection, object):
 		collection.insert_many(object)
 
 def query_collection(collection, query=None, sort=None):
-	results = collection.find(query).sort(sort) if sort else collection.find(query)
+	results = collection.find(query).sort(sort[0], sort[1]) if sort else collection.find(query)
 	return [doc for doc in results]
 
 def update_one(collection, query, update):
@@ -61,7 +61,7 @@ if __name__ == '__main__':
 					"away":"Manchester City",
 					"date":"30 March 2016",
 					"timestamp": int(time.time())}
-	live_query = {"match_ts":1463320800}
+	live_query = {"match_ts":1463511600, "team":"Manchester United"}
 	# live_query = {"team" : "Manchester United"}
 	# live_query = {'unix_ts': {'$gt': 1459397958.0, '$lt': 1459398018.0}, 'team': u'manchester_city'}
 	live_collection = init_collection('live')
@@ -69,8 +69,10 @@ if __name__ == '__main__':
 	matches = query_collection(matches_collection, match_query)
 	# for m in matches:
 	# 	print m
-	tweets = query_collection(live_collection, live_query)
-	print len(tweets)
-	# for m in matches:
-	# 	print m
-	# print tweets[81]["team"]
+	# tweets = query_collection(live_collection, live_query)
+	# print len(tweets)
+	# print tweets[0]
+	archive_collection = init_collection('archive')
+	#archive_collection.remove({})
+	for r in query_collection(archive_collection):
+		print r["home"], r["away"], type(r["timestamp"])
