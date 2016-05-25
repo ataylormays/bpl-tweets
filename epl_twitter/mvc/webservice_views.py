@@ -175,3 +175,18 @@ def most_popular_tweet(request):
 	except:
 		raise Http404("Internal Server Error")
 
+def archive_match(request):
+	home = request.GET.get('home').replace("_", " ").title()
+	away = request.GET.get('away').replace("_", " ").title()
+	match_ts = int(request.GET.get('match_ts'))
+
+	archive_collection = mongodb.init_collection('archive')
+	query = {
+				"home" : home,
+				"away" : away,
+				"timestamp" : match_ts
+			}
+	archived_match = mongodb.query_collection(archive_collection, query)[0]
+	del archived_match["_id"]
+	return JsonResponse(archived_match, safe=False)
+

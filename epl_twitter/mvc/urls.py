@@ -31,6 +31,10 @@ live_urlpatterns = [
 				r'^tweets/ws/getPopularTweet$',
 				webservice_views.most_popular_tweet,
 				name='getPopularTweet'),
+	url(
+				r'^archives/ws/getArchivedMatch$',
+				webservice_views.archive_match,
+				name='getArchivedMatch'),
 	url(r'^about/', views.about, name='about'),
 	url(r'^archive/$', views.archive, name='archive'),
 	url(r'^archive/' + match_regex, views.archive_match, name='archive'),
