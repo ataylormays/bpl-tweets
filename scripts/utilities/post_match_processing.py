@@ -4,6 +4,7 @@ import requests
 import operator
 import os, sys
 import time
+import logging
 from bs4 import BeautifulSoup
 
 file_loc = os.path.abspath(__file__)
@@ -16,21 +17,12 @@ import constants
 sys.path.append(constants.UTILITIES_DIR)
 import mongo_utilities as mongodb
 
-def get_matches(match_ts):
-	matches_filename = os.path.join(constants.MATCHES_DIR, "matches.csv")
-	matches = []
-	with open(matches_filename, "r") as f:
-		matches_reader = csv.reader(f, delimiter=",")
-		for row in matches_reader:
-			match = {"date" : row[0],
-				"time" : row[1],
-				"timestamp" : row[2], 
-				"home" : row[3], 
-				"away" : row[4]
-			}
-			matches += [match]
+# initiate logging
+logging.basicConfig(filename=constants.LOG_FILE, 
+						level=constants.LOG_LEVEL,
+						format=constants.LOG_FORMAT)
 
-	return matches
+FILE_NM = "post_match_processing"
 
 def get_tweets_for_match(match):
 	collection = mongodb.init_collection('live')
@@ -43,10 +35,11 @@ def get_tweets_for_match(match):
 	return result
 
 def scrape_score(match):
-	month = datetime.datetime.now().month
+	log_prefix = FILE_NM + ":scrape_score: "
+	month = datetime.datetime.fromtimestamp(match["timestamp"]).month
 	if month in [6, 7]:
-		print "it's summer dum dum, there's no football happening"
-		sys.exit()
+		logging.error(log_prefix + "There's no match data during summer, attempting to find score for %s vs %s on %d" % (match["home"], match["away"], match["timestamp"]))
+		return ''
 	url = "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month)
 
 	r = requests.get(url)
@@ -105,7 +98,8 @@ def get_counts_for_match(tweets, match):
 	for i in xrange(len(ts_chunks)-1):
 		start = ts_chunks[i]
 		end = ts_chunks[i+1]
-		while(tweets[curr_tweet_index]["unix_ts"] < end
+		while(curr_tweet_index < len(tweets) 
+			and tweets[curr_tweet_index]["unix_ts"] < end
 			and tweets[curr_tweet_index]["unix_ts"] >= start):
 			if tweets[curr_tweet_index]["team"] == match["home"]:
 				t1_counts[i] += 1
@@ -135,12 +129,13 @@ def find_top_hashtags(num_hashtags, tweets):
 	all_hashtags = {}
 	for tweet in tweets:
 		for hashtag in tweet["entities"]["hashtags"]:
-			if hashtag in all_hashtags:
-				all_hashtags[hashtag] += 1
+			hashtag_text = hashtag["text"].encode('utf8')
+			if hashtag_text in all_hashtags:
+				all_hashtags[hashtag_text] += 1
 			else:
-				all_hashtags[hashtags] = 1
-
-	sorted_top_hashtags = sorted(all_hashtags.items(), key=operator.itemgetter(0))
+				all_hashtags[hashtag_text] = 1
+		
+	sorted_top_hashtags = [(key, all_hashtags[key]) for key in sorted(all_hashtags, key=all_hashtags.get, reverse=True)[:num_hashtags]]
 
 	top_hashtags = []
 	for index, hashtag in enumerate(sorted_top_hashtags):
@@ -167,7 +162,8 @@ def process_match(match):
 	return post_processing
 
 def main():
-	matches = get_matches()
+	matches_collection = mongodb.init_collection('matches')
+	matches = mongodb.query_collection(matches_collection)
 	for m in matches:
 		post_processing = process_match(m)
 
