@@ -65,14 +65,17 @@ if __name__ == '__main__':
 	# live_query = {"team" : "Manchester United"}
 	# live_query = {'unix_ts': {'$gt': 1459397958.0, '$lt': 1459398018.0}, 'team': u'manchester_city'}
 	live_collection = init_collection('live')
+	# result = live_collection.create_index([("unix_ts", pymongo.ASCENDING)], unique=False)
+	# print result
+	print list(live_collection.index_information())
 	match_query = {'$or': [{'home': u'Manchester United'}, {'away': u'Manchester United'}]}
-	matches = query_collection(matches_collection, match_query)
-	# for m in matches:
-	# 	print m
-	# tweets = query_collection(live_collection, live_query)
-	# print len(tweets)
-	# print tweets[0]
+	# matches = query_collection(matches_collection, match_query)
+	# # for m in matches:
+	# # 	print m
+	# # tweets = query_collection(live_collection, live_query)
+	# # print len(tweets)
+	# # print tweets[0]
 	archive_collection = init_collection('archive')
-	#archive_collection.remove({})
+	# archive_collection.remove({})
 	for r in query_collection(archive_collection):
-		print r["home"], r["away"], type(r["timestamp"])
+		print r["home"], r["away"], r["timestamp"]
