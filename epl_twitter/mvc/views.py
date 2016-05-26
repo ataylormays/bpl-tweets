@@ -277,14 +277,15 @@ def archive_match(request, team1, team2, timestamp):
 	query = {"home" : home,
 				"away" : away,
 				"timestamp" : int(timestamp)}
-	print query
-	match_data = mongo.query_collection(archive_collection, query)[0]
-	print match_data
+	match_data = mongo.query_collection(archive_collection, query)
+	if match_data:
+		match_data = match_data[0]
 
 	template = loader.get_template('archive_match.html')
 	context = RequestContext(request, {
 		'home' : home,
 		'away' : away,
+		'match_ts' : timestamp,
 		'home_crest' : home_crest,
 		'away_crest' : away_crest,
 		'match_data' : match_data

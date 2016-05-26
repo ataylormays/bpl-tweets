@@ -31,6 +31,8 @@ def get_tweets_for_match(match):
 				{"team" : match["away"]}
 				]}
 	sort = ("unix_ts", 1)
+	print 'getting tweets'
+	print query
 	result = mongodb.query_collection(collection, query, sort)
 	return result
 
@@ -93,8 +95,8 @@ def get_counts_for_match(tweets, match):
 	ts_chunks = chunks(match_start, match_end, 60)
 	
 	# intialize lists of 0s for counts for t1, t2
-	t1_counts = [0] * len(ts_chunks)
-	t2_counts = [0] * len(ts_chunks)
+	t1_counts = [0] * (len(ts_chunks) - 1)
+	t2_counts = [0] * (len(ts_chunks) - 1)
 	for i in xrange(len(ts_chunks)-1):
 		start = ts_chunks[i]
 		end = ts_chunks[i+1]
@@ -149,7 +151,9 @@ def find_top_hashtags(num_hashtags, tweets):
 
 def process_match(match):
 	tweets = get_tweets_for_match(match)
+	print len(tweets)
 	score = scrape_score(match)
+	print score
 	counts = get_counts_for_match(tweets, match)
 	top_hashtags = find_top_hashtags(5, tweets)
 	post_processing = {"home" : match["home"],

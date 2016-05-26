@@ -20,7 +20,7 @@ function description(state, timestamp) {
 </script>
 
 <div>
-	{% if matches %}
+	{% if matches.0|length > 0%}
 		{% for match_day in matches %}
 			<h2>{{match_day.0.date}}</h2>
 			<table align="center" width="900px" style="border-collapse: collapse;">
@@ -50,6 +50,8 @@ function description(state, timestamp) {
 			{% endfor %}
 			<table>
 		{% endfor %}
+	{% else %}
+		<p>There are currently no upcoming matches. Instead, checkout the <a href="/archive/">archive</a> page!</p>
 	{% endif %}
 </div>
 

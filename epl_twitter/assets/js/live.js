@@ -29,6 +29,34 @@ function fromHMS(timeString) {
 	    parseInt(split[2]));
 }
 
+function convertTimestampToLocalTime(timestamp) {
+  var d = new Date(timestamp * 1000),	// Convert the passed timestamp to milliseconds
+		yyyy = d.getFullYear(),
+		mm = ('0' + (d.getMonth() + 1)).slice(-2),	// Months are zero based. Add leading 0.
+		dd = ('0' + d.getDate()).slice(-2),			// Add leading 0.
+		hh = d.getHours(),
+		h = hh,
+		min = ('0' + d.getMinutes()).slice(-2),		// Add leading 0.
+		s = ('0' + d.getSeconds()).slice(-2),		// Add leading 0.
+		ampm = 'AM',
+		time;
+			
+	if (hh > 12) {
+		h = hh - 12;
+		ampm = 'PM';
+	} else if (hh === 12) {
+		h = 12;
+		ampm = 'PM';
+	} else if (hh == 0) {
+		h = 12;
+	}
+	
+	// ie: 2013-02-18, 8:35 AM	
+	time = yyyy + '-' + mm + '-' + dd + ', ' + h + ':' + min + ':' + s + ' ' + ampm;
+		
+	return time;
+}
+
 // Prototypes to get the minimum and maximum members of arrays
 Array.prototype.max = function() {
     return Math.max.apply(null, this);
@@ -432,12 +460,23 @@ function getCounts(url) {
     var jq = document.createElement('script');
     jq.src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js";
 
-    var result = $.ajax({
+	var result = $.ajax({
 	url: url,
 	type: 'GET',
 	async: false});
 
-    return result.responseJSON;
+	return result.responseJSON;
+}
+
+function getArchive(url) {
+    console.log(url);
+    
+	var result = $.ajax({
+	url: url,
+	type: 'GET',
+	async: false});
+
+	return result.responseJSON;
 }
 
 function getPopularTweet(url, body) {
@@ -507,6 +546,7 @@ function loadTweets(tweet_id, url, body) {
 function loadGraph(
     countsData,
     container,
+    match_ts,
     liveTweetsUrl,
     barDuration,
     timeout,
@@ -514,6 +554,12 @@ function loadGraph(
     
     var team1Arr = countsData ? countsData.home.counts : [];
     var team2Arr = countsData ? countsData.away.counts : [];
+
+    startTimeString = convertTimestampToLocalTime(match_ts).slice(-10, -3);
+    endTimeString = convertTimestampToLocalTime(match_ts + 2 * 60 * 60).slice(-10, -3);
+
+    startTimeString = startTimeString[0] == "0" ? console.log(startTimeString.slice(1)) : startTimeString;
+    endTimeString = endTimeString[0] == "0" ? endTimeString.slice(1) : endTimeString;
 
     makeDoubleBarGraph(
 	500,
@@ -534,8 +580,8 @@ function loadGraph(
 	0.05,
 	0.00,
 	10,
-	"11:00:00",
-	"13:00:00",
+	startTimeString,
+	endTimeString,
 	9,
 	initializing);
 
@@ -560,19 +606,21 @@ function loadGraph(
 		return newCountsData;
 	}
 
-    setTimeout(function() {
-		var now = Math.floor(new Date().getTime() / 1000);
-		//get data from last minute
-		start = now - 59;
-		liveTweetsUrl = replaceUrlParam(liveTweetsUrl, 'start', Math.floor(start).toString())
-		newCountsData = getCounts(liveTweetsUrl);
-		countsData = addIncrementalCountData(countsData, newCountsData);
-		loadGraph(
-		    countsData,
-		    container,
-		    liveTweetsUrl,
-		    barDuration,
-		    timeout,
-		    initializing);
-	    }, timeout * 1000);
+	if (timeout) {
+		setTimeout(function() {
+			var now = Math.floor(new Date().getTime() / 1000);
+			//get data from last minute
+			start = now - 59;
+			liveTweetsUrl = replaceUrlParam(liveTweetsUrl, 'start', Math.floor(start).toString())
+			newCountsData = getCounts(liveTweetsUrl);
+			countsData = addIncrementalCountData(countsData, newCountsData);
+			loadGraph(
+			    countsData,
+			    container,
+			    liveTweetsUrl,
+			    barDuration,
+			    timeout,
+			    initializing);
+		    }, timeout * 1000);
+	}
 }

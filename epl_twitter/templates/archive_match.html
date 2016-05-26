@@ -55,19 +55,21 @@
 
 	{% if match_data %}
 
-	<div id='countsGraph'></div>
+	<div id='liveGraph'></div>
 	<script  type="text/javascript">
-		console.log(typeof ({{match_data.counts}});
-		console.log(obj);
-		// loadGraph(
-		// 	countsData={{match_data.counts}},
-		// 	container="countsGraph"
-		// 	);
+		var getArchiveUrl = host + "/archives/ws/getArchivedMatch?home={{home}}&away={{away}}&match_ts={{match_ts}}";
+		var archiveData = getArchive(getArchiveUrl);
+		console.log(archiveData);
+		loadGraph(
+			countsData=archiveData.counts,
+			container="liveGraph",
+			match_ts=archiveData.timestamp
+			);
 	</script>
 
 	<div>
 		{% for hashtag in match_data.top_hashtags%}
-			<div>{{hashtag.text}}  {{hashtag.count}}</div>
+			<div>#{{hashtag.text}}  {{hashtag.count}}</div>
 		{% endfor %}
 	</div>	
 	
