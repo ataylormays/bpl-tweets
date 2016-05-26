@@ -29,7 +29,7 @@ class PostMatchProcessingThread(threading.Thread):
 
 	def run(self):
 		log_prefix = FILE_NM + ":run: "
-		time.sleep(constants.TOT_MINUTES * 60)
+		#time.sleep(constants.TOT_MINUTES * 60)
 		matches_collection = mongo.init_collection('matches')
 		update = {"live" : False}
 		query = {"home" : self.match["home"],
@@ -44,6 +44,8 @@ class PostMatchProcessingThread(threading.Thread):
 
 if __name__ == '__main__':
 	matches_collection = mongo.init_collection('matches')
-	m = mongo.query_collection(matches_collection)[-1]
-	t = PostMatchProcessingThread(m)
-	t.run()
+	matches = mongo.query_collection(matches_collection)[-11:-1]
+	for m in matches:
+		print m
+		t = PostMatchProcessingThread(m)
+		t.run()
