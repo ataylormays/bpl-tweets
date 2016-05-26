@@ -2,6 +2,7 @@ from pymongo import MongoClient, ReturnDocument
 import pymongo
 import time, calendar
 import os, sys
+import json
 
 file_loc = os.path.abspath(__file__)
 resources_path = os.path.join(
@@ -76,6 +77,18 @@ if __name__ == '__main__':
 	# # print len(tweets)
 	# # print tweets[0]
 	archive_collection = init_collection('archive')
-	# archive_collection.remove({})
-	for r in query_collection(archive_collection):
-		print r["home"], r["away"], r["timestamp"]
+	#archive_collection.remove({})
+	dirc = constants.DATA_DIR + "migration/"
+	files = []
+	for f in os.listdir(dirc):
+		files.append(dirc + f)
+	for f in files:
+		print f
+		with open(f) as twitter_file:
+			try:
+				tweets = json.load(twitter_file)
+				insert_object(live_collection, tweets)
+			except:
+				continue
+	# for r in query_collection(archive_collection):
+	# 	print r["home"], r["away"], r["timestamp"]
