@@ -44,7 +44,7 @@ class PostMatchProcessingThread(threading.Thread):
 
 if __name__ == '__main__':
 	matches_collection = mongo.init_collection('matches')
-	matches = mongo.query_collection(matches_collection)[-11:-1]
+	matches = mongo.query_collection(matches_collection)[-11:]
 	for m in matches:
 		print m
 		t = PostMatchProcessingThread(m)
