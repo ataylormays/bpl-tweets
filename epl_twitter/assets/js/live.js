@@ -555,8 +555,8 @@ function loadGraph(
     var team1Arr = countsData ? countsData.home.counts : [];
     var team2Arr = countsData ? countsData.away.counts : [];
 
-    startTimeString = convertTimestampToLocalTime(match_ts).slice(-10, -3);
-    endTimeString = convertTimestampToLocalTime(match_ts + 2 * 60 * 60).slice(-10, -3);
+    startTimeString = convertTimestampToLocalTime(match_ts).slice(-11, -3);
+    endTimeString = convertTimestampToLocalTime(match_ts + 2 * 60 * 60).slice(-11, -3);
 
     startTimeString = startTimeString[0] == "0" ? console.log(startTimeString.slice(1)) : startTimeString;
     endTimeString = endTimeString[0] == "0" ? endTimeString.slice(1) : endTimeString;
