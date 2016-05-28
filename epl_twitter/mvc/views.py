@@ -11,6 +11,7 @@ import datetime
 import time
 import os, sys
 import collections
+import pdb
 
 path = os.path.abspath(os.path.join('..', 'resources'))
 sys.path.append(path)
@@ -126,8 +127,8 @@ def get_club_names():
 				[(name.replace(' ', '_').lower(), name)])
 	return club_names
 
-def format_match_dt_from_db(date_string):
-	dt = datetime.datetime.strptime(date_string, "%d %B %Y")
+def format_match_dt_from_db(ts):
+	dt = datetime.datetime.fromtimestamp(ts)
 	formatted_date_string = datetime.datetime.strftime(dt, "%B %d %Y").lstrip("0").replace(" 0", " ")
 	return formatted_date_string
 
@@ -238,8 +239,8 @@ def group_archive_data_by_date(archive_data):
 	return grouped_archive_data
 
 def archive(request):
-	matches_collection = mongo.init_collection('matches')
-	matches = mongo.query_collection(matches_collection)
+	archive_collection = mongo.init_collection('archive')
+	matches = mongo.query_collection(archive_collection)
 
 	# reverse matches so in reverse chronological order
 	matches = matches[::-1]
@@ -247,7 +248,7 @@ def archive(request):
 	archive_data = []
 	for m in matches:
 		match_data = {}
-		match_data["date"] = format_match_dt_from_db(m["date"])
+		match_data["date"] = format_match_dt_from_db(m["timestamp"])
 		match_data["home"] = m["home"]
 		match_data["away"] = m["away"]
 		match_data["home_crest"] = os.path.join(
