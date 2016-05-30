@@ -709,8 +709,8 @@ function loadGraph(
     makeDoubleBarGraph(
 	home,
 	away,
-	480,
-	500,
+	490,
+	620,
 	team1Arr,
 	team2Arr,
 	120,
