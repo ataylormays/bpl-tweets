@@ -633,6 +633,28 @@ function loadTweets(tweet_id, url, body) {
     }
 }
 
+function loadArchivedTweets(tweet_ids) {
+	for (var i = 0; i < tweet_ids.length; i++) {
+		tweet_id = tweet_ids[i];
+		var divName = 'tweet' + String(tweet_id);
+		var divString = '<div id="' + divName + '"></div>';
+		console.log(divString);
+		var oldScrollTop = $('#tweets').scrollTop();
+		$('#tweets').prepend(divString);
+		twttr.widgets.createTweet(
+			tweet_id,
+			document.getElementById(divName),
+			{
+				cards: 'hidden'
+		    }).then(function(element) {
+				if (oldScrollTop > 0) {
+					var adjustment = $("#" + divName)[0].getBoundingClientRect().height + 10;
+					$('#tweets').scrollTop(oldScrollTop + adjustment);
+				}
+			});
+	}
+}
+
 
 
 /*

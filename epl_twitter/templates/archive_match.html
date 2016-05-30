@@ -70,7 +70,12 @@ $(function() {
 
 	{% if match_data %}
 
-	<div id="tweets"></div>
+	<div id="topTweets">
+		<div>
+			<h2>Top Tweets</h2>
+		</div>
+		<div id="tweets"></div>
+	</div>
 	<div id='liveGraph'></div>
 	<script  type="text/javascript">
 		var getArchiveUrl = host + "/archives/ws/getArchivedMatch?home={{home}}&away={{away}}&match_ts={{match_ts}}";
@@ -81,6 +86,7 @@ $(function() {
 			container="liveGraph",
 			match_ts=archiveData.timestamp
 			);
+		loadArchivedTweets(archiveData.top_tweets);
 	</script>
 
 	<div id="topHashtags">
