@@ -2,6 +2,7 @@
 
 body {
 	font-family: "Trebuchet MS";
+	height: 100%;
 }
 
 #content-container {
@@ -10,6 +11,13 @@ body {
 	width: 80%;
 	text-align: center;
 	color: #1E266B;
+	min-height: 100%;
+	padding-bottom: 50px;
+}
+
+#content-container:after {
+	content: "";
+	display: block;
 }
 
 #content-container a {
@@ -40,14 +48,19 @@ div.scroll {
 }
 
 /* Footer */
-footer {
-    position: fixed;
-    bottom: 0px;
-    margin-right: 10%
+
+#footer {
+	color: #1E266B;
+	width: 90%;
+	position: absolute;
+	bottom: 0;
+	height: 50px;
+	text-align: right;
+	margin-right: 10%;
 }
 
 /* Archive */
-div.left-box {
+/*div.left-box {
 	display: inline-block;
 	float: left;
 	width: 50%;
@@ -56,4 +69,22 @@ div.left-box {
 div.right-box {
 	float: left;
 	width: 50%;
+}*/
+
+html,
+body {
+	margin:0;
+	padding:0;
+	height:100%;
+}
+#wrapper {
+	min-height:100%;
+	position:relative;
+}
+#header {
+	background:#ededed;
+	padding:10px;
+}
+#content {
+	padding-bottom:50px; /* Height of the footer element */
 }

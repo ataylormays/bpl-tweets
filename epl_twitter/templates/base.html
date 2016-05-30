@@ -19,32 +19,34 @@
   </head>
 
   <body>
-    <header>
-      <div class="header-left">
-        <a class="logo" href="/matches/">
-          <span><h2>BPL Tweets</h2></span>
-          <img class="bottom-img" src="{% static "bpl_tweets_logo_white.png" %}">
-          <img class="top-img" src="{% static "bpl_tweets_logo_dblue.png" %}">
-          
-        </a>  
-      </div>
-      <div class="header-right">
-        <ul>
-          <li><a href="/matches/">Matches</a></li>
-          <li><a href="/archive/">Archive</a></li>
-          <li><a href="/about/">About</a></li>
-        </ul>
-      </div>
-    </header>
+    <div id="wrapper">
+      <header>
+        <div class="header-left">
+          <a class="logo" href="/matches/">
+            <span><h2>BPL Tweets</h2></span>
+            <img class="bottom-img" src="{% static "bpl_tweets_logo_white.png" %}">
+            <img class="top-img" src="{% static "bpl_tweets_logo_dblue.png" %}">
+            
+          </a>  
+        </div>
+        <div class="header-right">
+          <ul>
+            <li><a href="/matches/">Matches</a></li>
+            <li><a href="/archive/">Archive</a></li>
+            <li><a href="/about/">About</a></li>
+          </ul>
+        </div>
+      </header>
 
-    <div id="content-container">
-      {% block content %}
+      <div id="content-container">
+        {% block content %}
 
-      {% endblock %}
+        {% endblock %}
+      </div>
+      <div id="footer">
+          <p>&copy; BPL Tweets 2015</p>
+      </div>
     </div>
-    <footer>
-        <p>&copy; BPL Tweets 2015</p>
-    </footer>
   </body>
 
 </html>
