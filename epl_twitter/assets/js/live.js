@@ -545,7 +545,7 @@ function makeDoubleBarGraph(
     	.enter()
     	.append("text")
     	.text(function(d) { return d[0]; })
-    	.attr("x", xInnerBegin + 30)
+    	.attr("x", xInnerEnd - 70)
     	.attr("y", function(d) { return d[2] + yInnerBegin; })
     	.attr("font-family", "sans-serif")
     	.attr("font-size", "10px")
@@ -565,7 +565,7 @@ function makeDoubleBarGraph(
     	.data([ [team1, team1PrimaryColor, 15], [team2, team2PrimaryColor, 30] ])
     	.enter()
 	.append("rect")
-	.attr("x", xInnerBegin + 15)
+	.attr("x", xInnerEnd - 85)
 	.attr("y", function(d) { return d[2] + yInnerBegin - 4; })
 	.attr("width", 8)
 	.attr("height", 8)
@@ -671,28 +671,6 @@ function loadTweets(tweet_id, url, body) {
 	    getPopularTweet(url, body);
 	}, 30000);
     }
-}
-
-function loadArchivedTweets(tweet_ids) {
-	for (var i = 0; i < tweet_ids.length; i++) {
-		tweet_id = tweet_ids[i];
-		var divName = 'tweet' + String(tweet_id);
-		var divString = '<div id="' + divName + '"></div>';
-		console.log(divString);
-		var oldScrollTop = $('#tweets').scrollTop();
-		$('#tweets').prepend(divString);
-		twttr.widgets.createTweet(
-			tweet_id,
-			document.getElementById(divName),
-			{
-				cards: 'hidden'
-		    }).then(function(element) {
-				if (oldScrollTop > 0) {
-					var adjustment = $("#" + divName)[0].getBoundingClientRect().height + 10;
-					$('#tweets').scrollTop(oldScrollTop + adjustment);
-				}
-			});
-	}
 }
 
 
