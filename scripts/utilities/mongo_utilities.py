@@ -58,3 +58,39 @@ def twitter_time_to_unix(created_at):
 
 if __name__ == '__main__':
 	print "Now using mongo_playground.py"
+	matches_collection = init_collection('matches')
+	new_match = {"home":"Manchester United",
+					"away":"Manchester City",
+					"date":"30 March 2016",
+					"timestamp": int(time.time())}
+	live_query = {"match_ts":1463511600, "team":"Manchester United"}
+	# live_query = {"team" : "Manchester United"}
+	# live_query = {'unix_ts': {'$gt': 1459397958.0, '$lt': 1459398018.0}, 'team': u'manchester_city'}
+	live_collection = init_collection('live')
+	#result = live_collection.create_index([("unix_ts", pymongo.ASCENDING)], unique=False)
+	#print result
+	print list(live_collection.index_information())
+	match_query = {'$or': [{'home': u'Manchester United'}, {'away': u'Manchester United'}]}
+	# matches = query_collection(matches_collection, match_query)
+	# # for m in matches:
+	# # 	print m
+	# # tweets = query_collection(live_collection, live_query)
+	# # print len(tweets)
+	# # print tweets[0]
+	archive_collection = init_collection('archive')
+	#archive_collection.remove({})
+	#dirc = constants.DATA_DIR + "migration/"
+	#files = []
+	#for f in os.listdir(dirc):
+	#	files.append(dirc + f)
+	#for f in files:
+	#	print f
+	#	with open(f) as twitter_file:
+	#		try:
+	#			tweets = json.load(twitter_file)
+	#			insert_object(live_collection, tweets)
+	#		except:
+	#			continue
+	for r in query_collection(archive_collection):
+	 	print r["home"], r["away"], r["timestamp"]
+>>>>>>> Clean up graph.

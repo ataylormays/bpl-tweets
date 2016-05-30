@@ -10,10 +10,25 @@
 <link rel="stylesheet/less" type="text/css" href={% static "archive_match.less" %} />
 <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/2.5.3/less.min.js"></script>
 
+<link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.min.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.structure.min.css" %}>
+<link rel="stylesheet" type="text/css" href={% static "jquery-ui-1.11.4.custom/jquery-ui.theme.min.css" %}>
+
+<script type="text/javascript" src="{% static "live.js" %}"></script>
+<script type="text/javascript" src="{% static "jquery-ui-1.11.4.custom/jquery-ui.min.js" %}"></script>
+
 <!-- load global variables -->
 <script>
   var host = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
   var exclusions = [];
+</script>
+
+<script>
+$(function() {
+	$("#liveGraph").tooltip({
+		track: true
+	});
+});
 </script>
 
 {% endblock %}

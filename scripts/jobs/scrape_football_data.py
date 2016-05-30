@@ -1,5 +1,4 @@
-#! /usr/bin/python
-# #!/usr/local/lib/python2.7.10/bin//python
+#!/usr/local/lib/python2.7.10/bin//python
 
 from bs4 import BeautifulSoup
 import requests
@@ -96,9 +95,10 @@ if __name__ == '__main__':
 	if month in [6, 7]:
 		print "it's summer dum dum, there's no football happening"
 		sys.exit()
-	urls = [
-                "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month),
-                "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str((month + 1) % 12) ]
+        urls = [ "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month) ]
+        if month != 5:
+                urls.append(
+                        "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str((month + 1) % 12));
 	try:
                 collection = mongo.init_collection('matches')
                 for url in urls:
