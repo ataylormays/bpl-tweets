@@ -37,6 +37,7 @@ INSTALLED_APPS = (
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
+	'debug_toolbar',
 	#'gunicorn',
 	'mvc',
 )
@@ -54,7 +55,6 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'mvc.urls'
 
 WSGI_APPLICATION = 'epl_twitter.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
