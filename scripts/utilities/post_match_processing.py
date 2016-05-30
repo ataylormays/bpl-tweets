@@ -145,10 +145,30 @@ def find_top_hashtags(num_hashtags, tweets):
 			else:
 				all_hashtags[hashtag_text] = 1
 		
-	sorted_top_hashtags = [(key, all_hashtags[key]) for key in sorted(all_hashtags, key=all_hashtags.get, reverse=True)[:num_hashtags]]
+	sorted_top_hashtags = [(key, all_hashtags[key]) for key in sorted(all_hashtags, key=all_hashtags.get, reverse=True)[:num_hashtags*5]]
+	print sorted_top_hashtags
+	
+	# remove duplicates from cases
+	unique_top_hashtags = {}
+	for h in sorted_top_hashtags:
+		hashtag = h[0]
+		count = h[1]
+		if hashtag.lower() in unique_top_hashtags:
+			unique_top_hashtags[hashtag.lower()] += count
+		else:
+			unique_top_hashtags[hashtag.lower()] = count
+
+	sorted_unique_top_hashtags = [[key, unique_top_hashtags[key]] for key in sorted(unique_top_hashtags, key=unique_top_hashtags.get, reverse=True)]
+
+	#restore original cases
+	for index, lower_h in enumerate(sorted_unique_top_hashtags):
+		for h in sorted_top_hashtags:
+			if lower_h[0] == h[0].lower():
+				sorted_unique_top_hashtags[index][0] = h[0]
+				break
 
 	top_hashtags = []
-	for index, hashtag in enumerate(sorted_top_hashtags):
+	for index, hashtag in enumerate(sorted_unique_top_hashtags[:num_hashtags]):
 		hashtag_dict = {"rank": index+1,
 						"text": hashtag[0],
 						"count": hashtag[1]}
@@ -177,8 +197,10 @@ def process_match(match):
 def main():
 	matches_collection = mongodb.init_collection('matches')
 	matches = mongodb.query_collection(matches_collection)
-	for m in matches:
-		post_processing = process_match(m)
+	for m in matches[-1:]:
+		#post_processing = process_match(m)
+		tweets = get_tweets_for_match(m)
+		top_hashtags = find_top_hashtags(5, tweets)
 
 
 if __name__ == '__main__':

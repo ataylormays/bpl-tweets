@@ -40,10 +40,7 @@ class PostMatchProcessingThread(threading.Thread):
 		processed_record = pmp.process_match(self.match)
 		logging.debug(log_prefix + "processed_record: " + str(processed_record))
 		archive_collection = mongo.init_collection('archive')
-		print processed_record
 		mongo.insert_object(archive_collection, processed_record)
-		print 'inserted'
-		print mongo.query_collection(archive_collection)
 
 if __name__ == '__main__':
 	matches_collection = mongo.init_collection('matches')
