@@ -21,14 +21,14 @@ body {
 	color: #1E266B;
 }
 
-tr:hover {
+tr:not(.nohover):hover {
 	cursor: pointer;
 }
 
-td:hover {
+td:not(.nohover):hover {
 	cursor: pointer;
 }
-tr:hover {
+tr:not(.nohover):hover {
     background-color: #DAE9FF;
 }
 

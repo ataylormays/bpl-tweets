@@ -35,20 +35,20 @@ $(function() {
 	
 {%block content%}
 <div>
-	<table align="center" width="900px" style="border-collapse: collapse;">
-		<tr onclick="window.document.location='{{match.dest_url}}';" height="120px">
+	<table id="archiveTitle">
+		<tr height="120px" class="nohover">
 			<!-- home crest -->
-			<td width="120px">
+			<td width="120px" class="nohover">
 				<img src={% static "" %}{{home_crest}} height="75px" width="75px">
 			</td>
 			
 			<!-- home team name -->
-			<td align="left" width="200px">
+			<td align="left" width="200px" class="nohover">
 				<h1>{{home}}</h1>
 			</td>
 			
 			<!-- score -->
-			<td style="font-size:120%">
+			<td style="font-size:120%" class="nohover">
 				{% if match_data %}
 					<h3>{{match_data.score}}</h3>
 				{% else %}
@@ -57,12 +57,12 @@ $(function() {
 			</td>
 			
 			<!-- away team name -->
-			<td align="right" width="200px">
+			<td align="right" width="200px" class="nohover">
 				<h1>{{away}}</h1>
 			</td>
 			
 			<!-- away crest -->
-			<td width="120px">
+			<td width="120px" class="nohover">
 				<img src={% static "" %}{{away_crest}} height="75px" width="75px">
 			</td>
 		</tr>
