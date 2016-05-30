@@ -55,6 +55,7 @@
 
 	{% if match_data %}
 
+	<div id="tweets"></div>
 	<div id='liveGraph'></div>
 	<script  type="text/javascript">
 		var getArchiveUrl = host + "/archives/ws/getArchivedMatch?home={{home}}&away={{away}}&match_ts={{match_ts}}";
@@ -67,11 +68,20 @@
 			);
 	</script>
 
-	<div>
-		{% for hashtag in match_data.top_hashtags%}
-			<div>#{{hashtag.text}}  {{hashtag.count}}</div>
-		{% endfor %}
-	</div>	
+	<div id="topHashtags">
+		<div>
+			<h2>Top Hashtags</h2>
+		</div>
+		<div id="topHashtagsText">
+			{% for hashtag in match_data.top_hashtags%}
+				<div class="hashtagText">#{{hashtag.text}}</div>
+			{% endfor %}
+		</div>
+		<div style="float: right" id="topHashtagsChart"></div>
+	</div>
+	<script type="text/javascript">
+		drawHashtagChart(archiveData.top_hashtags);
+	</script>	
 	
 	{% endif %}
 </div>

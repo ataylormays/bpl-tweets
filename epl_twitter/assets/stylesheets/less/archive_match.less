@@ -15,6 +15,7 @@
 @container-height: 500px;
 @graph-width: 62%;
 @tweets-width: 100%-@graph-width;
+@tophashtags-text-width: 22%;
 
 #tweets {
 	height: @container-height;
@@ -30,4 +31,35 @@
 	margin-bottom: 50px;
 	float: right;
 	.border;
+}
+
+#topHashtags {
+	width: @graph-width;
+	float: right;
+	.border;
+}
+
+#topHashtagsText {
+	float: left;
+	text-align: right;
+	width: @tophashtags-text-width;
+}
+
+.hashtagText {
+	margin-top: 1px;
+}
+
+#topHashtagsChart {
+	padding-top: 2px;
+	padding-bottom: 2px;
+	margin-right: 5px;
+}
+
+#topHashtagsChart div {
+  font: 11px sans-serif;
+  background-color: #00008B;
+  text-align: right;
+  padding: 3px;
+  margin-top: 1px;
+  color: white;
 }

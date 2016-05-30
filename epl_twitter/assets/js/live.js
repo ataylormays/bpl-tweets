@@ -455,6 +455,30 @@ function makeDoubleBarGraph(
     if (initializing) { window.setInterval(callString, milliseconds * 2); }
 }
 
+
+/*
+	drawHashtagChart
+	hashtags: a list of top_hashtags objects returned from getArchive
+	This function draws a horizontal bar chart of popular hashtags.
+*/
+function drawHashtagChart(hashtags){
+	var hashtagsData = []
+	for (var i = 0; i < hashtags.length; i++) {
+		hashtagsData.push(hashtags[i].count);
+	};
+
+	var scaleHashtagData = d3.scale.linear()
+							.domain([0, d3.max(hashtagsData)])
+							.range([0, 420])
+
+	d3.select("#topHashtagsChart")
+		.selectAll("div")
+			.data(hashtagsData)
+		.enter().append("div")
+			.style("width", function(d) { return scaleHashtagData(d) + "px"})
+			.text(function(d) {return d; });	
+}
+
 function getCounts(url) {
     console.log(url);
     var jq = document.createElement('script');
