@@ -181,6 +181,8 @@ function blinkFinalBars(
   A more formal description is forthcoming.
 */
 function makeDoubleBarGraph(
+    team1,
+    team2,
     height,
     width,
     y1,
@@ -235,11 +237,12 @@ function makeDoubleBarGraph(
     var xInnerBegin = xBegin + (width - 2 * xBegin) * xInnerPadding;
     var xInnerEnd = width - xInnerBegin;
 
+    // don't pad yEnd or yInnerEnd
     var yBegin = height * yPadding;
-    var yEnd = height - yBegin;
+    var yEnd = height;
 
     var yInnerBegin = yBegin + (width - 2 * yBegin) * yInnerPadding;
-    var yInnerEnd = height - yInnerBegin;
+    var yInnerEnd = height;
 
     var yMid = (yBegin + yEnd) / 2;
     var yMidUp = yMid + yMidWidth;
@@ -312,7 +315,7 @@ function makeDoubleBarGraph(
 
     var nowYMag = yMax;
 
-    yMax = yMax * 1.25;
+    yMax = yMax * 1.3;
 
     var yMag = [];
     while (nowYMag > 1) {
@@ -530,6 +533,43 @@ function makeDoubleBarGraph(
 	.attr("text-anchor", "middle")
 	.attr("class", "graphTitle");
 
+    d3.select("#liveGraph")
+	.select("svg")
+	.selectAll(".legendText")
+	.remove();
+
+    d3.select("#liveGraph")
+    	.select("svg")
+    	.selectAll(".legendText")
+    	.data([ [team1, team1PrimaryColor, 15], [team2, team2PrimaryColor, 30] ])
+    	.enter()
+    	.append("text")
+    	.text(function(d) { return d[0]; })
+    	.attr("x", xInnerEnd - 70)
+    	.attr("y", function(d) { return d[2] + yInnerBegin; })
+    	.attr("font-family", "sans-serif")
+    	.attr("font-size", "10px")
+    	.attr("fill", function(d) { return d[1]; })
+    	.attr("alignment-baseline", "central")
+    	.attr("text-anchor", "left")
+    	.attr("class", "graphTitle");    
+
+    d3.select("#liveGraph")
+	.select("svg")
+	.selectAll(".legendRect")
+	.remove();
+
+    d3.select("#liveGraph")
+    	.select("svg")
+    	.selectAll(".legendRect")
+    	.data([ [team1, team1PrimaryColor, 15], [team2, team2PrimaryColor, 30] ])
+    	.enter()
+	.append("rect")
+	.attr("x", xInnerEnd - 85)
+	.attr("y", function(d) { return d[2] + yInnerBegin - 4; })
+	.attr("width", 8)
+	.attr("height", 8)
+	.attr("fill", function(d) { return d[1]; })
 
     if (initializing) { window.setInterval(callString, milliseconds * 2); }
 }
@@ -633,28 +673,6 @@ function loadTweets(tweet_id, url, body) {
     }
 }
 
-function loadArchivedTweets(tweet_ids) {
-	for (var i = 0; i < tweet_ids.length; i++) {
-		tweet_id = tweet_ids[i];
-		var divName = 'tweet' + String(tweet_id);
-		var divString = '<div id="' + divName + '"></div>';
-		console.log(divString);
-		var oldScrollTop = $('#tweets').scrollTop();
-		$('#tweets').prepend(divString);
-		twttr.widgets.createTweet(
-			tweet_id,
-			document.getElementById(divName),
-			{
-				cards: 'hidden'
-		    }).then(function(element) {
-				if (oldScrollTop > 0) {
-					var adjustment = $("#" + divName)[0].getBoundingClientRect().height + 10;
-					$('#tweets').scrollTop(oldScrollTop + adjustment);
-				}
-			});
-	}
-}
-
 
 
 /*
@@ -669,6 +687,8 @@ function loadArchivedTweets(tweet_ids) {
 
 */
 function loadGraph(
+    home,
+    away,
     countsData,
     container,
     match_ts,
@@ -687,8 +707,10 @@ function loadGraph(
     endTimeString = endTimeString[0] == "0" ? endTimeString.slice(1) : endTimeString;
 
     makeDoubleBarGraph(
-	500,
-	600,
+	home,
+	away,
+	490,
+	620,
 	team1Arr,
 	team2Arr,
 	120,
@@ -741,6 +763,8 @@ function loadGraph(
 			newCountsData = getCounts(liveTweetsUrl);
 			countsData = addIncrementalCountData(countsData, newCountsData);
 			loadGraph(
+			    home,
+			    away,
 			    countsData,
 			    container,
 			    liveTweetsUrl,

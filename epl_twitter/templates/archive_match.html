@@ -82,6 +82,8 @@ $(function() {
 		var archiveData = getArchive(getArchiveUrl);
 		console.log(archiveData);
 		loadGraph(
+			"{{home}}",
+			"{{away}}",
 			countsData=archiveData.counts,
 			container="liveGraph",
 			match_ts=archiveData.timestamp
