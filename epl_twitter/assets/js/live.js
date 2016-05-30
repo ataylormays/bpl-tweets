@@ -710,7 +710,7 @@ function loadGraph(
 	home,
 	away,
 	480,
-	700,
+	500,
 	team1Arr,
 	team2Arr,
 	120,
