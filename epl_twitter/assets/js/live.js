@@ -8,17 +8,17 @@ function assert(condition, message) {
     }
 }
 
-function toHMS(time) {
+function toHM(time) {
     function fix(x) {
 	if (x < 10) { return "0" + x.toString(); }
 	else { return x.toString(); }
     }
-    var S = fix(time % 60);
+    //var S = fix(time % 60);
     time = Math.floor(time / 60);
     var M = fix(time % 60);
     time = Math.floor(time / 60);
     var H = fix(time % 24);
-    return (H + ":" + M + ":" + S);
+    return (H + ":" + M);
 }
 
 function fromHMS(timeString) {
@@ -230,6 +230,7 @@ function makeDoubleBarGraph(
     // First get the sides of the rectangle
     var xBegin = width * xPadding;
     var xEnd = width - xBegin;
+    var xMid = (xEnd + xBegin) / 2;
 
     var xInnerBegin = xBegin + (width - 2 * xBegin) * xInnerPadding;
     var xInnerEnd = width - xInnerBegin;
@@ -257,8 +258,8 @@ function makeDoubleBarGraph(
 	[xEnd, yBegin, xEnd, yEnd],
 	[xBegin, yBegin, xEnd, yBegin],
 	[xBegin, yEnd, xEnd, yEnd],
-	[xBegin, yMidUp, xEnd, yMidUp],
-	[xBegin, yMidDown, xEnd, yMidDown]])
+	[xBegin + 20, yMidUp, xEnd - 20, yMidUp],
+	[xBegin + 20, yMidDown, xEnd - 20, yMidDown]])
 	.enter()
 	.append("line")
 	.attr("x1", function(d) { return d[0]; })
@@ -301,10 +302,14 @@ function makeDoubleBarGraph(
     addTicks(yMidDown, yMidDown - tick);
     var y1Max = y1.max();
     var y2Max = y2.max();
-    var yMax = y1Max > y2Max ? y1Max : y2Max;
-    yMax = Math.max(Math.pow(2, Math.ceil(Math.log2(yMax + 1))), 32);
+    var originalYMax = y1Max > y2Max ? y1Max : y2Max;
+    yMax = Math.max(Math.pow(10, Math.ceil(Math.log10(originalYMax + 1))), 100);
 
-    var jump = Math.pow(2, Math.floor(Math.log2(yMax) / 4));
+    var jump = yMax / 10;
+    while (yMax - jump > originalYMax) { 
+	yMax -= jump;
+    } 
+
     var nowYMag = yMax;
 
     yMax = yMax * 1.25;
@@ -312,7 +317,7 @@ function makeDoubleBarGraph(
     var yMag = [];
     while (nowYMag > 1) {
 	yMag.push(nowYMag);
-	nowYMag /= jump;
+	nowYMag -= jump;
     }
 
     var y1Scaled = [];
@@ -330,40 +335,67 @@ function makeDoubleBarGraph(
     var y2MagScaled = [];
     for (i = 0; i < yMag.length; i++) {
 	y1MagScaled.push(
-	    [yMid - (yMidDown - yInnerBegin) *
+	    [yMidDown - (yMidDown - yInnerBegin) *
 	     (yMag[i] / yMax),
 	     yMag[i]]);
 	y2MagScaled.push(
-	    [yMid + (yInnerEnd - yMidUp) *
+	    [yMidUp + (yInnerEnd - yMidUp) *
 	     (yMag[i] / yMax),
 	     yMag[i]]);
     }
 
-    function makeDottedLineList(y) {
+    function makeDottedLineList(y, dottedLineClass) {
 	d3.select("#liveGraph")
 	    .select("svg")
-	    .selectAll(".dottedLine")
+	    .selectAll("." + dottedLineClass)
 	    .remove()
 
 	d3.select("#liveGraph")
 	    .select("svg")
-	    .selectAll(".dottedLine")
+	    .selectAll(dottedLineClass)
 	    .data(y)
 	    .enter()
 	    .append("line")
-	    .attr("x1", xBegin + 1)
-	    .attr("x2", xEnd - 1)
+	    .attr("x1", xBegin + 20)
+	    .attr("x2", xEnd - 20)
 	    .attr("y1", function(d) { return d[0]; })
 	    .attr("y2", function(d) { return d[0]; })
 	    .style({
 		"stroke" : dottedLineColor,
 		"stroke-width" : strokeWidth,
 		"stroke-dasharray" : "5, 5" })
-	    .attr("class", "tick");
+	    .attr("class", dottedLineClass);
     }
 
-    makeDottedLineList(y1MagScaled);
-    makeDottedLineList(y2MagScaled);
+    function addYLabels(y, color, labelClass) {
+	d3.select("#liveGraph")
+	    .select("svg")
+	    .selectAll(labelClass)
+	    .remove()
+
+	d3.select("#liveGraph")
+	    .select("svg")
+	    .selectAll("." + labelClass)
+	    .data(y)
+	    .enter()
+	    .append("text")
+	    .text(function(d) { return d[1]; })
+	    .attr("x", xBegin + 1)
+	    .attr("y", function(d) { return d[0]; })
+	    .attr("font-family", "sans-serif")
+	    .attr("font-size", "10px")
+	    .attr("fill", color)
+	    .attr("alignment-baseline", "central")
+	    .attr("text-anchor", "left")
+	    .attr("class", labelClass);
+    }
+
+    makeDottedLineList(y1MagScaled, "yAxisUp");
+    makeDottedLineList(y2MagScaled, "yAxisDown");
+
+
+    addYLabels(y1MagScaled, team1PrimaryColor, "yLabelUp");
+    addYLabels(y2MagScaled, team2PrimaryColor, "yLabelDown");
 
     var y1Rects = [];
     var y2Rects = [];
@@ -428,18 +460,19 @@ function makeDoubleBarGraph(
     var times = [];
     for (i = 0; i < nTimeTickMarks; i++) {
 	times.push([
-	    toHMS(Math.floor(startTime + timeInterval * i)),
+	    toHM(Math.floor(startTime + timeInterval * i)),
 	    i * tickInterval + xInnerBegin]);
     }
 
+
     d3.select("#liveGraph")
 	.select("svg")
-	.selectAll("text")
+	.selectAll(".time")
 	.remove()
 
     var text = d3.select("#liveGraph")
 	.select("svg")
-	.selectAll("text")
+	.selectAll(".times")
 	.data(times)
 	.enter()
 	.append("text")
@@ -448,9 +481,55 @@ function makeDoubleBarGraph(
 	.attr("y", function(d) { return yMid; })
 	.attr("font-family", "sans-serif")
 	.attr("font-size", "10px")
-	.attr("fill", "red")
+	.attr("fill", "black")
 	.attr("alignment-baseline", "central")
-	.attr("text-anchor", "middle");
+	.attr("text-anchor", "middle")
+	.attr("class", "time");
+
+    d3.select("#liveGraph")
+	.select("svg")
+	.selectAll(".axisLabel")
+	.remove();
+
+    var transformString = "rotate(270," + (xBegin - 20) + "," + yMid + ")";
+    d3.select("#liveGraph")
+	.select("svg")
+	.selectAll(".axisLabel")
+	.data(["number of tweets"])
+	.enter()
+	.append("text")
+	.text(function(d) { return d; })
+	.attr("x", xBegin - 20)
+	.attr("y", yMid)
+	.attr("transform", transformString)
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "14px")
+	.attr("fill", "black")
+	.attr("alignment-baseline", "central")
+	.attr("text-anchor", "middle")
+	.attr("class", "axisLabel");
+
+    d3.select("#liveGraph")
+	.select("svg")
+	.selectAll(".graphTitle")
+	.remove();
+
+    d3.select("#liveGraph")
+	.select("svg")
+	.selectAll(".graphTitle")
+	.data(["Tweets By Team And Minute"])
+	.enter()
+	.append("text")
+	.text(function(d) { return d; })
+	.attr("x", xMid)
+	.attr("y", yInnerBegin - 20)
+	.attr("font-family", "sans-serif")
+	.attr("font-size", "14px")
+	.attr("fill", "black")
+	.attr("alignment-baseline", "central")
+	.attr("text-anchor", "middle")
+	.attr("class", "graphTitle");
+
 
     if (initializing) { window.setInterval(callString, milliseconds * 2); }
 }
@@ -597,10 +676,11 @@ function loadGraph(
 	"Blue",
 	"Red",
 	"#F7F9FA",
-	"#E8EAEB",
+	//"#E8EAEB",
+	"#d9d9d9",
 	3,
-	0.05,
-	0.05,
+	0.10,
+	0.10,
 	0.05,
 	0.00,
 	10,

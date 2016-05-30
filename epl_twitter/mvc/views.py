@@ -13,8 +13,8 @@ import os, sys
 import collections
 import pdb
 
-path = os.path.abspath(os.path.join('..', 'resources'))
-sys.path.append(path)
+sys.path.append(os.path.abspath(os.path.join('..', 'resources')))
+sys.path.append(os.path.abspath(os.path.join('../..', 'resources')))
 
 try:
 	import constants
