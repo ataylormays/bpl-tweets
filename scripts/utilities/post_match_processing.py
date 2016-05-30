@@ -114,7 +114,15 @@ def get_counts_for_match(tweets, match):
 
 	return counts
 
+def find_popular_tweets(num_tweets, tweets):
+	all_tweets = {}
+	for t in tweets:
+		popularity = t["retweet_count"] + t["favorite_count"]
+		all_tweets[t["id_str"]] = popularity
 
+	sorted_popular_tweets = [(key, all_tweets[key]) for key in sorted(all_tweets, key=all_tweets.get, reverse=True)[:num_tweets]]
+
+	return sorted_popular_tweets
 
 '''
 find_top_hashtags: function to return most popular hashtags from
@@ -137,7 +145,7 @@ def find_top_hashtags(num_hashtags, tweets):
 			else:
 				all_hashtags[hashtag_text] = 1
 		
-	sorted_top_hashtags = [(key, all_hashtags[key]) for key in sorted(all_hashtags, key=all_hashtags.get, reverse=True)[:num_hashtags]]
+	sorted_top_hashtags = [key for key in sorted(all_hashtags, key=all_hashtags.get, reverse=True)[:num_hashtags]]
 
 	top_hashtags = []
 	for index, hashtag in enumerate(sorted_top_hashtags):
@@ -153,22 +161,23 @@ def process_match(match):
 	tweets = get_tweets_for_match(match)
 	print len(tweets)
 	score = scrape_score(match)
-	print score
 	counts = get_counts_for_match(tweets, match)
 	top_hashtags = find_top_hashtags(5, tweets)
+	top_tweets = find_popular_tweets(10, tweets)
 	post_processing = {"home" : match["home"],
 						"away" : match["away"],
 						"timestamp" : match["timestamp"],
 						"score" : score,
 						"counts" : counts,
-						"top_hashtags" : top_hashtags}
+						"top_hashtags" : top_hashtags,
+						"top_tweets" : top_tweets}
 
 	return post_processing
 
 def main():
 	matches_collection = mongodb.init_collection('matches')
 	matches = mongodb.query_collection(matches_collection)
-	for m in matches:
+	for m in matches[-1:]:
 		post_processing = process_match(m)
 
 
