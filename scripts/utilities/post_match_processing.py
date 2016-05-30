@@ -120,7 +120,7 @@ def find_popular_tweets(num_tweets, tweets):
 		popularity = t["retweet_count"] + t["favorite_count"]
 		all_tweets[t["id_str"]] = popularity
 
-	sorted_popular_tweets = [(key, all_tweets[key]) for key in sorted(all_tweets, key=all_tweets.get, reverse=True)[:num_tweets]]
+	sorted_popular_tweets = [key for key in sorted(all_tweets, key=all_tweets.get, reverse=True)[:num_tweets]]
 
 	return sorted_popular_tweets
 
@@ -145,7 +145,7 @@ def find_top_hashtags(num_hashtags, tweets):
 			else:
 				all_hashtags[hashtag_text] = 1
 		
-	sorted_top_hashtags = [key for key in sorted(all_hashtags, key=all_hashtags.get, reverse=True)[:num_hashtags]]
+	sorted_top_hashtags = [(key, all_hashtags[key]) for key in sorted(all_hashtags, key=all_hashtags.get, reverse=True)[:num_hashtags]]
 
 	top_hashtags = []
 	for index, hashtag in enumerate(sorted_top_hashtags):
@@ -177,7 +177,7 @@ def process_match(match):
 def main():
 	matches_collection = mongodb.init_collection('matches')
 	matches = mongodb.query_collection(matches_collection)
-	for m in matches[-1:]:
+	for m in matches:
 		post_processing = process_match(m)
 
 
