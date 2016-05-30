@@ -49,6 +49,8 @@ $(function() {
 	var liveTweetsUrl = host + '/tweets/ws/liveTweetsCount?home={{team1}}&away={{team2}}&match_ts={{timestamp}}';
 	var initCountData = getCounts(liveTweetsUrl);
 	loadGraph(
+		"{{team1Title}}"
+		"{{team2Title}}"
 		initCountData,
 		"liveGraph",
 		liveTweetsUrl,
