@@ -6,3 +6,4 @@ data.popularity.*
 data/*
 src.*
 db.sqlite3
+scripts/utilities/mongo_playground.py
