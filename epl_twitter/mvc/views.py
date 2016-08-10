@@ -13,22 +13,21 @@ import os, sys
 import collections
 import pdb
 
-sys.path.append(os.path.abspath(os.path.join('..', 'resources')))
-sys.path.append(os.path.abspath(os.path.join('../..', 'resources')))
+sys.path.append(os.path.abspath(os.path.join('resources')))
 
 try:
 	import constants
 except ImportError, e:
 	print 'import constants failed'
-	print 'sys_path: ', sys.path
-	constants = __import__('constants')
-	print 'constants: %r' % constants
-	try:
-		print (
-			'constants is at %s (%s)' %
-			(constants.__file__, constants.__path__))
-	except Exception, e:
-		print 'Cannot give details on constants (%s)' % e
+	# print 'sys_path: ', sys.path
+	# constants = __import__('constants')
+	# print 'constants: %r' % constants
+	# try:
+	# 	print (
+	# 		'constants is at %s (%s)' %
+	# 		(constants.__file__, constants.__path__))
+	# except Exception, e:
+	# 	print 'Cannot give details on constants (%s)' % e
 
 sys.path.append(constants.UTILITIES_DIR)
 import mongo_utilities as mongo
@@ -157,36 +156,38 @@ def matches(request):
 		date = (today + datetime.timedelta(days=i)).strftime("%-d %B %Y")
 		results = mongo.query_collection(collection, {"date" : date})
 
-		matches_on_date = []
-		for match in results:
-			delta = datetime.timedelta(minutes=constants.TOT_MINUTES)
-			now = datetime.datetime.now()
-			crest1 = os.path.join(
-				'club-crests',
-				match['home'].lower().replace(' ', '_') + '-crest.png')
-			crest2 = os.path.join(
-				'club-crests',
-				match['away'].lower().replace(' ', '_') + '-crest.png')
+		if results:
+			matches_on_date = []
+			for match in results:
+				delta = datetime.timedelta(minutes=constants.TOT_MINUTES)
+				now = datetime.datetime.now()
+				crest1 = os.path.join(
+					'club-crests',
+					match['home'].lower().replace(' ', '_') + '-crest.png')
+				crest2 = os.path.join(
+					'club-crests',
+					match['away'].lower().replace(' ', '_') + '-crest.png')
 
-			start = datetime.datetime.fromtimestamp(float(match['timestamp']))
-			date_string = match['date']
-			state = 'LIVE'
-			if now < start:
-				state = '(upcoming)'
-			elif now > start + delta:
-				state = 'FT'
-			url = create_match_url(match['home'], match['away'], match['timestamp'], 'live')
-			match_data = { "date" :  match['date'],
-							"time" : match['human_time'],
-							"timestamp" : match['timestamp'],
-							"home" : match['home'],
-							"away" : match['away'],
-							"state" : state,
-							"home_crest" : crest1,
-							"away_crest" : crest2,
-							"dest_url" : url }
-			matches_on_date += [match_data]
-		matches_by_date += [matches_on_date]
+				start = datetime.datetime.fromtimestamp(float(match['timestamp']))
+				date_string = match['date']
+				state = 'LIVE'
+				if now < start:
+					state = '(upcoming)'
+				elif now > start + delta:
+					state = 'FT'
+				url = create_match_url(match['home'], match['away'], match['timestamp'], 'live')
+				match_data = { "date" :  match['date'],
+								"time" : match['human_time'],
+								"timestamp" : match['timestamp'],
+								"home" : match['home'],
+								"away" : match['away'],
+								"state" : state,
+								"home_crest" : crest1,
+								"away_crest" : crest2,
+								"dest_url" : url }
+				matches_on_date += [match_data]
+			matches_by_date += [matches_on_date]
+		print matches_by_date
 
 	template = loader.get_template('matches.html')
 	context = RequestContext(request, {
