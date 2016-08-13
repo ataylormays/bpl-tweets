@@ -179,7 +179,7 @@ def matches(request):
 				elif now > start + delta:
 					state = 'FT'
 				url = create_match_url(match['home'], match['away'], match['timestamp'], 'live')
-				match_data = { "date" :  match['date'],
+				match_data = { "date" :  formatted_date_string,
 								"time" : match['human_time'],
 								"timestamp" : match['timestamp'],
 								"home" : match['home'],
