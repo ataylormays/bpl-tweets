@@ -170,6 +170,7 @@ def matches(request):
 
 				start = datetime.datetime.fromtimestamp(float(match['timestamp']))
 				date_string = match['date']
+				formatted_date_string = datetime.datetime.strptime(date_string, "%d %B %Y").strftime('%B %d %Y')
 				state = 'LIVE'
 				if now < start:
 					state = '(upcoming)'
