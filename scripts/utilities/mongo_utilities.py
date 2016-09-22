@@ -17,11 +17,12 @@ def get_db(database_name, server_url=None):
 def get_collection(db, collection_name):
 	return db[collection_name]
 
-def init_collection(collection_type):
-	if constants.LIVE_MODE:
-		env = 'prod'
-	if constants.QA_MODE:
-		env = 'qa'
+def init_collection(collection_type, env=None):
+	if env is None:
+		if constants.LIVE_MODE:
+			env = 'prod'
+		if constants.QA_MODE:
+			env = 'qa'
 
 	db_name = constants.TWITTER_DB[env]
 	collection_name = constants.TWITTER_COLLECTIONS[env][collection_type]

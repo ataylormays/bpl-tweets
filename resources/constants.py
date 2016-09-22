@@ -1,5 +1,3 @@
-
-
 import os
 import logging
 
@@ -30,7 +28,7 @@ BANNED_PHRASES = [
 ]
 
 # live vs. placeholder
-LIVE_MODE = True
+LIVE_MODE = False
 
 # mongo collections to use
 QA_MODE = not LIVE_MODE
@@ -62,8 +60,8 @@ CLUBS_JSON = os.path.join(RESOURCES_DIR, "twitter_clubs.json")
 
 # db configs
 TWITTER_TIME_FORMAT = '%a %b %d %H:%M:%S +0000 %Y'
-TWITTER_DB = {'prod':'twitter_db','qa':'twitter_test_db'}
-TWITTER_COLLECTIONS = {'prod':{}, 'qa':{}}
+TWITTER_DB = {'prod':'twitter_db','qa':'twitter_test_db','test':'twitter_testing_db'}
+TWITTER_COLLECTIONS = {'prod':{}, 'qa':{}, 'test':{}}
 TWITTER_COLLECTIONS["prod"]["tweets"] = 'twitter_collection'
 TWITTER_COLLECTIONS["prod"]["live"] = 'live_tweets'
 TWITTER_COLLECTIONS["prod"]["popular"] = 'popular_tweets'
@@ -74,6 +72,9 @@ TWITTER_COLLECTIONS["qa"]["live"] = 'live_test_tweets'
 TWITTER_COLLECTIONS["qa"]["popular"] = 'popular_test_tweets'
 TWITTER_COLLECTIONS["qa"]["matches"] = 'test_matches'
 TWITTER_COLLECTIONS["qa"]["archive"] = 'test_archive'
+TWITTER_COLLECTIONS["test"]["live"] = 'live_testing_tweets'
+TWITTER_COLLECTIONS["test"]["matches"] = 'testing_matches'
+TWITTER_COLLECTIONS["test"]["archive"] = 'testing_archive'
 
 #Archive configs
 ARCHIVE_START = "August 2015"

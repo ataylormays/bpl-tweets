@@ -23,6 +23,15 @@ def datetime2timestamp(match_dt):
 
 	return match_ts
 
+def form_match_dict(home, away, timestamp, human_time, date):
+	match_dict = { "timestamp" : timestamp,
+		"home" : home,
+		"away" : away,
+		"human_time" : human_time,
+		"date" : date }
+
+	return match_dict
+
 def scrape_match_data(urls, collection, weeks=2):
 	r = requests.get(url)
 
@@ -63,49 +72,41 @@ def scrape_match_data(urls, collection, weeks=2):
 					home = elt.find_all('td', {"class":"shsNamD"})[1].text
 					away = elt.find_all('td', {"class":"shsNamD"})[2].text
 					match_ts = datetime2timestamp(date + " " + time)
-					matches += [[date, time, match_ts, home, away]]
+					match_dict = form_match_dict(home, away, match_ts, time, date)
+					matches += [match_dict]
 				except Exception, e:
 					print 'Failed on row'
 					print elt
-        
-        flag = False
-        for match in matches:
-                date = match[0]
-                human_time = match[1]
-                time = match[2]
-                home = match[3]
-                away = match[4]
-                match_dict = { "timestamp" : time,
-                               "home" : home,
-                               "away" : away,
-                               "human_time" : human_time,
-                               "date" : date }
-                query = { "timestamp" : time,
-                          "home" : home,
-                          "away" : away }
-                results = mongo.query_collection(collection, query)
-                if not results:
-                        mongo.insert_object(collection, match_dict)
-                else:
-                        mongo.update_one(collection, query, match_dict)
+
+	flag = False
+	for match in matches:
+		query = { 
+					"timestamp" : match["timestamp"],
+					"home" : match["home"],
+					"away" : match["away"],
+				}
+		results = mongo.query_collection(collection, query)
+		if not results:
+			mongo.insert_object(collection, match)
+		else:
+			mongo.update_one(collection, query, match)
 
 if __name__ == '__main__':
-	# print constants.MATCHES_DIR
 	month = datetime.datetime.now().month
 	if month in [6, 7]:
 		print "it's summer dum dum, there's no football happening"
 		sys.exit()
-        urls = [ "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month) ]
-        if month != 5:
-                urls.append(
-                        "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str((month + 1) % 12));
-	try:
-                collection = mongo.init_collection('matches')
-                for url in urls:
-                        scrape_match_data(url, collection)
-	except:
-		print "Error in scraping football data from %s" % url
-		traceback.print_exc()
+	urls = [ "http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str(month) ]
+	if month != 5:
+		urls.append(
+			"http://scores.nbcsports.msnbc.com/epl/fixtures.asp?month=" + str((month + 1) % 12));
+		try:
+			collection = mongo.init_collection('matches')
+			for url in urls:
+				scrape_match_data(url, collection)
+		except:
+			print "Error in scraping football data from %s" % url
+			traceback.print_exc()
 
 
 
