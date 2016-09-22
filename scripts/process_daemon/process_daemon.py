@@ -56,9 +56,30 @@ def start_threads(lt_threads, p_threads, pmp_threads):
 		print post_match_template % (thread.match["home"], thread.match["away"])
 		thread.start()
 
-def dummy_mode():
-	# TODO - Implement!
-	pass
+def dummy_mode(home, away, match_ts, duration):
+	log_prefix = FILE_NM + ":dummy_mode: "
+	print "entered " + log_prefix
+	m = { "timestamp" : match_ts, "home" : home, "away" : away }
+	start = time.time()
+	while time.time() < start + duration:
+		print "current time = %d" % time.time()
+		print "start+duration = %d" % (start + duration)
+		now = int(time.time())
+		start_boundary = now - 30;
+		end_boundary = now + 30;
+		collection = mongo.init_collection('matches', 'test')
+		query = {"timestamp": {"$lt": end_boundary, "$gt": start_boundary}}
+		matches = mongo.query_collection(collection, query)
+		if matches:
+			lt_thread = LTT(m["home"], m["away"], m["timestamp"], duration)
+			p_threads = [PT(home, match_ts), PT(away, match_ts)]
+			# test pmpt separately
+			pmp_threads = []
+			set_live_in_db(collection, matches, live=True)
+			print 'starting threads'
+			start_threads([lt_thread], p_threads, pmp_threads)
+		print log_prefix + "Daemon sleeping for 55 seconds"
+		time.sleep(55)
 
 def team_mode(team1, team2, match_ts):
         m = { "timestamp" : match_ts,
@@ -158,7 +179,7 @@ def main():
 		daemon_mode()
 
 if __name__ == "__main__":
-        main()
+	main()
 	#t = LTT("Manchester United", "Arsenal", int(time.time()), 15)
 	#t = PT("Manchester United")
 	#t.start()

@@ -59,7 +59,7 @@ class SListener(StreamListener):
 			[team1, team2])
 
 		# db configs
-		self.collection = mongo.init_collection('live')
+		self.collection = mongo.init_collection('live', 'test')
 
 	def on_data(self, data):
 		log_prefix = FILE_NM + ":on_data: "
@@ -67,16 +67,18 @@ class SListener(StreamListener):
 		if 'in_reply_to_status' in data:
 			if self.on_status(data) is False:
 				return False
-			elif 'delete' in data:
-				delete = json.loads(data)['delete']['status']
-				if self.on_delete(delete['id'], delete['user_id']) is False:
+			else:
+				data_dict = json.loads(data)
+				if 'delete' in data_dict:
+					delete = data_dict['delete']['status']
+					if self.on_delete(delete['id'], delete['user_id']) is False:
+						return False
+				elif 'limit' in data_dict:
+					self.on_limit(data)
+				elif 'warning' in data_dict:
+					warning = data_dict['warning']
+					logging.warning(log_prefix + "Warning: %s." % warning['message']) 
 					return False
-			elif 'limit' in data:
-				self.on_limit(data)
-			elif 'warning' in data:
-				warning = json.loads(data)['warning']
-				logging.warning(log_prefix + "Warning: %s." % warning['message']) 
-				return False
 
 
 	def contains_either_team(self, text):
