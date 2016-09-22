@@ -1,4 +1,3 @@
-import csv
 import datetime
 import requests
 import operator
@@ -37,6 +36,7 @@ def get_tweets_for_match(match):
 	return result
 
 def scrape_score(match):
+	score = ''
 	log_prefix = FILE_NM + ":scrape_score: "
 	month = datetime.datetime.fromtimestamp(match["timestamp"]).month
 	if month in [6, 7]:
@@ -179,15 +179,12 @@ def find_top_hashtags(num_hashtags, tweets):
 
 def process_match(match):
 	tweets = get_tweets_for_match(match)
-	print len(tweets)
-	score = scrape_score(match)
 	counts = get_counts_for_match(tweets, match)
 	top_hashtags = find_top_hashtags(5, tweets)
 	top_tweets = find_popular_tweets(10, tweets)
 	post_processing = {"home" : match["home"],
 						"away" : match["away"],
 						"timestamp" : match["timestamp"],
-						"score" : score,
 						"counts" : counts,
 						"top_hashtags" : top_hashtags,
 						"top_tweets" : top_tweets}

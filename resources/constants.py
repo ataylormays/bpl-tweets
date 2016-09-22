@@ -45,6 +45,8 @@ PARAMS_DIR = os.path.join(SECRETS_DIR, "params/")
 CONSUMERS_DIR = os.path.join(SECRETS_DIR, "consumers/")
 TOKENS_DIR = os.path.join(SECRETS_DIR, "tokens/")
 SCRIPTS_DIR = os.path.join(BASE_DIR, "scripts/")
+JOBS_DIR = os.path.join(SCRIPTS_DIR, "jobs/")
+THREADS_DIR = os.path.join(SCRIPTS_DIR, "process_daemon/threads/")
 UTILITIES_DIR = os.path.join(SCRIPTS_DIR, "utilities/")
 
 # logging
